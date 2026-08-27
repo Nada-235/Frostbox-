@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#163832">
+<title>Frostbox</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --frost:#F6FAF9;
+  --card:#FFFFFF;
+  --kale:#163832;
+  --mint:#4FB6A8;
+  --mint-deep:#38948A;
+  --citrus:#F2A33B;
+  --berry:#E1503F;
+  --fog:#7C918D;
+  --line:#E4EEEC;
+  --shadow: 0 8px 24px rgba(22,56,50,0.08);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:#DCE8E6;
+  font-family:'Inter',sans-serif;
+  color:var(--kale);
+  display:flex;
+  justify-content:center;
+}
+button{font-family:inherit;}
+input,textarea{font-family:inherit;}
+
+.app-shell{
+  width:100%;
+  max-width:460px;
+  min-height:100vh;
+  background:var(--frost);
+  position:relative;
+  overflow-x:hidden;
+  box-shadow: var(--shadow);
+}
+.screen{
+  padding:20px 18px 100px 18px;
+  min-height:100vh;
+  animation: fadeIn .25s ease;
+}
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+@media (prefers-reduced-motion: reduce){
+  .screen{animation:none;}
+}
+
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01em;}
+
+/* ---------- Onboarding / Setup ---------- */
+.onboard{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:32px 28px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(79,182,168,0.18), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(242,163,59,0.14), transparent 45%),
+    var(--frost);
+}
+.brand-mark{
+  width:74px; height:74px; border-radius:22px;
+  background:var(--kale);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:20px;
+  box-shadow: var(--shadow);
+}
+.onboard h1{font-size:30px; color:var(--kale); margin-bottom:8px;}
+.onboard p.tag{color:var(--fog); font-size:15px; line-height:1.5; max-width:290px; margin-bottom:36px;}
+.ob-btn{
+  width:100%; max-width:300px;
+  padding:16px 20px;
+  border-radius:16px;
+  border:none;
+  font-size:16px; font-weight:600;
+  cursor:pointer;
+  margin-bottom:12px;
+  transition: transform .15s ease;
+}
+.ob-btn:active{transform:scale(0.97);}
+.ob-primary{background:var(--kale); color:#fff;}
+.ob-secondary{background:#fff; color:var(--kale); border:1.5px solid var(--line);}
+.join-box{margin-top:10px; width:100%; max-width:300px; display:none;}
+.join-box.show{display:block;}
+.join-box input{
+  width:100%; padding:14px 16px; border-radius:14px;
+  border:1.5px solid var(--line); font-size:16px;
+  text-align:center; letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:10px; font-family:'IBM Plex Mono',monospace; font-weight:600;
+}
+.setup-card{
+  background:#fff; border-radius:18px; padding:20px; text-align:left; max-width:340px;
+  border:1.5px solid var(--line); margin-top:8px;
+}
+.setup-card h3{font-size:15px; margin-bottom:10px;}
+.setup-card ol{margin:0; padding-left:18px; font-size:13.5px; line-height:1.7; color:var(--kale);}
+.setup-card code{background:var(--frost); padding:2px 6px; border-radius:6px; font-family:'IBM Plex Mono',monospace; font-size:12px;}
+
+/* ---------- Top header ---------- */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:6px; margin-bottom:18px;
+}
+.topbar .greet{font-size:13px; color:var(--fog); font-weight:500;}
+.topbar h1{font-size:24px;}
+.code-pill{
+  font-family:'IBM Plex Mono',monospace;
+  background:var(--kale); color:#fff;
+  font-size:12px; font-weight:600; letter-spacing:1px;
+  padding:7px 12px; border-radius:20px;
+  border:none; cursor:pointer;
+}
+
+/* ---------- Reminder banner ---------- */
+.banner{
+  background:linear-gradient(135deg, var(--berry), #C43F30);
+  color:#fff; border-radius:16px; padding:14px 16px;
+  margin-bottom:16px; display:flex; align-items:center; gap:10px;
+  box-shadow: 0 6px 16px rgba(225,80,63,0.3);
+}
+.banner .txt{font-size:13.5px; line-height:1.4; font-weight:500;}
+.banner .txt b{display:block; font-family:'Space Grotesk',sans-serif; font-size:14.5px; margin-bottom:1px;}
+
+/* ---------- Section groups ---------- */
+.section-label{
+  font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--fog); margin: 22px 2px 10px 2px;
+  display:flex; align-items:center; gap:6px;
+}
+.dot{width:7px; height:7px; border-radius:50%; display:inline-block;}
+
+/* ---------- Item card ---------- */
+.item-card{
+  background:var(--card); border-radius:18px; padding:12px;
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:10px; box-shadow: var(--shadow);
+  cursor:pointer; border:1px solid var(--line);
+}
+.thumb{
+  width:52px; height:52px; border-radius:14px; flex-shrink:0;
+  background:var(--frost); display:flex; align-items:center; justify-content:center;
+  font-size:24px; overflow:hidden; border:1px solid var(--line);
+}
+.thumb img{width:100%; height:100%; object-fit:cover;}
+.item-info{flex:1; min-width:0;}
+.item-info .name{font-weight:600; font-size:15px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.item-info .note{font-size:12.5px; color:var(--fog); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.chip{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+  padding:6px 9px; border-radius:9px; letter-spacing:0.03em; flex-shrink:0;
+  white-space:nowrap;
+}
+.chip.fresh{background:#E4F5F2; color:var(--mint-deep);}
+.chip.soon{background:#FDF0DD; color:#B97317;}
+.chip.expired{background:#FBE4E1; color:var(--berry);}
+
+.empty-state{
+  text-align:center; padding:60px 20px; color:var(--fog);
+}
+.empty-state .emoji{font-size:44px; margin-bottom:14px;}
+.empty-state p{font-size:14.5px; line-height:1.5; max-width:230px; margin:0 auto;}
+
+/* ---------- Floating add button ---------- */
+.fab{
+  position:absolute; right:20px; bottom:96px;
+  width:58px; height:58px; border-radius:50%;
+  background:var(--mint); color:#fff; border:none;
+  font-size:28px; font-weight:400; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 22px rgba(79,182,168,0.45);
+  cursor:pointer; z-index:30;
+}
+.fab:active{transform:scale(0.94);}
+
+/* ---------- Bottom nav ---------- */
+.tabbar{
+  position:absolute; left:0; right:0; bottom:0;
+  height:82px; background:rgba(255,255,255,0.92); backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  display:flex; align-items:flex-start; justify-content:space-around;
+  padding-top:10px; z-index:20;
+}
+.tab-btn{
+  background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px;
+  color:var(--fog); font-size:11px; font-weight:600; cursor:pointer; width:80px;
+}
+.tab-btn .ic{font-size:21px;}
+.tab-btn.active{color:var(--mint-deep);}
+
+/* ---------- Forms ---------- */
+.field{margin-bottom:16px;}
+.field label{
+  display:block; font-size:12.5px; font-weight:700; color:var(--fog);
+  text-transform:uppercase; letter-spacing:0.05em; margin-bottom:7px;
+}
+.field input[type=text], .field input[type=date], .field input[type=datetime-local], .field textarea{
+  width:100%; padding:13px 14px; border-radius:13px; border:1.5px solid var(--line);
+  font-size:15.5px; color:var(--kale); background:#fff;
+}
+.field textarea{resize:vertical; min-height:70px; line-height:1.4;}
+.field input:focus, .field textarea:focus{outline:2px solid var(--mint); border-color:var(--mint);}
+
+.photo-picker{
+  width:100%; height:150px; border-radius:16px; border:1.5px dashed var(--line);
+  background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--fog); font-size:13px; font-weight:600; gap:6px; overflow:hidden; cursor:pointer; margin-bottom:16px;
+  position:relative;
+}
+.photo-picker img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+.photo-picker .ic{font-size:26px;}
+
+.toggle-row{
+  display:flex; align-items:center; justify-content:space-between;
+  background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:13px 14px; margin-bottom:12px;
+}
+.toggle-row .lbl{font-size:14.5px; font-weight:600;}
+.switch{
+  width:46px; height:27px; border-radius:14px; background:var(--line); position:relative; cursor:pointer; border:none; flex-shrink:0;
+  transition: background .2s;
+}
+.switch.on{background:var(--mint);}
+.switch::after{
+  content:''; position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%;
+  background:#fff; transition: transform .2s; box-shadow:0 1px 3px rgba(0,0,0,0.25);
+}
+.switch.on::after{transform:translateX(19px);}
+
+.btn-row{display:flex; gap:10px; margin-top:22px;}
+.btn{
+  flex:1; padding:15px; border-radius:14px; border:none; font-size:15.5px; font-weight:700; cursor:pointer;
+}
+.btn-primary{background:var(--kale); color:#fff;}
+.btn-ghost{background:#fff; color:var(--kale); border:1.5px solid var(--line);}
+.btn-danger{background:#fff; color:var(--berry); border:1.5px solid #F3CDC8;}
+.btn:active{transform:scale(0.97);}
+
+.back-row{display:flex; align-items:center; gap:10px; margin-bottom:18px;}
+.back-btn{
+  width:36px; height:36px; border-radius:11px; border:1.5px solid var(--line); background:#fff;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:var(--kale); flex-shrink:0;
+}
+
+/* ---------- Shopping list ---------- */
+.add-row{display:flex; gap:8px; margin-bottom:18px;}
+.add-row input{
+  flex:1; padding:13px 15px; border-radius:13px; border:1.5px solid var(--line); font-size:15px;
+}
+.add-row button{
+  width:48px; border-radius:13px; border:none; background:var(--mint); color:#fff; font-size:22px; cursor:pointer;
+}
+.shop-row{
+  display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line);
+  border-radius:15px; padding:13px 14px; margin-bottom:9px;
+}
+.shop-check{
+  width:23px; height:23px; border-radius:50%; border:2px solid var(--mint); flex-shrink:0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff;
+}
+.shop-check.done{background:var(--mint);}
+.shop-name{flex:1; font-size:15px; font-weight:500;}
+.shop-name.done{color:var(--fog); text-decoration:line-through;}
+.shop-del{background:none; border:none; color:var(--fog); font-size:17px; cursor:pointer; padding:4px;}
+
+/* ---------- Household screen ---------- */
+.hh-code-card{
+  background:var(--kale); border-radius:20px; padding:26px 20px; text-align:center; color:#fff; margin-bottom:20px;
+}
+.hh-code-card .lbl{font-size:12px; color:#B9D4CF; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; margin-bottom:10px;}
+.hh-code-card .code{font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:600; letter-spacing:4px; margin-bottom:16px;}
+.hh-code-card .desc{font-size:13px; color:#B9D4CF; line-height:1.5; margin-bottom:18px;}
+.hh-share-btn{
+  background:var(--mint); color:#fff; border:none; padding:12px 22px; border-radius:13px; font-weight:700; font-size:14px; cursor:pointer;
+}
+.member-row{
+  display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:9px;
+}
+.member-avatar{
+  width:34px; height:34px; border-radius:50%; background:var(--mint); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:13px; flex-shrink:0;
+}
+.sync-dot{width:8px; height:8px; border-radius:50%; background:var(--mint); display:inline-block; margin-right:6px; box-shadow:0 0 0 3px rgba(79,182,168,0.2);}
+.toast{
+  position:absolute; left:50%; bottom:100px; transform:translateX(-50%);
+  background:var(--kale); color:#fff; padding:11px 20px; border-radius:30px; font-size:13.5px; font-weight:600;
+  box-shadow:var(--shadow); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+  white-space:nowrap;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+</style>
+</head>
+<body>
+<div class="app-shell" id="app"></div>
+
+<script type="module">
+/* ============================================================================
+   SETUP REQUIRED — paste your Firebase config below.
+   See the setup instructions provided alongside this file for how to get
+   these values (it takes about 5 minutes and is free).
+   ============================================================================ */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCz7ruv1JJbRcSSK8wyyW4cGvFhIszBVMk",
+    authDomain: "frostbox-86ced.firebaseapp.com",
+    projectId: "frostbox-86ced",
+    storageBucket: "frostbox-86ced.firebasestorage.app",
+    messagingSenderId: "761973634405",
+    appId: "1:761973634405:web:0c686530d4dec8118c1d8c"
+  };
+/* ============================================================================ */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
+  collection, onSnapshot, arrayUnion, enableIndexedDbPersistence
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+let app, db;
+let unsubItems = null, unsubShopping = null, unsubHousehold = null;
+
+function firebaseConfigured(){
+  return firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
+}
+function initFirebase(){
+  if(!firebaseConfigured()) return false;
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  try{ enableIndexedDbPersistence(db); }catch(e){ /* fine if it fails (e.g. multiple tabs) */ }
+  return true;
+}
+
+/* ---- device-local "who am I / which household" pointer ---- */
+function getMe(){
+  try{ return JSON.parse(localStorage.getItem('frostbox_me') || 'null'); }catch(e){ return null; }
+}
+function setMe(obj){ localStorage.setItem('frostbox_me', JSON.stringify(obj)); }
+function clearMe(){ localStorage.removeItem('frostbox_me'); }
+
+/* ================= App state ================= */
+let state = {
+  code: null,
+  myName: null,
+  data: { items: [], shopping: [], members: [] },
+  tab: 'fridge',
+  screen: 'loading', // loading | setup | onboard | main | add
+  joinBoxOpen: false,
+  editingItem: null,
+  synced: false
+};
+
+const FOOD_EMOJI = [
+  [['milk','yogurt','cream','butter'], '🥛'],
+  [['cheese'], '🧀'],
+  [['egg'], '🥚'],
+  [['chicken','turkey','poultry'], '🍗'],
+  [['beef','pork','steak','meat','sausage','bacon'], '🥩'],
+  [['fish','salmon','shrimp','seafood'], '🐟'],
+  [['apple','pear','fruit','berry','berries','grape'], '🍎'],
+  [['vegetable','veggie','broccoli','carrot','lettuce','spinach','salad'], '🥦'],
+  [['bread','bagel','toast'], '🍞'],
+  [['leftover','rice','pasta','noodle'], '🍱'],
+  [['juice','soda','drink'], '🧃'],
+  [['sauce','dressing','condiment'], '🫙'],
+];
+function emojiFor(name){
+  const n = (name||'').toLowerCase();
+  for(const [keys, emo] of FOOD_EMOJI){ if(keys.some(k=>n.includes(k))) return emo; }
+  return '🧊';
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function genCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c=''; for(let i=0;i<6;i++) c+=chars[Math.floor(Math.random()*chars.length)];
+  return c;
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function daysUntil(dateStr){
+  const target = new Date(dateStr+'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((target-now)/86400000);
+}
+function chipFor(days){
+  if(days < 0) return {cls:'expired', txt:`EXP ${Math.abs(days)}D AGO`};
+  if(days === 0) return {cls:'soon', txt:'USE TODAY'};
+  if(days === 1) return {cls:'soon', txt:'1D LEFT'};
+  if(days === 2) return {cls:'soon', txt:'2D LEFT'};
+  return {cls:'fresh', txt:`${days}D LEFT`};
+}
+function fmtDate(d){ return new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'short', day:'numeric'}); }
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ================= Firestore wiring ================= */
+async function startHousehold(){
+  const code = genCode();
+  const name = 'You';
+  await setDoc(doc(db,'households',code), { members: [name], createdAt: Date.now() });
+  state.code = code; state.myName = name;
+  setMe({ code, name });
+  subscribeHousehold();
+}
+async function joinHousehold(code){
+  const ref = doc(db,'households',code);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return false;
+  const name = 'You';
+  await updateDoc(ref, { members: arrayUnion(name) });
+  state.code = code; state.myName = name;
+  setMe({ code, name });
+  subscribeHousehold();
+  return true;
+}
+function subscribeHousehold(){
+  unsubHousehold = onSnapshot(doc(db,'households',state.code), snap=>{
+    const d = snap.data() || {};
+    state.data.members = d.members || [state.myName];
+    if(state.screen === 'main') render();
+  });
+  unsubItems = onSnapshot(collection(db,'households',state.code,'items'), snap=>{
+    state.data.items = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    state.synced = true;
+    checkReminders();
+    if(state.screen === 'main') render();
+  });
+  unsubShopping = onSnapshot(collection(db,'households',state.code,'shopping'), snap=>{
+    state.data.shopping = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    if(state.screen === 'main') render();
+  });
+}
+function unsubscribeAll(){
+  if(unsubItems) unsubItems();
+  if(unsubShopping) unsubShopping();
+  if(unsubHousehold) unsubHousehold();
+  unsubItems = unsubShopping = unsubHousehold = null;
+}
+async function saveItem(item){
+  const { id, ...rest } = item;
+  await setDoc(doc(db,'households',state.code,'items',id), rest);
+}
+async function deleteItemDoc(id){ await deleteDoc(doc(db,'households',state.code,'items',id)); }
+async function addShoppingDoc(name){
+  const id = uid();
+  await setDoc(doc(db,'households',state.code,'shopping',id), { name, checked:false });
+}
+async function toggleShoppingDoc(id, checked){ await updateDoc(doc(db,'households',state.code,'shopping',id), { checked }); }
+async function deleteShoppingDoc(id){ await deleteDoc(doc(db,'households',state.code,'shopping',id)); }
+async function markReminderFired(id){
+  try{ await updateDoc(doc(db,'households',state.code,'items',id), { reminderFired: true }); }catch(e){}
+}
+
+/* ================= Init ================= */
+async function init(){
+  if(!initFirebase()){
+    state.screen = 'setup';
+    render();
+    return;
+  }
+  const me = getMe();
+  if(me && me.code){
+    state.code = me.code; state.myName = me.name || 'You';
+    state.screen = 'main';
+    subscribeHousehold();
+  } else {
+    state.screen = 'onboard';
+  }
+  render();
+  setInterval(checkReminders, 60000);
+}
+
+function checkReminders(){
+  const now = Date.now();
+  let firedThisPass = [];
+  (state.data.items||[]).forEach(it=>{
+    if(it.reminderEnabled && it.reminderAt && !it.reminderFired){
+      if(new Date(it.reminderAt).getTime() <= now){
+        firedThisPass.push(it);
+        it.reminderFired = true;
+        markReminderFired(it.id);
+      }
+    }
+  });
+  if(firedThisPass.length && window.Notification && Notification.permission === 'granted'){
+    firedThisPass.forEach(it=> new Notification('Frostbox reminder', { body:`${it.name} is expiring soon — check your fridge!` }));
+  }
+  state._dueReminders = (state.data.items||[]).filter(it=>{
+    if(!it.reminderEnabled || !it.reminderAt) return false;
+    return daysUntil(it.goodUntil) <= 2;
+  });
+}
+
+/* ================= Rendering ================= */
+function render(){
+  const app = document.getElementById('app');
+  if(state.screen === 'setup'){ app.innerHTML = renderSetup(); return; }
+  if(state.screen === 'onboard'){ app.innerHTML = renderOnboard(); bindOnboard(); return; }
+  if(state.screen === 'add'){ app.innerHTML = renderAddEdit(); bindAddEdit(); return; }
+  app.innerHTML = renderMain();
+  bindMain();
+}
+
+function renderSetup(){
+  return `
+  <div class="onboard">
+    <div class="brand-mark">${logoSvg()}</div>
+    <h1>Frostbox</h1>
+    <p class="tag">Almost ready. This copy of Frostbox needs to be connected to your free Firebase project before it can save or share your fridge list.</p>
+    <div class="setup-card">
+      <h3>Quick setup</h3>
+      <ol>
+        <li>Create a free project at <code>firebase.google.com</code></li>
+        <li>Enable <b>Firestore Database</b> for it</li>
+        <li>Register a <b>Web app</b> to get your config keys</li>
+        <li>Paste those keys into <code>firebaseConfig</code> near the top of this file</li>
+        <li>Save and reload this page</li>
+      </ol>
+    </div>
+  </div>`;
+}
+function logoSvg(){
+  return `<svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2 L12 22 M7 6 L17 6 M6 12 L18 12 M7 18 L17 18 M9 4 L12 6 L15 4 M9 20 L12 18 L15 20" stroke="#4FB6A8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/* ---- Onboarding ---- */
+function renderOnboard(){
+  return `
+  <div class="onboard">
+    <div class="brand-mark">${logoSvg()}</div>
+    <h1>Frostbox</h1>
+    <p class="tag">Know what's in your fridge, before it's too late. Track it, share it, never waste it.</p>
+    <button class="ob-btn ob-primary" id="btn-start">Start my fridge</button>
+    <button class="ob-btn ob-secondary" id="btn-join-toggle">Join a shared fridge</button>
+    <div class="join-box ${state.joinBoxOpen?'show':''}" id="join-box">
+      <input type="text" id="join-code" placeholder="ENTER CODE" maxlength="6">
+      <button class="ob-btn ob-primary" id="btn-join">Join fridge</button>
+    </div>
+  </div>`;
+}
+function bindOnboard(){
+  document.getElementById('btn-start').onclick = async ()=>{
+    await startHousehold();
+    state.screen = 'main';
+    render();
+  };
+  document.getElementById('btn-join-toggle').onclick = ()=>{ state.joinBoxOpen = !state.joinBoxOpen; render(); };
+  if(state.joinBoxOpen){
+    document.getElementById('btn-join').onclick = async ()=>{
+      const codeInput = document.getElementById('join-code').value.trim().toUpperCase();
+      if(!codeInput){ alert('Enter a code first'); return; }
+      const ok = await joinHousehold(codeInput);
+      if(!ok){ alert("We couldn't find that fridge code. Double check it and try again."); return; }
+      state.screen = 'main';
+      render();
+    };
+  }
+}
+
+/* ---- Main (tabbed) ---- */
+function renderMain(){
+  let body = '';
+  if(state.tab === 'fridge') body = renderFridgeTab();
+  else if(state.tab === 'shopping') body = renderShoppingTab();
+  else body = renderHouseholdTab();
+
+  return `
+  <div class="screen">${body}</div>
+  ${state.tab==='fridge' ? `<button class="fab" id="fab-add">+</button>` : ''}
+  <div class="tabbar">
+    <button class="tab-btn ${state.tab==='fridge'?'active':''}" data-tab="fridge"><span class="ic">🧊</span>Fridge</button>
+    <button class="tab-btn ${state.tab==='shopping'?'active':''}" data-tab="shopping"><span class="ic">📝</span>Shopping</button>
+    <button class="tab-btn ${state.tab==='household'?'active':''}" data-tab="household"><span class="ic">👨‍👩‍👧</span>Household</button>
+  </div>
+  <div class="toast" id="toast"></div>`;
+}
+
+function renderFridgeTab(){
+  const items = (state.data.items||[]).slice().sort((a,b)=>daysUntil(a.goodUntil)-daysUntil(b.goodUntil));
+  const expired = items.filter(i=>daysUntil(i.goodUntil)<0);
+  const soon = items.filter(i=>{ const d=daysUntil(i.goodUntil); return d>=0 && d<=2; });
+  const fresh = items.filter(i=>daysUntil(i.goodUntil)>2);
+
+  let banner = '';
+  if(state._dueReminders && state._dueReminders.length){
+    const it = state._dueReminders[0];
+    const extra = state._dueReminders.length>1 ? ` +${state._dueReminders.length-1} more` : '';
+    banner = `<div class="banner"><span style="font-size:20px;">⏰</span><div class="txt"><b>Use it soon</b>${escapeHtml(it.name)} is expiring — don't forget it!${extra}</div></div>`;
+  }
+
+  let sections = '';
+  if(!items.length){
+    sections = `<div class="empty-state"><div class="emoji">🧊</div><p>Your fridge is empty. Tap + to add your first item.</p></div>`;
+  } else {
+    if(expired.length) sections += sectionHtml('Expired', 'var(--berry)', expired);
+    if(soon.length) sections += sectionHtml('Use soon', 'var(--citrus)', soon);
+    if(fresh.length) sections += sectionHtml('Fresh', 'var(--mint)', fresh);
+  }
+
+  return `
+  <div class="topbar">
+    <div><div class="greet"><span class="sync-dot"></span>${state.synced ? 'Synced' : 'Connecting…'}</div><h1>Your fridge</h1></div>
+    <button class="code-pill" id="code-pill">${state.code}</button>
+  </div>
+  ${banner}
+  ${sections}`;
+}
+function sectionHtml(label, color, items){
+  return `<div class="section-label"><span class="dot" style="background:${color}"></span>${label}</div>${items.map(itemCardHtml).join('')}`;
+}
+function itemCardHtml(it){
+  const d = daysUntil(it.goodUntil);
+  const chip = chipFor(d);
+  const thumb = it.photo ? `<img src="${it.photo}">` : emojiFor(it.name);
+  return `
+  <div class="item-card" data-id="${it.id}">
+    <div class="thumb">${thumb}</div>
+    <div class="item-info">
+      <div class="name">${escapeHtml(it.name)}</div>
+      <div class="note">${escapeHtml(it.note || fmtDate(it.goodUntil))}</div>
+    </div>
+    <div class="chip ${chip.cls}">${chip.txt}</div>
+  </div>`;
+}
+
+function renderShoppingTab(){
+  const list = state.data.shopping||[];
+  const pending = list.filter(i=>!i.checked);
+  const done = list.filter(i=>i.checked);
+  return `
+  <div class="topbar"><div><div class="greet">Household ${state.code}</div><h1>Shopping list</h1></div></div>
+  <div class="add-row">
+    <input type="text" id="shop-input" placeholder="Add an item…">
+    <button id="shop-add">+</button>
+  </div>
+  ${list.length===0 ? `<div class="empty-state"><div class="emoji">📝</div><p>Nothing on the list yet. Add what you're running low on.</p></div>` : ''}
+  ${pending.map(shopRowHtml).join('')}
+  ${done.length ? `<div class="section-label">Checked off</div>${done.map(shopRowHtml).join('')}` : ''}
+  `;
+}
+function shopRowHtml(it){
+  return `
+  <div class="shop-row" data-id="${it.id}">
+    <button class="shop-check ${it.checked?'done':''}" data-check="${it.id}">${it.checked?'✓':''}</button>
+    <div class="shop-name ${it.checked?'done':''}">${escapeHtml(it.name)}</div>
+    <button class="shop-del" data-del="${it.id}">✕</button>
+  </div>`;
+}
+
+function renderHouseholdTab(){
+  const members = state.data.members || [state.myName];
+  return `
+  <div class="topbar"><div><div class="greet">Sharing</div><h1>Household</h1></div></div>
+  <div class="hh-code-card">
+    <div class="lbl">Your fridge code</div>
+    <div class="code">${state.code}</div>
+    <div class="desc">Share this code with a family member or friend so they can see and add to the same fridge, live.</div>
+    <button class="hh-share-btn" id="share-btn">Share code</button>
+  </div>
+  <div class="section-label">Members</div>
+  ${members.map(m=>`<div class="member-row"><div class="member-avatar">${escapeHtml(m).slice(0,1).toUpperCase()}</div><div>${escapeHtml(m)}</div></div>`).join('')}
+  <div class="section-label">Notifications</div>
+  <div class="toggle-row">
+    <div class="lbl">Enable expiry alerts</div>
+    <button class="switch ${window.Notification && Notification.permission==='granted' ? 'on':''}" id="notif-toggle"></button>
+  </div>
+  <p style="font-size:12.5px; color:var(--fog); line-height:1.5; margin:-4px 2px 20px 2px;">Alerts fire while Frostbox is open. Keep it running in a tab, or check the reminder banner on the Fridge tab so nothing slips by.</p>
+  <div class="section-label">Fridge</div>
+  <button class="btn btn-danger" style="width:100%;" id="leave-btn">Leave this household</button>
+  `;
+}
+
+/* ---- Add / Edit item ---- */
+function defaultReminderAt(goodUntil){
+  const d = new Date(goodUntil+'T09:00:00');
+  d.setDate(d.getDate()-2);
+  const pad = n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function renderAddEdit(){
+  const it = state.editingItem || {
+    id:null, name:'', dateAdded: todayStr(), goodUntil: todayStr(),
+    photo:null, note:'', reminderEnabled:false, reminderAt:''
+  };
+  const isEdit = !!it.id;
+  return `
+  <div class="screen">
+    <div class="back-row">
+      <button class="back-btn" id="back-btn">←</button>
+      <h2 style="font-size:19px;">${isEdit?'Edit item':'Add item'}</h2>
+    </div>
+    <div class="photo-picker" id="photo-picker">
+      ${it.photo ? `<img src="${it.photo}">` : `<span class="ic">📷</span><span>Add a photo</span>`}
+    </div>
+    <input type="file" accept="image/*" capture="environment" id="photo-input" style="display:none;">
+    <div class="field"><label>Name</label><input type="text" id="f-name" value="${escapeHtml(it.name)}" placeholder="e.g. Leftover pasta"></div>
+    <div class="field"><label>Date added</label><input type="date" id="f-added" value="${it.dateAdded}"></div>
+    <div class="field"><label>Good to use until</label><input type="date" id="f-until" value="${it.goodUntil}"></div>
+    <div class="toggle-row">
+      <div class="lbl">Remind me before it expires</div>
+      <button class="switch ${it.reminderEnabled?'on':''}" id="rem-toggle"></button>
+    </div>
+    <div class="field" id="rem-field" style="display:${it.reminderEnabled?'block':'none'};">
+      <label>Reminder time</label>
+      <input type="datetime-local" id="f-reminder" value="${it.reminderAt || defaultReminderAt(it.goodUntil)}">
+    </div>
+    <div class="field"><label>Note</label><textarea id="f-note" placeholder="Anything worth remembering…">${escapeHtml(it.note)}</textarea></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-btn">${isEdit?'Save changes':'Add to fridge'}</button>
+    </div>
+    ${isEdit ? `
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="toshop-btn">Add to shopping list</button>
+      <button class="btn btn-danger" id="delete-btn">Delete</button>
+    </div>` : ''}
+  </div>`;
+}
+function bindAddEdit(){
+  const it = state.editingItem;
+  let photoData = it && it.photo ? it.photo : null;
+
+  document.getElementById('back-btn').onclick = ()=>{ state.screen='main'; render(); };
+  document.getElementById('cancel-btn').onclick = ()=>{ state.screen='main'; render(); };
+  document.getElementById('photo-picker').onclick = ()=> document.getElementById('photo-input').click();
+  document.getElementById('photo-input').onchange = (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const maxW = 360;
+        const scale = Math.min(1, maxW/img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width*scale; canvas.height = img.height*scale;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        photoData = canvas.toDataURL('image/jpeg', 0.6);
+        document.getElementById('photo-picker').innerHTML = `<img src="${photoData}">`;
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const untilInput = document.getElementById('f-until');
+  const remToggleBtn = document.getElementById('rem-toggle');
+  const remField = document.getElementById('rem-field');
+  let reminderOn = !!(it && it.reminderEnabled);
+  remToggleBtn.onclick = ()=>{
+    reminderOn = !reminderOn;
+    remToggleBtn.classList.toggle('on', reminderOn);
+    remField.style.display = reminderOn ? 'block' : 'none';
+    if(reminderOn && !document.getElementById('f-reminder').value){
+      document.getElementById('f-reminder').value = defaultReminderAt(untilInput.value);
+    }
+  };
+  untilInput.onchange = ()=>{
+    if(reminderOn) document.getElementById('f-reminder').value = defaultReminderAt(untilInput.value);
+  };
+
+  document.getElementById('save-btn').onclick = async ()=>{
+    const name = document.getElementById('f-name').value.trim();
+    if(!name){ alert('Give the item a name first.'); return; }
+    const goodUntil = document.getElementById('f-until').value || todayStr();
+    const newItem = {
+      id: it && it.id ? it.id : uid(),
+      name,
+      dateAdded: document.getElementById('f-added').value || todayStr(),
+      goodUntil,
+      photo: photoData,
+      note: document.getElementById('f-note').value.trim(),
+      reminderEnabled: reminderOn,
+      reminderAt: reminderOn ? document.getElementById('f-reminder').value : '',
+      reminderFired: false
+    };
+    if(reminderOn && window.Notification && Notification.permission === 'default'){
+      try{ await Notification.requestPermission(); }catch(e){}
+    }
+    await saveItem(newItem);
+    state.editingItem = null;
+    state.tab = 'fridge';
+    state.screen = 'main';
+    render();
+  };
+
+  if(it && it.id){
+    document.getElementById('delete-btn').onclick = async ()=>{
+      if(!confirm(`Remove ${it.name} from your fridge?`)) return;
+      await deleteItemDoc(it.id);
+      state.editingItem = null;
+      state.tab = 'fridge';
+      state.screen = 'main';
+      render();
+    };
+    document.getElementById('toshop-btn').onclick = async ()=>{
+      await addShoppingDoc(it.name);
+      state.editingItem = null;
+      state.tab = 'shopping';
+      state.screen = 'main';
+      render();
+      showToast(`${it.name} added to shopping list`);
+    };
+  }
+}
+
+/* ---- Bind main screen events ---- */
+function bindMain(){
+  document.querySelectorAll('.tab-btn').forEach(b=>{ b.onclick = ()=>{ state.tab = b.dataset.tab; render(); }; });
+  const fab = document.getElementById('fab-add');
+  if(fab) fab.onclick = ()=>{ state.editingItem = null; state.screen = 'add'; render(); };
+
+  document.querySelectorAll('.item-card').forEach(c=>{
+    c.onclick = ()=>{
+      const id = c.dataset.id;
+      state.editingItem = state.data.items.find(i=>i.id===id);
+      state.screen = 'add';
+      render();
+    };
+  });
+
+  const codePill = document.getElementById('code-pill');
+  if(codePill) codePill.onclick = ()=> shareCode();
+
+  const shopInput = document.getElementById('shop-input');
+  const shopAdd = document.getElementById('shop-add');
+  if(shopAdd){
+    const doAdd = async ()=>{
+      const val = shopInput.value.trim();
+      if(!val) return;
+      await addShoppingDoc(val);
+      render();
+    };
+    shopAdd.onclick = doAdd;
+    shopInput.onkeydown = (e)=>{ if(e.key==='Enter') doAdd(); };
+  }
+  document.querySelectorAll('[data-check]').forEach(b=>{
+    b.onclick = async ()=>{
+      const id = b.dataset.check;
+      const item = state.data.shopping.find(i=>i.id===id);
+      if(item) await toggleShoppingDoc(id, !item.checked);
+    };
+  });
+  document.querySelectorAll('[data-del]').forEach(b=>{
+    b.onclick = async ()=>{ await deleteShoppingDoc(b.dataset.del); };
+  });
+
+  const shareBtn = document.getElementById('share-btn');
+  if(shareBtn) shareBtn.onclick = ()=> shareCode();
+
+  const notifToggle = document.getElementById('notif-toggle');
+  if(notifToggle){
+    notifToggle.onclick = async ()=>{
+      if(!window.Notification){ alert('Notifications are not supported in this browser.'); return; }
+      if(Notification.permission !== 'granted'){
+        const perm = await Notification.requestPermission();
+        if(perm === 'granted') render();
+      } else {
+        alert('Notifications are already enabled. You can turn them off from your browser/site settings.');
+      }
+    };
+  }
+
+  const leaveBtn = document.getElementById('leave-btn');
+  if(leaveBtn){
+    leaveBtn.onclick = ()=>{
+      if(!confirm('Leave this household? You can rejoin any time with the code.')) return;
+      unsubscribeAll();
+      clearMe();
+      state = { code:null, myName:null, data:{items:[],shopping:[],members:[]}, tab:'fridge', screen:'onboard', joinBoxOpen:false, editingItem:null, synced:false };
+      render();
+    };
+  }
+}
+
+async function shareCode(){
+  const text = `Join my Frostbox fridge! Use code: ${state.code}`;
+  if(navigator.share){
+    try{ await navigator.share({ title:'Frostbox', text }); return; }catch(e){}
+  }
+  try{ await navigator.clipboard.writeText(state.code); showToast('Code copied to clipboard'); }
+  catch(e){ alert(`Your fridge code: ${state.code}`); }
+}
+
+init();
+</script>
+</body>
+</html>
