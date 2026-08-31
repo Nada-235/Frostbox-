@@ -60,7 +60,7 @@ input,textarea{font-family:inherit;}
 
 /* Single-page screens (onboarding/setup/forms): the screen itself scrolls, fills remaining height */
 .onboard, .screen{
-  flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overflow-x:hidden;
   animation: fadeIn .25s ease;
 }
 .screen{ padding:20px 18px 40px 18px; }
