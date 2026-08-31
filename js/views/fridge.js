@@ -22,8 +22,8 @@ function itemCardHtml(item){
   </div>`;
 }
 
-function sectionHtml(label, color, items){
-  return `<div class="section-label"><span class="dot" style="background:${color}"></span>${label}</div>${items.map(itemCardHtml).join('')}`;
+function categorySectionHtml(category, items){
+  return `<div class="section-label"><span>${category.icon}</span>${catLabel(category)}</div>${items.map(itemCardHtml).join('')}`;
 }
 
 function reminderBannerHtml(){
@@ -59,11 +59,6 @@ export function renderBody(){
   const totalCount = items.length;
   if(state.locationFilter !== 'all') items = items.filter(i => (i.location || 'fridge') === state.locationFilter);
   if(state.categoryFilter !== 'all') items = items.filter(i => (i.category || 'other') === state.categoryFilter);
-  items.sort((a, b) => daysUntil(a.goodUntil) - daysUntil(b.goodUntil));
-
-  const expired = items.filter(i => daysUntil(i.goodUntil) < 0);
-  const soon = items.filter(i => { const d = daysUntil(i.goodUntil); return d >= 0 && d <= 2; });
-  const fresh = items.filter(i => daysUntil(i.goodUntil) > 2);
 
   let sections;
   if(!totalCount){
@@ -72,9 +67,12 @@ export function renderBody(){
     sections = `<div class="empty-state"><div class="emoji">🔍</div><p>${t('empty_filtered')}</p></div>`;
   } else {
     sections = '';
-    if(expired.length) sections += sectionHtml(t('section_expired'), 'var(--berry)', expired);
-    if(soon.length) sections += sectionHtml(t('section_soon'), 'var(--citrus)', soon);
-    if(fresh.length) sections += sectionHtml(t('section_fresh'), 'var(--mint)', fresh);
+    FOOD_CATEGORIES.forEach(category => {
+      const inCategory = items
+        .filter(i => (i.category || 'other') === category.id)
+        .sort((a, b) => daysUntil(a.goodUntil) - daysUntil(b.goodUntil)); // soonest-to-expire first, within the category
+      if(inCategory.length) sections += categorySectionHtml(category, inCategory);
+    });
   }
 
   return `${reminderBannerHtml()}${filtersHtml()}${sections}`;
