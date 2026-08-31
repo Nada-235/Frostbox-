@@ -39,10 +39,8 @@ export function render(){
         <button class="seg-btn ${((item.location || 'fridge') === 'freezer') ? 'active' : ''}" data-loc="freezer">❄️ ${t('filter_freezer')}</button>
       </div>
     </div>
-    <div>
      <div class="field"><label>${t('label_date_added')}</label><input type="date" id="f-added" value="${item.dateAdded}"></div>
     <div class="field"><label>${t('label_good_until')}</label><input type="date" id="f-until" value="${item.goodUntil}"></div>
-   </div>
 
    
     <div class="toggle-row">
