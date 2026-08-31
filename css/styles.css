@@ -39,8 +39,7 @@ input,textarea{font-family:inherit;}
 .app-shell{
   width:100%;
   max-width:var(--max-width);
-  height:100vh;
-  height:100dvh;
+  height:100vhd;
   background:var(--frost);
   position:relative;
   overflow:hidden;
