@@ -214,13 +214,33 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01e
 .field label{
   display:block; font-size:12.5px; font-weight:700; color:var(--fog); text-transform:uppercase;
   letter-spacing:0.05em; margin-bottom:7px;
-  width:95%;
 }
+
+
+
 .app-shell.rtl .field label{ letter-spacing:0; text-transform:none; }
 .field input[type=text], .field input[type=date], .field input[type=datetime-local], .field textarea{
   width:100%; padding:13px 14px; border-radius:13px; border:1.5px solid var(--line); font-size:15.5px;
   color:var(--kale); background:#fff;
 }
+
+.field input[type="date"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+
+  padding: 13px 14px;
+
+  border-radius: 13px;
+  border: 1.5px solid var(--line);
+
+  font-size: 15.5px;
+  color: var(--kale);
+  background: #fff;
+
+  box-sizing: border-box;
+}
+
 .field textarea{resize:vertical; min-height:70px; line-height:1.4;}
 .field input:focus, .field textarea:focus{outline:2px solid var(--mint); border-color:var(--mint);}
 
