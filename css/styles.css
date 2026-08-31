@@ -52,7 +52,15 @@ input,textarea{font-family:inherit;}
 
 /* Tabbed screen: sticky header, scrollable body, sticky footer nav */
 .app-flex{ display:flex; flex-direction:column; flex:1; min-height:0; }
-.app-header{ flex-shrink:0; padding:10px 18px 0 18px; }
+.app-header{
+  flex-shrink:0;
+  padding:10px 18px 0 18px;
+  position:sticky;
+  top:0;
+  background:var(--frost);
+  z-index:100;
+  box-shadow: 0 2px 8px rgba(22,56,50,0.06);
+}
 .app-scroll{
   flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
   padding:0 18px 24px 18px;
@@ -186,7 +194,7 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01e
 
 /* ---------- Floating add button ---------- */
 .fab{
-  position:absolute; right:20px; bottom:96px; width:58px; height:58px; border-radius:50%;
+  position:fixed; right:20px; bottom:96px; width:58px; height:58px; border-radius:50%;
   background:var(--mint); color:#fff; border:none; font-size:28px; font-weight:400; line-height:1;
   display:flex; align-items:center; justify-content:center; box-shadow:0 10px 22px rgba(79,182,168,0.45);
   cursor:pointer; z-index:30;
@@ -197,10 +205,18 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01e
 /* ---------- Bottom nav: real flex footer, not absolutely positioned ---------- */
 .tabbar{
   flex-shrink:0;
-  height:82px; background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(14px); border-top:1px solid var(--line); display:flex; align-items:flex-start;
-  justify-content:space-around; padding-top:10px;
+  height:82px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-around;
+  padding-top:10px;
   padding-bottom: env(safe-area-inset-bottom);
+  position:sticky;
+  bottom:0;
+  z-index:99;
 }
 .tab-btn{
   background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px;
