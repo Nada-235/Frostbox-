@@ -35,6 +35,7 @@ function reminderBannerHtml(){
 
 function filtersHtml(){
   return `
+  <div class="container-chip">
   <div class="seg-control">
     <button class="seg-btn ${state.locationFilter === 'all' ? 'active' : ''}" data-loc="all">${t('filter_all')}</button>
     <button class="seg-btn ${state.locationFilter === 'fridge' ? 'active' : ''}" data-loc="fridge">🧊 ${t('filter_fridge')}</button>
@@ -43,6 +44,7 @@ function filtersHtml(){
   <div class="chip-row" data-scroll-key="fridge-cat-filter">
     <button class="cat-chip ${state.categoryFilter === 'all' ? 'selected' : ''}" data-catf="all">${t('filter_all')}</button>
     ${FOOD_CATEGORIES.map(c => `<button class="cat-chip ${state.categoryFilter === c.id ? 'selected' : ''}" data-catf="${c.id}">${c.icon} ${catLabel(c)}</button>`).join('')}
+  </div>
   </div>`;
 }
 
