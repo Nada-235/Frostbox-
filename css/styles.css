@@ -332,3 +332,110 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01e
   opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; white-space:nowrap;
 }
 .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+
+/* ---------- App shell ---------- */
+
+.app-shell {
+  width: 100%;
+  max-width: 460px;
+
+  height: 100vh;
+  height: 100dvh;
+
+  background: var(--frost);
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow: var(--shadow);
+
+  padding-top: max(
+    16px,
+    env(safe-area-inset-top)
+  );
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ---------- Fixed header ---------- */
+
+.app-header {
+  flex: 0 0 auto;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 10px 18px 0;
+}
+
+
+/* ---------- Scrollable screen ---------- */
+
+.screen-container {
+  flex: 1 1 auto;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+
+  box-sizing: border-box;
+}
+
+
+/* ---------- Screen content ---------- */
+
+.screen-content {
+  width: 100%;
+  min-width: 0;
+
+  padding: 20px 18px 40px;
+
+  box-sizing: border-box;
+
+  animation: fadeIn .25s ease;
+}
+
+
+/* ---------- Fixed bottom navigation ---------- */
+
+.tabbar {
+  flex: 0 0 auto;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 82px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.92
+  );
+
+  backdrop-filter: blur(14px);
+
+  border-top: 1px solid var(--line);
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-around;
+
+  padding-top: 10px;
+
+  padding-bottom:
+    env(safe-area-inset-bottom);
+
+  box-sizing: border-box;
+}
