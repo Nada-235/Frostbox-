@@ -14,7 +14,7 @@ export function render(){
   };
   const isEdit = !!item.id;
   return `
-
+<div>
     <div class="back-row">
       <button class="back-btn" id="back-btn">${backArrow()}</button>
       <h2 style="font-size:19px;">${isEdit ? t('edit_item') : t('add_item')}</h2>
@@ -59,6 +59,7 @@ export function render(){
       <button class="btn btn-ghost" id="toshop-btn">${t('btn_add_to_shopping')}</button>
       <button class="btn btn-danger" id="delete-btn">${t('btn_delete')}</button>
     </div>` : ''}
+  </div>`;
   </div>`;
 }
 
