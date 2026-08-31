@@ -48,6 +48,8 @@ export function render(){
       <input type="datetime-local" id="f-reminder" value="${item.reminderAt || defaultReminderAt(item.goodUntil)}">
     </div>
     <div class="field"><label>${t('label_note')}</label><textarea id="f-note" placeholder="${t('note_placeholder')}">${escapeHtml(item.note)}</textarea></div>
+  </div>
+  <div class="form-footer">
     <div class="btn-row">
       <button class="btn btn-ghost" id="cancel-btn">${t('btn_cancel')}</button>
       <button class="btn btn-primary" id="save-btn">${isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')}</button>
