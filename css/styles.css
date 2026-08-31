@@ -157,6 +157,11 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
 .container-chip {
   width: 100%;
   background: #EAF2F0;
+    scrollbar-width:none;
+  position:sticky;
+  top:48px;
+  z-index:99;
+
 }
 
 .seg-control{
@@ -179,10 +184,6 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
   padding-bottom:6px;
   margin-bottom:16px;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  position:sticky;
-  top:48px;
-  z-index:40;
   background:var(--glass);
   backdrop-filter:blur(8px);
   border-bottom: 1px solid var(--line);
