@@ -11,6 +11,7 @@
   --berry:#E1503F;
   --fog:#7C918D;
   --line:#E4EEEC;
+  --card-border: 1.5px solid var(--line);
 
   /* Shadows & surfaces */
   --shadow-lg: 0 8px 24px rgba(22,56,50,0.08);
@@ -113,7 +114,7 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01e
   flex-shrink:0;
 }
 .ob-btn:active{transform:scale(0.97);}
-.ob-primary{background:var(--kale); color:var(--card);}
+.ob-primary{background:var(--kale); color:var(--card);} 
 .ob-secondary{background:var(--card); color:var(--kale); border:var(--card-border);} 
 .join-box{margin-top:10px; width:100%; max-width:300px; display:none;}
 .join-box.show{display:block;}
