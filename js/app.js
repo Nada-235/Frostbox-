@@ -4,12 +4,16 @@ import { getMe, getLang } from './local-storage.js';
 import { initFirebase } from './firebase-service.js';
 import { resumeHousehold } from './household-session.js';
 import { checkReminders } from './reminders.js';
+import { setStateRef } from './i18n.js';
 
 import * as setupView from './views/setup.js';
 import * as onboardingView from './views/onboarding.js';
 import * as mainView from './views/main.js';
 import * as itemFormView from './views/item-form.js';
 import * as shopItemFormView from './views/shop-item-form.js';
+
+// Initialize i18n with state reference
+setStateRef(state);
 
 const SCREENS = {
   setup: setupView,
