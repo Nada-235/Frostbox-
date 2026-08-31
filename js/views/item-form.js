@@ -14,11 +14,13 @@ export function render(){
   };
   const isEdit = !!item.id;
   return `
-  <div class="screen">
+
     <div class="back-row">
       <button class="back-btn" id="back-btn">${backArrow()}</button>
       <h2 style="font-size:19px;">${isEdit ? t('edit_item') : t('add_item')}</h2>
     </div>
+
+      <div class="screen">
     <div class="photo-picker" id="photo-picker">
       ${item.photo ? `<img src="${item.photo}">` : `<span class="ic">📷</span><span>${t('add_photo')}</span>`}
     </div>
