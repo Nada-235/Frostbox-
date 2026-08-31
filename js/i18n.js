@@ -1,5 +1,3 @@
-import { state } from './state.js';
-
 export const STRINGS = {
   en: {
     tagline: "Know what's in your fridge, before it's too late. Track it, share it, never waste it.",
@@ -96,7 +94,7 @@ export const STRINGS = {
     join_fridge_confirm: "انضمام",
     code_not_found: "لم نتمكن من العثور على هذا الرمز. تأكد منه وحاول مرة أخرى.",
     enter_code_first: "أدخل الرمز أولاً",
-    setup_tagline: "أوشكنا على الانتهاء. يحتاج هذا التطبيق للاتصال بمشروع Firebase المجاني الخاص بك قبل أن يتمكن من حفظ أو مشاركة قائمة ثلاجتك.",
+    setup_tagline: "أوشكنا على الانتهاء. يحتاج هذا التطبيق للاتصال بمشروع Firebase المجاني الخاص بك قبل أن يتمكن من حفظ أو مشاركة قائمة الثلاجة الخاصة بك.",
     setup_quick: "إعداد سريع",
     setup_step1: "أنشئ مشروعًا مجانيًا على firebase.google.com",
     setup_step2: "فعّل خدمة Firestore Database له",
@@ -160,7 +158,7 @@ export const STRINGS = {
     members_label: "الأعضاء",
     notifications_label: "الإشعارات",
     enable_alerts: "تفعيل تنبيهات انتهاء الصلاحية",
-    alerts_note: "تعمل التنبيهات أثناء فتح فروستبوكس. أبقِه مفتوحًا في نافذة، أو راجع شريط التذكير في تبويب الثلاجة حتى لا يفوتك شيء.",
+    alerts_note: "تعمل التنبيهات أثناء فتح فروستبوكس. أبقِه مفتوحًا في نافذة، أو راجع شريط التذكير في تبويب الثلاجة حتى لا يفوت شيء.",
     language_label: "اللغة",
     leave_household_btn: "مغادرة هذه الأسرة",
     confirm_leave: "هل تريد مغادرة هذه الأسرة؟ يمكنك الانضمام مرة أخرى في أي وقت باستخدام الرمز.",
@@ -177,8 +175,15 @@ export const STRINGS = {
   }
 };
 
+let stateRef = null;
+
+export function setStateRef(state) {
+  stateRef = state;
+}
+
 export function t(key, ...args){
-  const dict = STRINGS[state.lang] || STRINGS.en;
+  const lang = stateRef ? stateRef.lang : 'en';
+  const dict = STRINGS[lang] || STRINGS.en;
   const value = (key in dict) ? dict[key] : STRINGS.en[key];
   return typeof value === 'function' ? value(...args) : value;
 }
