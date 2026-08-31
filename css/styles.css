@@ -177,7 +177,9 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
   position:sticky;
   top:48px;
   z-index:40;
-  background:var(--frost);
+  background:var(--glass);
+  backdrop-filter:blur(8px);
+  border-bottom: 1px solid var(--line);
   padding-top:8px;
 }
 .chip-row::-webkit-scrollbar{ display:none; }
