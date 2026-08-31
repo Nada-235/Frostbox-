@@ -153,6 +153,12 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
 .app-shell.rtl .banner .txt b{font-family:'Tajawal',sans-serif;}
 
 /* ---------- Segmented control & chips (shared) ---------- */
+
+.container-chip {
+  width: 100%;
+  background: #EAF2F0;
+}
+
 .seg-control{
   display:flex;
   background:#EAF2F0;
