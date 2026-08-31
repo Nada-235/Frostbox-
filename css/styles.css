@@ -157,11 +157,10 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
 .container-chip {
   width: 100%;
   background: #EAF2F0;
-    scrollbar-width:none;
+  scrollbar-width:none;
   position:sticky;
-  top:48px;
   z-index:99;
-
+  padding-bottom:14px;
 }
 
 .seg-control{
