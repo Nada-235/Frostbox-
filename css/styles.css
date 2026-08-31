@@ -328,6 +328,8 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
 /* ---------- Shopping list ---------- */
 .add-row{display:flex; gap:8px; margin-bottom:18px;}
 .add-row input{ flex:1; padding:13px 15px; border-radius:13px; border:1.5px solid var(--line); font-size:15px; }
+/* hide the inline add button next to the input as requested */
+.add-row > button{ display:none; }
 .add-row button{ width:48px; border-radius:13px; border:none; background:var(--mint); color:var(--card); font-size:22px; cursor:pointer; }
 .shop-row{
   display:flex; align-items:center; gap:12px; background:var(--card); border:var(--card-border);
@@ -343,6 +345,22 @@ input, textarea, select, .join-box input, .add-row input, .price-add-row input{
 .shop-name.done{color:var(--fog); text-decoration:line-through;}
 .shop-price-line{ font-size:12px; color:var(--mint-deep); font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .shop-del{background:none; border:none; color:var(--fog); font-size:17px; cursor:pointer; padding:4px; flex-shrink:0;}
+
+/* Keep category/chips visible when an item is marked done */
+.shop-row .chip,
+.shop-row .cat-chip{
+  opacity:1;
+  visibility:visible;
+}
+/* ensure sibling chips don't get struck through or dimmed when name is done */
+.shop-name.done + .chip,
+.shop-name.done ~ .chip,
+.shop-name.done + .cat-chip,
+.shop-name.done ~ .cat-chip{
+  color:inherit;
+  text-decoration:none;
+  opacity:1;
+}
 
 /* ---------- Price comparison ---------- */
 .price-row{
