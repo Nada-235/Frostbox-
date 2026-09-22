@@ -100,8 +100,8 @@ export function FridgeBody(){
   );
 
   const filters = (
-    <div className="w-full glass-tint sticky top-0 z-[99] pb-3.5 border-b border-line">
-      <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
+    <div className="-mx-3 glass-tint sticky top-0 z-[99] pb-3.5 border-b border-line">
+      <div className="flex rounded-xl p-[3px] mb-3.5">
         <SegButton active={locationFilter === 'all'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'all' })}>{t('filter_all')}</SegButton>
         <SegButton active={locationFilter === 'fridge'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'fridge' })}>
           <Refrigerator size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_fridge')}
