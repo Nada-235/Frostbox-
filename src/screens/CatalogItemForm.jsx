@@ -70,6 +70,13 @@ export function CatalogItemForm(){
   async function handleSave(){
     const trimmedName = name.trim();
     if(!trimmedName){ alert(t('name_required_alert')); return; }
+    // A place/price pair typed but not explicitly added via the "+" button
+    // would otherwise be silently discarded on save.
+    const pendingPlace = place.trim();
+    const pendingPrice = price.trim();
+    const finalPrices = (pendingPlace && pendingPrice)
+      ? [...prices, { id: uid(), place: pendingPlace, price: pendingPrice }]
+      : prices;
     setSaving(true);
     try{
       const newId = await upsertCatalogItem(state.code, {
@@ -77,7 +84,7 @@ export function CatalogItemForm(){
         photo,
         brand: brand.trim(),
         size: size.trim(),
-        prices,
+        prices: finalPrices,
       });
       if(isEdit && original.id && newId !== original.id){
         await deleteCatalogItem(state.code, original.id);

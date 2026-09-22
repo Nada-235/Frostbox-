@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { X, Check, Trash2, Plus, Camera, TrendingDown, Store } from 'lucide-react';
+import { X, Check, Trash2, Plus, Camera, TrendingDown, Store, Search } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { SHOP_CATEGORIES } from '../lib/constants.js';
@@ -30,6 +30,7 @@ export function ShopItemForm(){
   const [place, setPlace] = useState('');
   const [price, setPrice] = useState('');
   const [saving, setSaving] = useState(false);
+  const [nameFocused, setNameFocused] = useState(false);
 
   const catalog = state.data.catalog || [];
   const matchedCatalogEntry = useMemo(() => {
@@ -38,6 +39,25 @@ export function ShopItemForm(){
     const id = catalogIdFromName(trimmed);
     return catalog.find(c => c.id === id) || null;
   }, [name, catalog]);
+
+  const suggestions = useMemo(() => {
+    const q = name.trim().toLowerCase();
+    if(!q) return [];
+    return catalog
+      .filter(c => c.name.toLowerCase() !== q && c.name.toLowerCase().includes(q))
+      .sort((a, b) => {
+        const aStarts = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+        const bStarts = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+        return aStarts !== bStarts ? aStarts - bStarts : a.name.localeCompare(b.name);
+      })
+      .slice(0, 5);
+  }, [name, catalog]);
+  const showSuggestions = nameFocused && suggestions.length > 0;
+
+  function selectSuggestion(entry){
+    setName(entry.name);
+    setNameFocused(false);
+  }
 
   const comparePrices = useMemo(() => {
     const list = (matchedCatalogEntry?.prices || []).filter(p => !isNaN(parseFloat(p.price)));
@@ -93,11 +113,18 @@ export function ShopItemForm(){
     if(!trimmedName){ alert(t('name_required_alert')); return; }
     const trimmedBrand = brand.trim();
     const trimmedSize = size.trim();
+    // A place/price pair typed but not explicitly added via the "+" button
+    // would otherwise be silently discarded on save.
+    const pendingPlace = place.trim();
+    const pendingPrice = price.trim();
+    const finalPrices = (pendingPlace && pendingPrice)
+      ? [...prices, { id: uid(), place: pendingPlace, price: pendingPrice }]
+      : prices;
     const newItem = {
       id: original.id || uid(),
       name: trimmedName,
       category,
-      prices,
+      prices: finalPrices,
       photo,
       brand: trimmedBrand,
       size: trimmedSize,
@@ -111,7 +138,7 @@ export function ShopItemForm(){
         photo: photo || matchedCatalogEntry?.photo || null,
         brand: trimmedBrand || matchedCatalogEntry?.brand || '',
         size: trimmedSize || matchedCatalogEntry?.size || '',
-        prices: mergePrices(matchedCatalogEntry?.prices, prices),
+        prices: mergePrices(matchedCatalogEntry?.prices, finalPrices),
       });
       dispatch({ type: 'SET_EDITING_SHOP_ITEM', item: null });
       dispatch({ type: 'SET_TAB', tab: 'shopping' });
@@ -164,7 +191,37 @@ export function ShopItemForm(){
       <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
 
       <Field label={t('label_name')}>
-        <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} />
+        <div className="relative">
+          <input
+            type="text" value={name} onChange={e => setName(e.target.value)}
+            onFocus={() => setNameFocused(true)} onBlur={() => setNameFocused(false)}
+            placeholder={t('name_placeholder_shop')} className={inputCls}
+            autoComplete="off"
+          />
+          {showSuggestions && (
+            <div className="absolute left-0 right-0 top-full mt-1.5 bg-card border border-line rounded-2xl shadow-[var(--shadow-app)] z-20 overflow-hidden">
+              {suggestions.map(s => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => selectSuggestion(s)}
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-start bg-transparent border-0 border-b border-line last:border-b-0 cursor-pointer active:bg-frost"
+                >
+                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-track flex items-center justify-center">
+                    {s.photo ? <img src={s.photo} alt="" className="w-full h-full object-cover" /> : <Search size={13} strokeWidth={2} className="text-fog" />}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">{s.name}</div>
+                    {(s.brand || s.size) && (
+                      <div className="text-xs text-fog whitespace-nowrap overflow-hidden text-ellipsis">{[s.brand, s.size].filter(Boolean).join(' · ')}</div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </Field>
 
       <Field label={t('label_category')}>
