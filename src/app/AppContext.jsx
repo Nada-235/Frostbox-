@@ -10,7 +10,7 @@ const initialState = {
   myName: null,
   lang: 'en',
   theme: 'sage',
-  data: { items: [], shopping: [], members: [] },
+  data: { items: [], shopping: [], members: [], catalog: [] },
   tab: 'fridge',           // 'fridge' | 'shopping' | 'household'
   screen: 'loading',       // 'loading' | 'setup' | 'onboard' | 'main' | 'add' | 'shopadd'
   joinBoxOpen: false,
@@ -50,6 +50,8 @@ function reducer(state, action){
       return { ...state, data: { ...state.data, items: action.items }, synced: true };
     case 'SET_SHOPPING':
       return { ...state, data: { ...state.data, shopping: action.shopping } };
+    case 'SET_CATALOG':
+      return { ...state, data: { ...state.data, catalog: action.catalog } };
     case 'SET_DUE_REMINDERS':
       return { ...state, dueReminders: action.list };
     case 'MARK_REMINDERS_FIRED': {

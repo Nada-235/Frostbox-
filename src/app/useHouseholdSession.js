@@ -20,6 +20,7 @@ export function useHouseholdSession(){
       onMembers: members => dispatch({ type: 'SET_MEMBERS', members }),
       onItems: items => dispatch({ type: 'SET_ITEMS', items }),
       onShopping: shopping => dispatch({ type: 'SET_SHOPPING', shopping }),
+      onCatalog: catalog => dispatch({ type: 'SET_CATALOG', catalog }),
     });
   }, [dispatch]);
 

@@ -4,9 +4,10 @@ import {
   collection, onSnapshot, arrayUnion, enableIndexedDbPersistence
 } from 'firebase/firestore';
 import { firebaseConfig } from './firebase-config.js';
+import { catalogIdFromName } from './utils.js';
 
 let db = null;
-const unsubscribers = { household: null, items: null, shopping: null };
+const unsubscribers = { household: null, items: null, shopping: null, catalog: null };
 
 export function isConfigured(){
   return !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY';
@@ -34,7 +35,7 @@ export async function joinHouseholdAsMember(code, memberName){
 }
 
 /** Wires up real-time listeners. Callbacks receive plain arrays/objects, no Firestore types leak out. */
-export function subscribeToHousehold(code, { onMembers, onItems, onShopping }){
+export function subscribeToHousehold(code, { onMembers, onItems, onShopping, onCatalog }){
   unsubscribers.household = onSnapshot(doc(db, 'households', code), snap => {
     onMembers((snap.data() || {}).members || []);
   });
@@ -43,6 +44,9 @@ export function subscribeToHousehold(code, { onMembers, onItems, onShopping }){
   });
   unsubscribers.shopping = onSnapshot(collection(db, 'households', code, 'shopping'), snap => {
     onShopping(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  });
+  unsubscribers.catalog = onSnapshot(collection(db, 'households', code, 'catalog'), snap => {
+    onCatalog(snap.docs.map(d => ({ id: d.id, ...d.data() })));
   });
 }
 export function unsubscribeFromHousehold(){
@@ -78,4 +82,12 @@ export async function toggleShoppingItem(code, id, checked){
 }
 export async function deleteShoppingItem(code, id){
   await deleteDoc(doc(db, 'households', code, 'shopping', id));
+}
+
+/* ---- Item catalog (per-household product records, reused for autofill) ---- */
+export async function upsertCatalogItem(code, item){
+  const { name, ...rest } = item;
+  const id = catalogIdFromName(name);
+  await setDoc(doc(db, 'households', code, 'catalog', id), { name, ...rest, updatedAt: Date.now() }, { merge: true });
+  return id;
 }

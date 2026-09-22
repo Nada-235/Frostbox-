@@ -27,3 +27,29 @@ export function defaultReminderAt(goodUntil){
   const pad = n => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
+
+/**
+ * Deterministic catalog doc id from an item name — normalizes casing/
+ * whitespace so "Milk", "milk", " Milk " all resolve to the same catalog
+ * entry, letting saves upsert with a plain setDoc(..., {merge:true})
+ * instead of a separate find-by-name query.
+ */
+export function catalogIdFromName(name){
+  const slug = (name || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9؀-ۿ]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return slug || uid();
+}
+
+/** Merges a new set of {place,price} entries into an existing price history — same place updates in place, a new one is appended. */
+export function mergePrices(existing, incoming){
+  const merged = (existing || []).slice();
+  (incoming || []).forEach(next => {
+    const i = merged.findIndex(p => (p.place || '').trim().toLowerCase() === (next.place || '').trim().toLowerCase());
+    if(i >= 0) merged[i] = { ...merged[i], price: next.price };
+    else merged.push(next);
+  });
+  return merged;
+}
