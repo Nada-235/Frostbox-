@@ -58,7 +58,7 @@ export function Main(){
           <Body />
         </div>
         <div
-          className="shrink-0 h-[82px] glass-tint border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
+          className="shrink-0 min-h-[82px] glass-tint border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <TabButton icon={Refrigerator} label={t('tab_fridge')} active={state.tab === 'fridge'} onClick={() => dispatch({ type: 'SET_TAB', tab: 'fridge' })} />

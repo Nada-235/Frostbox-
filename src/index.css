@@ -37,11 +37,19 @@
 
   /* #app is the actual flex item of body (the React root div in index.html
      has no Tailwind classes of its own) — without an explicit width here it
-     sizes to its widest descendant's content instead of the viewport. */
+     sizes to its widest descendant's content instead of the viewport. Also
+     give it the same height source as the shell div inside it (which sets
+     height: var(--app-height) explicitly, not a stretch/100%): if #app's
+     own height came from flex-stretch instead, it could compute to a
+     slightly different value than --app-height on some mobile browsers,
+     leaving a gap below the shell (and whatever sticks to its bottom edge,
+     like the tab bar) instead of the shell filling #app exactly.
+   */
   #app {
     width: 100%;
     max-width: 460px;
     min-width: 0;
+    height: var(--app-height, 100dvh);
   }
 
   /* Derived, theme-reactive shadows/gradients — color-mix() against the
