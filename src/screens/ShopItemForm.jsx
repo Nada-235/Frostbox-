@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X, Check, Trash2, Plus } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { SHOP_CATEGORIES } from '../lib/constants.js';
@@ -76,11 +77,13 @@ export function ShopItemForm(){
   const sortedPrices = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
   const bestId = sortedPrices[0]?.id;
 
+  const BackIcon = backArrow(lang);
+
   return (
     <>
-      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 bg-mint z-[100]">
-        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-base text-kale shrink-0">
-          {backArrow(lang)}
+      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 glass-brand z-[100]">
+        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-kale shrink-0">
+          <BackIcon size={18} strokeWidth={2.25} />
         </button>
         <h2 className={`text-[19px] m-0 text-card ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
       </div>
@@ -92,8 +95,8 @@ export function ShopItemForm(){
       <Field label={t('label_category')}>
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
           {SHOP_CATEGORIES.map(c => (
-            <CatChip key={c.id} selected={category === c.id} color={c.color} onClick={() => setCategory(c.id)}>
-              {c.icon} {catLabel(c, lang)}
+            <CatChip key={c.id} selected={category === c.id} color={c.color} icon={c.icon} onClick={() => setCategory(c.id)}>
+              {catLabel(c, lang)}
             </CatChip>
           ))}
         </div>
@@ -115,7 +118,9 @@ export function ShopItemForm(){
                   )}
                 </div>
                 <div className="force-mono font-semibold text-sm shrink-0">{String(p.price)}</div>
-                <button onClick={() => removePrice(p.id)} className="bg-transparent border-none text-fog text-[15px] cursor-pointer p-0.5 shrink-0">✕</button>
+                <button onClick={() => removePrice(p.id)} className="bg-transparent border-none text-fog cursor-pointer p-0.5 shrink-0 flex items-center justify-center">
+                  <X size={14} strokeWidth={2.25} />
+                </button>
               </div>
             ))}
           </div>
@@ -131,14 +136,16 @@ export function ShopItemForm(){
             placeholder={t('price_placeholder')}
             className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
           />
-          <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none text-xl cursor-pointer">+</button>
+          <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
+            <Plus size={20} strokeWidth={2.25} />
+          </button>
         </div>
       </Field>
 
       <div className="flex gap-2.5">
-        <IconButton onClick={goBack} icon="✕" label={t('btn_cancel')} variant="ghost" />
-        {isEdit && <IconButton onClick={handleDelete} icon="🗑️" label={t('btn_delete')} variant="danger" />}
-        <IconButton onClick={handleSave} disabled={saving} icon="✓" label={t('btn_save_item')} variant="primary" grow />
+        <IconButton onClick={goBack} icon={X} label={t('btn_cancel')} variant="ghost" />
+        {isEdit && <IconButton onClick={handleDelete} icon={Trash2} label={t('btn_delete')} variant="danger" />}
+        <IconButton onClick={handleSave} disabled={saving} icon={Check} label={t('btn_save_item')} variant="primary" grow />
       </div>
       </div>
     </>

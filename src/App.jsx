@@ -3,7 +3,7 @@ import { AppProvider, useAppState, useAppDispatch } from './app/AppContext.jsx';
 import { useHouseholdSession } from './app/useHouseholdSession.js';
 import { useReminders } from './app/useReminders.js';
 import { useViewportHeight } from './app/useViewportHeight.js';
-import { getMe, getLang } from './lib/localStorage.js';
+import { getMe, getLang, getTheme } from './lib/localStorage.js';
 import { initFirebase } from './lib/firebase.js';
 import { Setup } from './screens/Setup.jsx';
 import { Onboarding } from './screens/Onboarding.jsx';
@@ -30,6 +30,7 @@ function Shell(){
   useEffect(() => {
     const lang = getLang();
     dispatch({ type: 'SET_LANG', lang });
+    dispatch({ type: 'SET_THEME', theme: getTheme() });
 
     if(!initFirebase()){
       dispatch({ type: 'SET_SCREEN', screen: 'setup' });
@@ -45,6 +46,10 @@ function Shell(){
     // Runs once on mount, mirroring the original app.js init() sequence.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = state.theme;
+  }, [state.theme]);
 
   const isRtl = state.lang === 'ar';
   const Screen = SCREENS[state.screen];

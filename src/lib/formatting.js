@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { EN_MONTHS, AR_MONTHS } from './constants.js';
 import { t } from './i18n.js';
 
@@ -15,8 +16,9 @@ export function fmtDate(dateStr, lang){
     : `${months[dt.getMonth()]} ${dt.getDate()}`;
 }
 
+/** Returns the Lucide icon component for "back", mirrored for RTL. */
 export function backArrow(lang){
-  return lang === 'ar' ? '→' : '←';
+  return lang === 'ar' ? ChevronRight : ChevronLeft;
 }
 
 export function catLabel(cat, lang){

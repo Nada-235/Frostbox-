@@ -14,8 +14,11 @@ export function Switch({ on, onToggle }){
   );
 }
 
-/** color: optional hex used for the selected fill (per-category accent). Falls back to a neutral dark fill. */
-export function CatChip({ selected, onClick, color, children }){
+/**
+ * icon: optional Lucide icon component. color: optional hex used for the
+ * selected fill (per-category accent). Falls back to a neutral dark fill.
+ */
+export function CatChip({ selected, onClick, color, icon: Icon, children }){
   return (
     <button
       type="button"
@@ -25,6 +28,7 @@ export function CatChip({ selected, onClick, color, children }){
       }`}
       style={selected ? { background: color || 'var(--color-kale)' } : undefined}
     >
+      {Icon && <Icon size={15} strokeWidth={2.25} className="shrink-0" />}
       {children}
     </button>
   );
@@ -44,15 +48,16 @@ export function SegButton({ active, onClick, children }){
   );
 }
 
-export function SectionLabel({ icon, color, children }){
+/** icon: optional Lucide icon component, tinted by `color` (per-category) or a neutral default. */
+export function SectionLabel({ icon: Icon, color, children }){
   return (
     <div className="text-xs font-bold uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case text-fog mt-[22px] mb-2.5 flex items-center gap-2">
-      {icon && (
+      {Icon && (
         <span
-          className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] shrink-0"
-          style={{ background: color ? `${color}26` : 'var(--color-track)' }}
+          className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+          style={{ background: color ? `${color}26` : 'var(--color-track)', color: color || 'var(--color-fog)' }}
         >
-          {icon}
+          <Icon size={12} strokeWidth={2.5} />
         </span>
       )}
       {children}
@@ -67,7 +72,7 @@ const ICON_BTN_VARIANTS = {
 };
 
 /** Compact icon-only action button (form footers) — label is used for a11y (aria-label/title), not shown. */
-export function IconButton({ onClick, icon, label, variant = 'ghost', disabled, grow }){
+export function IconButton({ onClick, icon: Icon, label, variant = 'ghost', disabled, grow }){
   return (
     <button
       type="button"
@@ -75,19 +80,20 @@ export function IconButton({ onClick, icon, label, variant = 'ghost', disabled, 
       disabled={disabled}
       aria-label={label}
       title={label}
-      className={`h-11 rounded-2xl text-lg flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-60 ${
+      className={`h-11 rounded-2xl flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-60 ${
         ICON_BTN_VARIANTS[variant]
       } ${grow ? 'flex-1' : 'w-11 shrink-0'}`}
     >
-      <span aria-hidden="true">{icon}</span>
+      <Icon size={19} strokeWidth={2.25} aria-hidden="true" />
     </button>
   );
 }
 
-export function EmptyState({ emoji, children }){
+/** icon: Lucide icon component, shown large and muted above the message. */
+export function EmptyState({ icon: Icon, children }){
   return (
     <div className="text-center py-[60px] px-5 text-fog">
-      <div className="text-[44px] mb-3.5">{emoji}</div>
+      <Icon size={44} strokeWidth={1.5} className="mx-auto mb-3.5 opacity-70" />
       <p className="text-[14.5px] leading-normal max-w-[230px] mx-auto">{children}</p>
     </div>
   );

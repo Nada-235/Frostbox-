@@ -1,3 +1,4 @@
+import { Refrigerator, Snowflake, AlarmClock, SearchX } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { FOOD_CATEGORIES, catById } from '../../lib/constants.js';
@@ -16,6 +17,7 @@ function ItemCard({ item, lang, onOpen }){
   const chip = chipFor(daysUntil(item.goodUntil), lang);
   const category = catById(FOOD_CATEGORIES, item.category || 'other');
   const isFreezer = (item.location || 'fridge') === 'freezer';
+  const CategoryIcon = category.icon;
 
   return (
     <div
@@ -23,12 +25,14 @@ function ItemCard({ item, lang, onOpen }){
       className="bg-card rounded-[18px] p-3 flex items-center gap-3 mb-2.5 shadow-[var(--shadow-app)] cursor-pointer border border-line"
     >
       <div
-        className="w-[52px] h-[52px] rounded-2xl shrink-0 flex items-center justify-center text-2xl overflow-hidden relative"
-        style={{ background: item.photo ? undefined : `${category.color}22` }}
+        className="w-[52px] h-[52px] rounded-2xl shrink-0 flex items-center justify-center overflow-hidden relative"
+        style={{ background: item.photo ? undefined : `${category.color}22`, color: item.photo ? undefined : category.color }}
       >
-        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : category.icon}
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <CategoryIcon size={22} strokeWidth={1.75} />}
         {isFreezer && (
-          <span className="absolute -bottom-[3px] end-[-3px] w-[18px] h-[18px] rounded-full bg-card border border-line flex items-center justify-center text-[10px]">❄️</span>
+          <span className="absolute -bottom-[3px] end-[-3px] w-[18px] h-[18px] rounded-full bg-card border border-line flex items-center justify-center text-mint-deep">
+            <Snowflake size={11} strokeWidth={2.25} />
+          </span>
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -86,7 +90,7 @@ export function FridgeBody(){
       className="text-card rounded-2xl px-4 py-3.5 mb-4 flex items-center gap-2.5 shadow-[var(--shadow-banner)]"
       style={{ background: 'var(--gradient-banner)' }}
     >
-      <span className="text-xl">⏰</span>
+      <AlarmClock size={20} strokeWidth={2} className="shrink-0" />
       <div className="text-[13.5px] leading-tight font-medium">
         <b className={`block ${lang === 'ar' ? 'font-arabic' : 'font-display'} text-[14.5px] mb-px`}>{t('banner_title')}</b>
         {t('reminder_notification_body', dueReminders[0].name)}
@@ -96,17 +100,21 @@ export function FridgeBody(){
   );
 
   const filters = (
-    <div className="w-full bg-frost sticky top-0 z-[99] pb-3.5 border-b border-line">
+    <div className="w-full glass-tint sticky top-0 z-[99] pb-3.5 border-b border-line">
       <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
         <SegButton active={locationFilter === 'all'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'all' })}>{t('filter_all')}</SegButton>
-        <SegButton active={locationFilter === 'fridge'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'fridge' })}>🧊 {t('filter_fridge')}</SegButton>
-        <SegButton active={locationFilter === 'freezer'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'freezer' })}>❄️ {t('filter_freezer')}</SegButton>
+        <SegButton active={locationFilter === 'fridge'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'fridge' })}>
+          <Refrigerator size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_fridge')}
+        </SegButton>
+        <SegButton active={locationFilter === 'freezer'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'freezer' })}>
+          <Snowflake size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_freezer')}
+        </SegButton>
       </div>
       <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
         <CatChip selected={categoryFilter === 'all'} onClick={() => dispatch({ type: 'SET_CATEGORY_FILTER', value: 'all' })}>{t('filter_all')}</CatChip>
         {FOOD_CATEGORIES.map(c => (
-          <CatChip key={c.id} selected={categoryFilter === c.id} color={c.color} onClick={() => dispatch({ type: 'SET_CATEGORY_FILTER', value: c.id })}>
-            {c.icon} {catLabel(c, lang)}
+          <CatChip key={c.id} selected={categoryFilter === c.id} color={c.color} icon={c.icon} onClick={() => dispatch({ type: 'SET_CATEGORY_FILTER', value: c.id })}>
+            {catLabel(c, lang)}
           </CatChip>
         ))}
       </div>
@@ -115,9 +123,9 @@ export function FridgeBody(){
 
   let sections;
   if(!totalCount){
-    sections = <EmptyState emoji="🧊">{t('empty_fridge')}</EmptyState>;
+    sections = <EmptyState icon={Refrigerator}>{t('empty_fridge')}</EmptyState>;
   } else if(!items.length){
-    sections = <EmptyState emoji="🔍">{t('empty_filtered')}</EmptyState>;
+    sections = <EmptyState icon={SearchX}>{t('empty_filtered')}</EmptyState>;
   } else {
     sections = FOOD_CATEGORIES.map(category => {
       const inCategory = items

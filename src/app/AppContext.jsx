@@ -9,6 +9,7 @@ const initialState = {
   code: null,
   myName: null,
   lang: 'en',
+  theme: 'sage',
   data: { items: [], shopping: [], members: [] },
   tab: 'fridge',           // 'fridge' | 'shopping' | 'household'
   screen: 'loading',       // 'loading' | 'setup' | 'onboard' | 'main' | 'add' | 'shopadd'
@@ -21,10 +22,11 @@ const initialState = {
   dueReminders: [],
 };
 
-function signedOutState(lang){
+function signedOutState(lang, theme){
   return {
     ...initialState,
     lang,
+    theme,
     screen: 'onboard',
   };
 }
@@ -32,6 +34,7 @@ function signedOutState(lang){
 function reducer(state, action){
   switch(action.type){
     case 'SET_LANG': return { ...state, lang: action.lang };
+    case 'SET_THEME': return { ...state, theme: action.theme };
     case 'SET_SCREEN': return { ...state, screen: action.screen };
     case 'SET_TAB': return { ...state, tab: action.tab };
     case 'SET_JOIN_BOX_OPEN': return { ...state, joinBoxOpen: action.open };
@@ -60,7 +63,7 @@ function reducer(state, action){
         },
       };
     }
-    case 'RESET': return signedOutState(action.lang);
+    case 'RESET': return signedOutState(action.lang, state.theme);
     default: return state;
   }
 }

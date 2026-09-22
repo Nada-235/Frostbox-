@@ -5,6 +5,7 @@
  */
 const ME_KEY = 'frostbox_me';
 const LANG_KEY = 'frostbox_lang';
+const THEME_KEY = 'frostbox_theme';
 
 export function getMe(){
   try{ return JSON.parse(localStorage.getItem(ME_KEY) || 'null'); }
@@ -15,3 +16,6 @@ export function clearMe(){ localStorage.removeItem(ME_KEY); }
 
 export function getLang(){ return localStorage.getItem(LANG_KEY) || 'en'; }
 export function setLang(lang){ localStorage.setItem(LANG_KEY, lang); }
+
+export function getTheme(){ return localStorage.getItem(THEME_KEY) || 'sage'; }
+export function setTheme(theme){ localStorage.setItem(THEME_KEY, theme); }

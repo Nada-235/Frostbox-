@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { Check } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { setLang } from '../../lib/localStorage.js';
 import { shareHouseholdCode } from '../../lib/share.js';
 import { useHouseholdSession } from '../../app/useHouseholdSession.js';
+import { setTheme as persistTheme } from '../../lib/localStorage.js';
+import { THEMES } from '../../lib/themes.js';
 import { SectionLabel, Switch, SegButton } from '../../components/ui.jsx';
 
 const AVATAR_COLORS = ['#7C5CFC', '#FF5470', '#06D6A0', '#F59E0B', '#EC4899', '#3B82F6'];
@@ -39,6 +42,11 @@ export function HouseholdBody(){
   function changeLang(lang){
     setLang(lang);
     dispatch({ type: 'SET_LANG', lang });
+  }
+
+  function changeTheme(themeId){
+    persistTheme(themeId);
+    dispatch({ type: 'SET_THEME', theme: themeId });
   }
 
   async function toggleNotifications(){
@@ -85,6 +93,33 @@ export function HouseholdBody(){
           <div>{m}</div>
         </div>
       ))}
+
+      <SectionLabel>{t('theme_label')}</SectionLabel>
+      <div className="flex gap-3 mb-5 px-0.5">
+        {THEMES.map(theme => (
+          <button
+            key={theme.id}
+            type="button"
+            onClick={() => changeTheme(theme.id)}
+            aria-label={theme.name}
+            title={theme.name}
+            className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer"
+          >
+            <span
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
+              style={{
+                background: theme.swatch,
+                boxShadow: state.theme === theme.id
+                  ? `0 0 0 2px var(--color-card), 0 0 0 4px ${theme.swatch}`
+                  : '0 1px 3px rgba(0,0,0,0.2)',
+              }}
+            >
+              {state.theme === theme.id && <Check size={16} strokeWidth={3} className="text-card" />}
+            </span>
+            <span className="text-[11px] font-medium text-fog">{theme.name}</span>
+          </button>
+        ))}
+      </div>
 
       <SectionLabel>{t('language_label')}</SectionLabel>
       <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">

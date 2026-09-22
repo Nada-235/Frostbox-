@@ -2,7 +2,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* Sage & cream palette: 386641 / 6A994E / A7C957 / F2E8CF / BC4749 */
+  /* Default theme: Sage & cream — 386641 / 6A994E / A7C957 / F2E8CF / BC4749.
+     Other themes override these same custom properties under [data-theme="…"]
+     below, so every utility that references var(--color-*) re-themes for free. */
   --color-frost: #FAF6E9;
   --color-card: #FFFFFF;
   --color-kale: #283618;
@@ -19,20 +21,13 @@
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-arabic: 'Tajawal', 'Inter', sans-serif;
-
-  --shadow-app: 0 8px 28px rgba(40,54,24,0.16);
-  --shadow-sm: 0 2px 8px rgba(40,54,24,0.08);
-  --shadow-fab: 0 10px 24px rgba(106,153,78,0.5);
-  --shadow-banner: 0 6px 18px rgba(188,71,73,0.35);
-  --gradient-brand: linear-gradient(135deg, #6A994E, #386641);
-  --gradient-banner: linear-gradient(135deg, #BC4749, #9C3A3C);
 }
 
 @layer base {
   * { -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    background: linear-gradient(160deg, #FAF6E9 0%, #F1ECDC 100%);
+    background: linear-gradient(160deg, var(--color-frost) 0%, var(--color-track) 100%);
     font-family: var(--font-sans);
     color: var(--color-kale);
     display: flex;
@@ -47,6 +42,43 @@
     width: 100%;
     max-width: 460px;
     min-width: 0;
+  }
+
+  /* Derived, theme-reactive shadows/gradients — color-mix() against the
+     active theme's own tokens, so these never need per-theme overrides. */
+  :root {
+    --shadow-app: 0 8px 28px color-mix(in srgb, var(--color-kale) 16%, transparent);
+    --shadow-sm: 0 2px 8px color-mix(in srgb, var(--color-kale) 8%, transparent);
+    --shadow-fab: 0 10px 24px color-mix(in srgb, var(--color-mint) 50%, transparent);
+    --shadow-banner: 0 6px 18px color-mix(in srgb, var(--color-berry) 35%, transparent);
+    --gradient-brand: linear-gradient(135deg, var(--color-mint), var(--color-mint-deep));
+    --gradient-banner: linear-gradient(135deg, var(--color-berry), color-mix(in srgb, var(--color-berry) 80%, black));
+  }
+
+  /* ---- Theme presets — pick one, see lib/themes.js for the picker list ---- */
+  [data-theme="ocean"] {
+    --color-frost: #EFF6F8; --color-card: #FFFFFF; --color-kale: #0B2E3D;
+    --color-mint: #2E86AB; --color-mint-deep: #145C7A; --color-citrus: #E6A23C;
+    --color-berry: #D64550; --color-fog: #5C7A88; --color-line: #D3E6EC;
+    --color-teal: #1B998B; --color-track: #E3EFF3;
+  }
+  [data-theme="sunset"] {
+    --color-frost: #FFF3E9; --color-card: #FFFFFF; --color-kale: #4A2511;
+    --color-mint: #E76F51; --color-mint-deep: #C9482E; --color-citrus: #E9C46A;
+    --color-berry: #9D2933; --color-fog: #8C6A56; --color-line: #F0DCC8;
+    --color-teal: #2A9D8F; --color-track: #FBE8D5;
+  }
+  [data-theme="berry"] {
+    --color-frost: #FBF0F5; --color-card: #FFFFFF; --color-kale: #3B0B2E;
+    --color-mint: #A63A6B; --color-mint-deep: #7A2350; --color-citrus: #E0A96D;
+    --color-berry: #C1495A; --color-fog: #8C6478; --color-line: #F0D9E4;
+    --color-teal: #4C8577; --color-track: #F7E3EE;
+  }
+  [data-theme="slate"] {
+    --color-frost: #F1F3F5; --color-card: #FFFFFF; --color-kale: #1F2937;
+    --color-mint: #475569; --color-mint-deep: #334155; --color-citrus: #D97706;
+    --color-berry: #DC2626; --color-fog: #64748B; --color-line: #E2E8F0;
+    --color-teal: #0D9488; --color-track: #E7EBEF;
   }
 
   /* Arabic mode: switch the whole shell to Tajawal, except spots that must
@@ -66,8 +98,22 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
 
   .glass {
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(14px);
+    background: color-mix(in srgb, var(--color-card) 88%, transparent);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+
+  /* Colorful frosted glass — tinted by the active theme's brand color. */
+  .glass-tint {
+    background: color-mix(in srgb, var(--color-mint) 14%, color-mix(in srgb, var(--color-card) 86%, transparent));
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+  }
+
+  .glass-brand {
+    background: color-mix(in srgb, var(--color-mint) 78%, transparent);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
   }
 
   .btn-brand {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Check, X, Tag, ClipboardList } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { SHOP_CATEGORIES } from '../../lib/constants.js';
@@ -14,17 +15,21 @@ function ShopRow({ item, t, color, onOpen }){
     const sorted = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     const best = sorted[0];
     const more = prices.length > 1 ? ` +${prices.length - 1} ${t('more_suffix')}` : '';
-    priceLine = <div className="text-xs text-teal font-bold mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">🏷️ {String(best.price)} · {best.place}{more}</div>;
+    priceLine = (
+      <div className="text-xs text-teal font-bold mt-0.5 flex items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis">
+        <Tag size={11} strokeWidth={2.25} className="shrink-0" /> {String(best.price)} · {best.place}{more}
+      </div>
+    );
   }
 
   return (
     <div className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-2.5">
       <button
         onClick={() => toggleShoppingItem(item.householdCode, item.id, !item.checked)}
-        className="w-[23px] h-[23px] rounded-full border-2 shrink-0 cursor-pointer flex items-center justify-center text-[13px] text-card transition-colors"
+        className="w-[23px] h-[23px] rounded-full border-2 shrink-0 cursor-pointer flex items-center justify-center text-card transition-colors"
         style={{ borderColor: color || 'var(--color-mint)', background: item.checked ? (color || 'var(--color-mint)') : 'transparent' }}
       >
-        {item.checked ? '✓' : ''}
+        {item.checked && <Check size={13} strokeWidth={3} />}
       </button>
       <div className="flex-1 min-w-0 cursor-pointer" onClick={onOpen}>
         <div className={`text-[15px] font-medium whitespace-nowrap overflow-hidden text-ellipsis ${item.checked ? 'text-fog line-through' : ''}`}>{item.name}</div>
@@ -32,9 +37,9 @@ function ShopRow({ item, t, color, onOpen }){
       </div>
       <button
         onClick={() => deleteShoppingItem(item.householdCode, item.id)}
-        className="bg-transparent border-none text-fog text-[17px] cursor-pointer p-1 shrink-0"
+        className="bg-transparent border-none text-fog cursor-pointer p-1 shrink-0 flex items-center justify-center"
       >
-        ✕
+        <X size={16} strokeWidth={2.25} />
       </button>
     </div>
   );
@@ -77,7 +82,7 @@ export function ShoppingBody(){
 
   let sections;
   if(!list.length){
-    sections = <EmptyState emoji="📝">{t('empty_shopping')}</EmptyState>;
+    sections = <EmptyState icon={ClipboardList}>{t('empty_shopping')}</EmptyState>;
   } else {
     sections = (
       <>

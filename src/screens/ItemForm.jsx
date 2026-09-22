@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Camera, Refrigerator, Snowflake, X, Check, ShoppingCart, Trash2 } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { FOOD_CATEGORIES } from '../lib/constants.js';
@@ -117,11 +118,13 @@ export function ItemForm(){
     showToast(t('toast_added_shop', original.name));
   }
 
+  const BackIcon = backArrow(lang);
+
   return (
     <>
-      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 bg-mint z-[100]">
-        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-base text-kale shrink-0">
-          {backArrow(lang)}
+      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 glass-brand z-[100]">
+        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-kale shrink-0">
+          <BackIcon size={18} strokeWidth={2.25} />
         </button>
         <h2 className={`text-[19px] m-0 text-card ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
       </div>
@@ -135,7 +138,7 @@ export function ItemForm(){
             <img src={photo} alt="" className="w-full h-full object-cover absolute inset-0" />
           ) : (
             <>
-              <span className="text-[26px]">📷</span>
+              <Camera size={26} strokeWidth={1.75} />
               <span>{t('add_photo')}</span>
             </>
           )}
@@ -149,8 +152,8 @@ export function ItemForm(){
         <Field label={t('label_category')}>
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
             {FOOD_CATEGORIES.map(c => (
-              <CatChip key={c.id} selected={category === c.id} color={c.color} onClick={() => setCategory(c.id)}>
-                {c.icon} {catLabel(c, lang)}
+              <CatChip key={c.id} selected={category === c.id} color={c.color} icon={c.icon} onClick={() => setCategory(c.id)}>
+                {catLabel(c, lang)}
               </CatChip>
             ))}
           </div>
@@ -158,8 +161,12 @@ export function ItemForm(){
 
         <Field label={t('label_storage')}>
           <div className="flex bg-frost rounded-xl p-[3px]">
-            <SegButton active={location === 'fridge'} onClick={() => setLocation('fridge')}>🧊 {t('filter_fridge')}</SegButton>
-            <SegButton active={location === 'freezer'} onClick={() => setLocation('freezer')}>❄️ {t('filter_freezer')}</SegButton>
+            <SegButton active={location === 'fridge'} onClick={() => setLocation('fridge')}>
+              <Refrigerator size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_fridge')}
+            </SegButton>
+            <SegButton active={location === 'freezer'} onClick={() => setLocation('freezer')}>
+              <Snowflake size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_freezer')}
+            </SegButton>
           </div>
         </Field>
 
@@ -194,10 +201,10 @@ export function ItemForm(){
 
       <div className="shrink-0 py-3.5 px-3 glass border-t border-line sticky bottom-0">
         <div className="flex gap-2.5">
-          <IconButton onClick={goBack} icon="✕" label={t('btn_cancel')} variant="ghost" />
-          {isEdit && <IconButton onClick={handleAddToShopping} icon="🛒" label={t('btn_add_to_shopping')} variant="ghost" />}
-          {isEdit && <IconButton onClick={handleDelete} icon="🗑️" label={t('btn_delete')} variant="danger" />}
-          <IconButton onClick={handleSave} disabled={saving} icon="✓" label={isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')} variant="primary" grow />
+          <IconButton onClick={goBack} icon={X} label={t('btn_cancel')} variant="ghost" />
+          {isEdit && <IconButton onClick={handleAddToShopping} icon={ShoppingCart} label={t('btn_add_to_shopping')} variant="ghost" />}
+          {isEdit && <IconButton onClick={handleDelete} icon={Trash2} label={t('btn_delete')} variant="danger" />}
+          <IconButton onClick={handleSave} disabled={saving} icon={Check} label={isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')} variant="primary" grow />
         </div>
       </div>
     </>
