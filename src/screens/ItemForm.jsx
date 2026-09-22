@@ -119,11 +119,11 @@ export function ItemForm(){
 
   return (
     <>
-      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 bg-frost z-[100]">
+      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-5 pb-3.5 sticky top-0 bg-mint z-[100]">
         <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-base text-kale shrink-0">
           {backArrow(lang)}
         </button>
-        <h2 className={`text-[19px] m-0 ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
+        <h2 className={`text-[19px] m-0 text-card ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pb-10">
         <button

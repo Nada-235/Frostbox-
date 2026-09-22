@@ -49,15 +49,15 @@ export function FridgeHeader(){
   return (
     <div className="flex items-center justify-between pb-4">
       <div>
-        <div className="text-[13px] text-fog font-medium flex items-center">
-          <span className="w-2 h-2 rounded-full bg-teal inline-block me-1.5 shadow-[0_0_0_3px_rgba(6,214,160,0.25)]" />
+        <div className="text-[13px] text-card/80 font-medium flex items-center">
+          <span className="w-2 h-2 rounded-full bg-card inline-block me-1.5 shadow-[0_0_0_3px_rgba(255,255,255,0.25)]" />
           {state.synced ? t('synced') : t('connecting')}
         </div>
-        <h1 className="font-display rtl:font-arabic text-2xl m-0">{t('your_fridge')}</h1>
+        <h1 className="font-display rtl:font-arabic text-2xl m-0 text-card">{t('your_fridge')}</h1>
       </div>
       <button
         onClick={() => shareHouseholdCode(state.code, state.lang)}
-        className="btn-brand force-mono text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_4px_12px_rgba(56,102,65,0.35)]"
+        className="force-mono bg-card text-mint-deep text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_4px_12px_rgba(40,54,24,0.25)]"
       >
         {state.code}
       </button>

@@ -46,8 +46,8 @@ export function ShoppingHeader(){
   return (
     <div className="flex items-center justify-between pb-4">
       <div>
-        <div className="text-[13px] text-fog font-medium">{state.code}</div>
-        <h1 className="font-display rtl:font-arabic text-2xl m-0">{t('shopping_list_title')}</h1>
+        <div className="text-[13px] text-card/80 font-medium">{state.code}</div>
+        <h1 className="font-display rtl:font-arabic text-2xl m-0 text-card">{t('shopping_list_title')}</h1>
       </div>
     </div>
   );

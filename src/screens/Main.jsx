@@ -46,7 +46,7 @@ export function Main(){
           className="flex-1 min-h-0 overflow-y-auto px-3 pb-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          <div className="pt-2.5"><Header /></div>
+          <div className="-mx-3 px-3 pt-2.5 bg-mint"><Header /></div>
           <Body />
         </div>
         <div

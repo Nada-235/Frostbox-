@@ -3,7 +3,7 @@
 
 @theme {
   /* Sage & cream palette: 386641 / 6A994E / A7C957 / F2E8CF / BC4749 */
-  --color-frost: #F2E8CF;
+  --color-frost: #FAF6E9;
   --color-card: #FFFFFF;
   --color-kale: #283618;
   --color-mint: #6A994E;
@@ -13,7 +13,7 @@
   --color-fog: #6B6B4F;
   --color-line: #E3D9B8;
   --color-teal: #4C6B2C;
-  --color-track: #EAE0C2;
+  --color-track: #F2EEDC;
 
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -32,7 +32,7 @@
   * { -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    background: linear-gradient(160deg, #F2E8CF 0%, #E3D9B8 100%);
+    background: linear-gradient(160deg, #FAF6E9 0%, #F1ECDC 100%);
     font-family: var(--font-sans);
     color: var(--color-kale);
     display: flex;
