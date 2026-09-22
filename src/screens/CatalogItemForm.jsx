@@ -3,9 +3,9 @@ import { X, Check, Trash2, Plus, Camera } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { backArrow } from '../lib/formatting.js';
-import { uid, catalogIdFromName } from '../lib/utils.js';
+import { uid, catalogIdFromName, mergePrices } from '../lib/utils.js';
 import { upsertCatalogItem, deleteCatalogItem } from '../lib/firebase.js';
-import { IconButton } from '../components/ui.jsx';
+import { IconButton, noAutofillProps } from '../components/ui.jsx';
 
 function blankItem(){
   return { id: null, name: '', photo: null, brand: '', size: '', prices: [] };
@@ -58,7 +58,7 @@ export function CatalogItemForm(){
     const p = place.trim();
     const amount = price.trim();
     if(!p || !amount) return;
-    setPrices(prev => [...prev, { id: uid(), place: p, price: amount }]);
+    setPrices(prev => mergePrices(prev, [{ id: uid(), place: p, price: amount }]));
     setPlace('');
     setPrice('');
   }
@@ -75,7 +75,7 @@ export function CatalogItemForm(){
     const pendingPlace = place.trim();
     const pendingPrice = price.trim();
     const finalPrices = (pendingPlace && pendingPrice)
-      ? [...prices, { id: uid(), place: pendingPlace, price: pendingPrice }]
+      ? mergePrices(prices, [{ id: uid(), place: pendingPlace, price: pendingPrice }])
       : prices;
     setSaving(true);
     try{
@@ -137,18 +137,18 @@ export function CatalogItemForm(){
         <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
 
         <Field label={t('label_name')}>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} />
+          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} name="fb-catalog-item-name" {...noAutofillProps} />
         </Field>
 
         <div className="flex gap-2.5">
           <div className="flex-1 min-w-0">
             <Field label={t('label_brand')}>
-              <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder={t('brand_placeholder')} className={inputCls} />
+              <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder={t('brand_placeholder')} className={inputCls} name="fb-catalog-item-brand" {...noAutofillProps} />
             </Field>
           </div>
           <div className="flex-1 min-w-0">
             <Field label={t('label_size')}>
-              <input type="text" value={size} onChange={e => setSize(e.target.value)} placeholder={t('size_placeholder')} className={inputCls} />
+              <input type="text" value={size} onChange={e => setSize(e.target.value)} placeholder={t('size_placeholder')} className={inputCls} name="fb-catalog-item-size" {...noAutofillProps} />
             </Field>
           </div>
         </div>
@@ -181,11 +181,13 @@ export function CatalogItemForm(){
               type="text" value={place} onChange={e => setPlace(e.target.value)}
               placeholder={t('place_placeholder')}
               className="flex-[1.3] min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+              name="fb-catalog-item-place" {...noAutofillProps}
             />
             <input
               type="text" value={price} onChange={e => setPrice(e.target.value)} inputMode="decimal"
               placeholder={t('price_placeholder')}
               className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+              name="fb-catalog-item-price" {...noAutofillProps}
             />
             <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
               <Plus size={20} strokeWidth={2.25} />

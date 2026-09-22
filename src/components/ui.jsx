@@ -1,5 +1,20 @@
 /** Small shared UI atoms reused across the tab/form screens. */
 
+/**
+ * Plain text fields (item/brand/place names, prices) aren't passwords,
+ * cards, or contact info — these hints keep iOS/desktop Safari from
+ * guessing otherwise and popping its AutoFill (Passwords/Cards/Contacts)
+ * suggestion bar with a colored "needs attention" outline over the field.
+ */
+export const noAutofillProps = {
+  autoComplete: 'off',
+  autoCorrect: 'off',
+  autoCapitalize: 'off',
+  spellCheck: false,
+  'data-1p-ignore': true,
+  'data-lpignore': true,
+};
+
 export function Switch({ on, onToggle }){
   return (
     <button

@@ -7,7 +7,7 @@ import { catLabel, backArrow } from '../lib/formatting.js';
 import { todayStr, defaultReminderAt, uid } from '../lib/utils.js';
 import { saveFridgeItem, deleteFridgeItem, quickAddShoppingItem } from '../lib/firebase.js';
 import { showToast } from '../lib/toast.js';
-import { CatChip, SegButton, Switch, IconButton } from '../components/ui.jsx';
+import { CatChip, SegButton, Switch, IconButton, noAutofillProps } from '../components/ui.jsx';
 
 function blankItem(){
   return {
@@ -149,7 +149,7 @@ export function ItemForm(){
         <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
 
         <Field label={t('label_name')}>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_food')} className={inputCls} />
+          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_food')} className={inputCls} name="fb-fridge-item-name" {...noAutofillProps} />
         </Field>
 
         <Field label={t('label_category')}>
@@ -198,7 +198,7 @@ export function ItemForm(){
         )}
 
         <Field label={t('label_note')}>
-          <textarea value={note} onChange={e => setNote(e.target.value)} placeholder={t('note_placeholder')} className={`${inputCls} resize-y min-h-[70px] leading-tight`} />
+          <textarea value={note} onChange={e => setNote(e.target.value)} placeholder={t('note_placeholder')} className={`${inputCls} resize-y min-h-[70px] leading-tight`} name="fb-fridge-item-note" {...noAutofillProps} />
         </Field>
       </div>
 

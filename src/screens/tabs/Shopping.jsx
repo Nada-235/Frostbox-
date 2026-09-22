@@ -6,7 +6,7 @@ import { SHOP_CATEGORIES } from '../../lib/constants.js';
 import { catLabel } from '../../lib/formatting.js';
 import { uid } from '../../lib/utils.js';
 import { quickAddShoppingItem, toggleShoppingItem, deleteShoppingItem } from '../../lib/firebase.js';
-import { SectionLabel, EmptyState } from '../../components/ui.jsx';
+import { SectionLabel, EmptyState, noAutofillProps } from '../../components/ui.jsx';
 
 function ShopRow({ item, t, color, onOpen }){
   const prices = item.prices || [];
@@ -116,6 +116,7 @@ export function ShoppingBody(){
           onKeyDown={e => { if(e.key === 'Enter') addQuick(); }}
           placeholder={t('add_item_placeholder')}
           className="flex-1 px-[15px] py-[13px] rounded-[13px] border-[1.5px] border-line text-[15px] text-kale bg-card"
+          name="fb-quick-add" {...noAutofillProps}
         />
       </div>
       {sections}

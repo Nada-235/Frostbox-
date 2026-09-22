@@ -6,7 +6,7 @@ import { SHOP_CATEGORIES } from '../lib/constants.js';
 import { catLabel, backArrow } from '../lib/formatting.js';
 import { uid, catalogIdFromName, mergePrices } from '../lib/utils.js';
 import { saveShoppingItem, deleteShoppingItem, upsertCatalogItem } from '../lib/firebase.js';
-import { CatChip, IconButton } from '../components/ui.jsx';
+import { CatChip, IconButton, noAutofillProps } from '../components/ui.jsx';
 
 function blankItem(){
   return { id: null, name: '', category: 'other', prices: [], photo: null, brand: '', size: '' };
@@ -56,6 +56,10 @@ export function ShopItemForm(){
 
   function selectSuggestion(entry){
     setName(entry.name);
+    setPhoto(entry.photo || null);
+    setBrand(entry.brand || '');
+    setSize(entry.size || '');
+    setPrices(entry.prices ? entry.prices.slice() : []);
     setNameFocused(false);
   }
 
@@ -99,7 +103,9 @@ export function ShopItemForm(){
     const p = place.trim();
     const amount = price.trim();
     if(!p || !amount) return;
-    setPrices(prev => [...prev, { id: uid(), place: p, price: amount }]);
+    // Merge by place so re-entering a price for a place already in the list
+    // updates it in place instead of creating a duplicate row.
+    setPrices(prev => mergePrices(prev, [{ id: uid(), place: p, price: amount }]));
     setPlace('');
     setPrice('');
   }
@@ -118,7 +124,7 @@ export function ShopItemForm(){
     const pendingPlace = place.trim();
     const pendingPrice = price.trim();
     const finalPrices = (pendingPlace && pendingPrice)
-      ? [...prices, { id: uid(), place: pendingPlace, price: pendingPrice }]
+      ? mergePrices(prices, [{ id: uid(), place: pendingPlace, price: pendingPrice }])
       : prices;
     const newItem = {
       id: original.id || uid(),
@@ -196,7 +202,7 @@ export function ShopItemForm(){
             type="text" value={name} onChange={e => setName(e.target.value)}
             onFocus={() => setNameFocused(true)} onBlur={() => setNameFocused(false)}
             placeholder={t('name_placeholder_shop')} className={inputCls}
-            autoComplete="off"
+            name="fb-shop-item-name" {...noAutofillProps}
           />
           {showSuggestions && (
             <div className="absolute left-0 right-0 top-full mt-1.5 bg-card border border-line rounded-2xl shadow-[var(--shadow-app)] z-20 overflow-hidden">
@@ -237,12 +243,12 @@ export function ShopItemForm(){
       <div className="flex gap-2.5">
         <div className="flex-1 min-w-0">
           <Field label={t('label_brand')}>
-            <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder={t('brand_placeholder')} className={inputCls} />
+            <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder={t('brand_placeholder')} className={inputCls} name="fb-shop-item-brand" {...noAutofillProps} />
           </Field>
         </div>
         <div className="flex-1 min-w-0">
           <Field label={t('label_size')}>
-            <input type="text" value={size} onChange={e => setSize(e.target.value)} placeholder={t('size_placeholder')} className={inputCls} />
+            <input type="text" value={size} onChange={e => setSize(e.target.value)} placeholder={t('size_placeholder')} className={inputCls} name="fb-shop-item-size" {...noAutofillProps} />
           </Field>
         </div>
       </div>
@@ -302,11 +308,13 @@ export function ShopItemForm(){
             type="text" value={place} onChange={e => setPlace(e.target.value)}
             placeholder={t('place_placeholder')}
             className="flex-[1.3] min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+            name="fb-shop-item-place" {...noAutofillProps}
           />
           <input
             type="text" value={price} onChange={e => setPrice(e.target.value)} inputMode="decimal"
             placeholder={t('price_placeholder')}
             className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+            name="fb-shop-item-price" {...noAutofillProps}
           />
           <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
             <Plus size={20} strokeWidth={2.25} />

@@ -3,6 +3,7 @@ import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT, useHeadingFont } from '../lib/useT.js';
 import { useHouseholdSession } from '../app/useHouseholdSession.js';
 import { Logo, LangSwitchButton } from '../components/Shell.jsx';
+import { noAutofillProps } from '../components/ui.jsx';
 
 export function Onboarding(){
   const state = useAppState();
@@ -68,6 +69,7 @@ export function Onboarding(){
             maxLength={6}
             dir="ltr"
             className="force-mono w-full px-3.5 py-[13px] rounded-[13px] border-[1.5px] border-line text-[15.5px] text-kale bg-card mb-2.5 text-center tracking-[2px] uppercase font-semibold"
+            name="fb-join-code" {...noAutofillProps}
           />
           <button
             onClick={handleJoin}
