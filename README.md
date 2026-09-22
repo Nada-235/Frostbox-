@@ -2,64 +2,79 @@
 
 A shared fridge/freezer + shopping list app, installable to an iPhone home screen.
 
+Built with **React**, **Tailwind CSS**, and **Vite**, syncing over **Firebase Firestore**.
+
+## Getting started
+
+```bash
+npm install
+npm run dev       # start the dev server
+npm run build     # production build to dist/
+npm run preview   # preview the production build locally
+```
+
+Only `src/lib/firebase-config.js` needs your real Firebase values — everything else works out of the box.
+Firebase's web config values are not secrets; access is controlled by your Firestore
+security rules, not by hiding these keys.
+
 ## Project structure
 
 ```
-index.html                 Markup shell only — no logic
-css/styles.css              All styles
+index.html                     Vite entry — mounts <App/> into #app
+src/
+  main.jsx                     ReactDOM root
+  App.jsx                      App init (Firebase/session bootstrap) + screen switch
+  index.css                    Tailwind import + design tokens (@theme) + base overrides
 
-js/
-  app.js                    Entry point: screen registry + render loop
-  state.js                  Single shared app state object
-  render-bus.js              Tiny pub/sub so any module can trigger a re-render
-  local-storage.js           Device-local persistence (which household, language)
-  firebase-config.js         ⚠️  THE ONLY FILE YOU NEED TO EDIT — paste your keys here
-  firebase-service.js        All Firestore reads/writes — the only file that knows about Firebase
-  household-session.js       Start/join/leave household, wires live data to state
-  reminders.js               Expiry reminder checking
-  i18n.js                    English + Arabic strings, t() lookup
-  formatting.js              Language-aware date/label/expiry-chip formatting
-  constants.js                Food & shopping categories
-  utils.js                   Pure helpers (ids, dates, escaping) — no app dependencies
-  toast.js / share.js        Small single-purpose UI actions
+  app/
+    AppContext.jsx              Single shared app state, as a React Context + reducer
+    useHouseholdSession.js      Start/join/resume/leave household
+    useReminders.js             Expiry reminder checking (on data change + every 60s)
 
-  views/
-    shell.js                 Shared bits (logo, language switch button)
-    onboarding.js             Start/join screen
-    setup.js                  "Firebase not configured yet" screen
-    main.js                   Composes the tabbed screen (sticky header/footer + scroll body)
-    fridge.js                 Fridge tab
-    shopping.js                Shopping tab
-    household.js               Household/settings tab
-    item-form.js               Add/edit fridge item
-    shop-item-form.js          Add/edit shopping item
+  lib/
+    firebase-config.js          ⚠️  THE ONLY FILE YOU NEED TO EDIT — paste your keys here
+    firebase.js                 All Firestore reads/writes — the only file that knows about Firebase
+    localStorage.js             Device-local persistence (which household, language)
+    i18n.js                     English + Arabic strings, t() lookup
+    formatting.js                Language-aware date/label/expiry-chip formatting
+    constants.js                 Food & shopping categories
+    utils.js                     Pure helpers (ids, dates) — no app dependencies
+    toast.js / share.js          Small single-purpose UI actions
+    useT.js                      t()/heading-font hooks bound to the current language
+
+  components/
+    Shell.jsx                    Logo, language-switch button
+    Toast.jsx                    Toast host (subscribes to lib/toast.js)
+    ui.jsx                       Small shared UI atoms (Switch, CatChip, SegButton, ...)
+
+  screens/
+    Onboarding.jsx                Start/join screen
+    Setup.jsx                     "Firebase not configured yet" screen
+    Main.jsx                      Tabbed shell (sticky header/footer + scroll body)
+    ItemForm.jsx                  Add/edit fridge item
+    ShopItemForm.jsx              Add/edit shopping item
+    tabs/
+      Fridge.jsx                  Fridge tab
+      Shopping.jsx                 Shopping tab
+      Household.jsx                Household/settings tab
 ```
 
 ## Why it's organized this way
 
-- **One responsibility per file.** `firebase-service.js` only talks to Firestore — no DOM, no
-  app state. `utils.js` has zero dependencies and could be unit tested with no setup.
-- **No circular imports.** Dependencies only flow one direction:
-  `state/utils/constants` → `i18n/formatting` → `firebase-service` →
-  `household-session/reminders` → `views` → `app.js`. Nothing further down the list ever
-  imports something further up.
-- **Views don't call `render()` directly.** They call `requestRender()` from `render-bus.js`.
-  This is what lets views trigger a re-render without importing `app.js` (which imports the
-  views) — avoiding a circular import.
-- **Every view exports the same shape**: `render()`/`bind()`, or for tabs,
-  `renderHeader()`/`renderBody()`/`bind()`. `app.js` and `main.js` don't need to know
-  anything about a screen's internals to display it.
-
-## Editing
-
-Only `js/firebase-config.js` needs your real values — everything else should just work.
-Firebase's web config values are not secrets; access is controlled by your Firestore
-security rules, not by hiding these keys.
+- **One responsibility per file/hook.** `lib/firebase.js` only talks to Firestore — no
+  components import Firestore directly. `lib/utils.js` has zero dependencies.
+- **Single source of truth.** `app/AppContext.jsx` mirrors the original app's single shared
+  `state` object, now as a Context + reducer — components read what they need and dispatch
+  actions instead of mutating state directly.
+- **Screens mirror the original view modules**: a tab exports `TabHeader`/`TabBody` (rendered
+  in the sticky header vs. the scrollable body), single-page screens render themselves whole.
+- **Styling is Tailwind utility classes** against a small custom theme (`src/index.css`
+  `@theme` block) matching the app's original color palette and type scale. RTL is handled by
+  `dir="rtl"` plus Tailwind's logical-property utilities (`ps-`, `pe-`, `start-`, `end-`, the
+  `rtl:` variant) so most components don't need direction-specific overrides.
 
 ## Deploying
 
-This is a static site — no build step. Upload the **whole folder** (keeping the `css/` and
-`js/` subfolders intact) to GitHub Pages, Netlify, or any static host. Opening `index.html`
-directly as a `file://` URL will NOT work — ES modules require being served over
-http(s), so it needs real hosting (even a simple `python3 -m http.server` locally works
-for testing).
+`npm run build` produces a static `dist/` folder — upload it to GitHub Pages, Netlify, Vercel,
+or any static host. There's no server-side code; Firestore is reached directly from the browser
+over your Firestore security rules.

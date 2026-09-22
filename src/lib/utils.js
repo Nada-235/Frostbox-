@@ -20,12 +20,6 @@ export function daysUntil(dateStr){
   return Math.round((target - now) / 86400000);
 }
 
-export function escapeHtml(str){
-  return (str || '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[c]));
-}
-
 /** Defaults a reminder to 9am, two days before the "good until" date. */
 export function defaultReminderAt(goodUntil){
   const d = new Date(goodUntil + 'T09:00:00');

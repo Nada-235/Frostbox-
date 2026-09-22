@@ -1,8 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { initializeApp } from 'firebase/app';
 import {
   getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
   collection, onSnapshot, arrayUnion, enableIndexedDbPersistence
-} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+} from 'firebase/firestore';
 import { firebaseConfig } from './firebase-config.js';
 
 let db = null;
