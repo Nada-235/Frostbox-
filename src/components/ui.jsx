@@ -14,7 +14,7 @@ export function Switch({ on, onToggle }){
   );
 }
 
-/** color: optional hex used for the selected fill (per-category accent). Falls back to the brand gradient. */
+/** color: optional hex used for the selected fill (per-category accent). Falls back to a neutral dark fill. */
 export function CatChip({ selected, onClick, color, children }){
   return (
     <button
@@ -23,7 +23,7 @@ export function CatChip({ selected, onClick, color, children }){
       className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border text-[13.5px] font-semibold whitespace-nowrap cursor-pointer transition-colors ${
         selected ? 'border-transparent text-card' : 'bg-card border-line text-kale'
       }`}
-      style={selected ? { background: color || 'var(--gradient-brand)' } : undefined}
+      style={selected ? { background: color || 'var(--color-kale)' } : undefined}
     >
       {children}
     </button>
