@@ -42,13 +42,11 @@ export function Main(){
   return (
     <>
       <div className="flex flex-col flex-1 min-h-0">
-        <div className="shrink-0 px-[18px] pt-2.5 sticky top-0 bg-frost z-[100] shadow-[var(--shadow-sm)]">
-          <Header />
-        </div>
         <div
           className="flex-1 min-h-0 overflow-y-auto px-[18px] pb-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
+          <div className="pt-2.5"><Header /></div>
           <Body />
         </div>
         <div
