@@ -10,6 +10,8 @@ import { Onboarding } from './screens/Onboarding.jsx';
 import { Main } from './screens/Main.jsx';
 import { ItemForm } from './screens/ItemForm.jsx';
 import { ShopItemForm } from './screens/ShopItemForm.jsx';
+import { CatalogList } from './screens/CatalogList.jsx';
+import { CatalogItemForm } from './screens/CatalogItemForm.jsx';
 import { ToastHost } from './components/Toast.jsx';
 
 const SCREENS = {
@@ -18,6 +20,8 @@ const SCREENS = {
   main: Main,
   add: ItemForm,
   shopadd: ShopItemForm,
+  catalog: CatalogList,
+  catalogadd: CatalogItemForm,
 };
 
 function Shell(){

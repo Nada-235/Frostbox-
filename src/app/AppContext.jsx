@@ -16,6 +16,7 @@ const initialState = {
   joinBoxOpen: false,
   editingItem: null,       // fridge item currently being added/edited, or null
   editingShopItem: null,   // shopping item currently being added/edited, or null
+  editingCatalogItem: null, // catalog item currently being added/edited, or null
   locationFilter: 'all',   // 'all' | 'fridge' | 'freezer'
   categoryFilter: 'all',
   synced: false,
@@ -40,6 +41,7 @@ function reducer(state, action){
     case 'SET_JOIN_BOX_OPEN': return { ...state, joinBoxOpen: action.open };
     case 'SET_EDITING_ITEM': return { ...state, editingItem: action.item };
     case 'SET_EDITING_SHOP_ITEM': return { ...state, editingShopItem: action.item };
+    case 'SET_EDITING_CATALOG_ITEM': return { ...state, editingCatalogItem: action.item };
     case 'SET_LOCATION_FILTER': return { ...state, locationFilter: action.value };
     case 'SET_CATEGORY_FILTER': return { ...state, categoryFilter: action.value };
     case 'ENTER_HOUSEHOLD':

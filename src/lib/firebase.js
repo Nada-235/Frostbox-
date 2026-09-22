@@ -91,3 +91,6 @@ export async function upsertCatalogItem(code, item){
   await setDoc(doc(db, 'households', code, 'catalog', id), { name, ...rest, updatedAt: Date.now() }, { merge: true });
   return id;
 }
+export async function deleteCatalogItem(code, id){
+  await deleteDoc(doc(db, 'households', code, 'catalog', id));
+}

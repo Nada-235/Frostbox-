@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Database, ChevronRight } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { setLang } from '../../lib/localStorage.js';
@@ -80,6 +80,21 @@ export function HouseholdBody(){
           {t('share_code_btn')}
         </button>
       </div>
+
+      <SectionLabel>{t('catalog_label')}</SectionLabel>
+      <button
+        onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'catalog' })}
+        className="w-full flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-5 cursor-pointer text-start"
+      >
+        <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-track text-mint-deep">
+          <Database size={16} strokeWidth={2.25} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[14.5px] font-semibold">{t('catalog_label')}</div>
+          <div className="text-[12.5px] text-fog leading-snug mt-0.5">{t('catalog_desc')}</div>
+        </div>
+        <ChevronRight size={17} strokeWidth={2.25} className="text-fog shrink-0 rtl:rotate-180" />
+      </button>
 
       <SectionLabel>{t('members_label')}</SectionLabel>
       {members.map((m, i) => (
