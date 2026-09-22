@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Tajawal:wght@400;500;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-frost: #F6FAF9;
+  --color-card: #FFFFFF;
+  --color-kale: #163832;
+  --color-mint: #4FB6A8;
+  --color-mint-deep: #38948A;
+  --color-citrus: #F2A33B;
+  --color-berry: #E1503F;
+  --color-fog: #7C918D;
+  --color-line: #E4EEEC;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-arabic: 'Tajawal', 'Inter', sans-serif;
+
+  --shadow-app: 0 8px 24px rgba(22,56,50,0.08);
+  --shadow-sm: 0 2px 8px rgba(22,56,50,0.06);
+  --shadow-fab: 0 10px 22px rgba(79,182,168,0.45);
+  --shadow-banner: 0 6px 16px rgba(225,80,63,0.3);
+}
+
+@layer base {
+  * { -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; padding: 0; }
+  body {
+    background: #DCE8E6;
+    font-family: var(--font-sans);
+    color: var(--color-kale);
+    display: flex;
+    justify-content: center;
+  }
+  button, input, textarea { font-family: inherit; }
+
+  /* Arabic mode: switch the whole shell to Tajawal, except spots that must
+     stay monospace + LTR (codes, prices rendered as digits). */
+  [dir="rtl"] {
+    font-family: var(--font-arabic);
+  }
+  [dir="rtl"] .force-mono {
+    font-family: var(--font-mono);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  .glass {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up { animation: fade-in-up .25s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up { animation: none; }
+  }
+}

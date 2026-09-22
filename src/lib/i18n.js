@@ -12,7 +12,7 @@ export const STRINGS = {
     setup_step1: "Create a free project at firebase.google.com",
     setup_step2: "Enable Firestore Database for it",
     setup_step3: "Register a Web app to get your config keys",
-    setup_step4: "Paste those keys into js/firebase-config.js",
+    setup_step4: "Paste those keys into src/lib/firebase-config.js",
     setup_step5: "Save and reload this page",
     synced: "Synced",
     connecting: "Connecting…",
@@ -99,7 +99,7 @@ export const STRINGS = {
     setup_step1: "أنشئ مشروعًا مجانيًا على firebase.google.com",
     setup_step2: "فعّل خدمة Firestore Database له",
     setup_step3: "سجّل تطبيق ويب للحصول على مفاتيح الإعداد",
-    setup_step4: "الصق تلك المفاتيح في js/firebase-config.js",
+    setup_step4: "الصق تلك المفاتيح في src/lib/firebase-config.js",
     setup_step5: "احفظ وأعد تحميل الصفحة",
     synced: "تمت المزامنة",
     connecting: "جارٍ الاتصال…",
@@ -175,14 +175,7 @@ export const STRINGS = {
   }
 };
 
-let stateRef = null;
-
-export function setStateRef(state) {
-  stateRef = state;
-}
-
-export function t(key, ...args){
-  const lang = stateRef ? stateRef.lang : 'en';
+export function t(lang, key, ...args){
   const dict = STRINGS[lang] || STRINGS.en;
   const value = (key in dict) ? dict[key] : STRINGS.en[key];
   return typeof value === 'function' ? value(...args) : value;
