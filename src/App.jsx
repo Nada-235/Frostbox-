@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AppProvider, useAppState, useAppDispatch } from './app/AppContext.jsx';
 import { useHouseholdSession } from './app/useHouseholdSession.js';
 import { useReminders } from './app/useReminders.js';
+import { useViewportHeight } from './app/useViewportHeight.js';
 import { getMe, getLang } from './lib/localStorage.js';
 import { initFirebase } from './lib/firebase.js';
 import { Setup } from './screens/Setup.jsx';
@@ -24,6 +25,7 @@ function Shell(){
   const dispatch = useAppDispatch();
   const { resumeHousehold } = useHouseholdSession();
   useReminders();
+  useViewportHeight();
 
   useEffect(() => {
     const lang = getLang();
@@ -50,8 +52,11 @@ function Shell(){
   return (
     <div
       dir={isRtl ? 'rtl' : 'ltr'}
-      className="relative w-full max-w-[460px] h-dvh bg-frost overflow-hidden shadow-[var(--shadow-app)] flex flex-col"
-      style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}
+      className="relative w-full max-w-[460px] bg-frost overflow-hidden shadow-[var(--shadow-app)] flex flex-col"
+      style={{
+        height: 'var(--app-height, 100dvh)',
+        paddingTop: 'max(16px, env(safe-area-inset-top))',
+      }}
     >
       {Screen && <Screen />}
       <ToastHost />
