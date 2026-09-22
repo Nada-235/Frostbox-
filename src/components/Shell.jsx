@@ -25,7 +25,8 @@ export function LangSwitchButton({ className = '' }){
   return (
     <button
       onClick={toggle}
-      className={`btn-brand force-mono absolute top-4 end-4 z-10 rounded-full text-xs font-semibold tracking-wide px-3 py-1.5 border-none cursor-pointer shadow-[0_4px_12px_rgba(56,102,65,0.35)] ${className}`}
+      className={`btn-brand force-mono absolute end-4 z-10 rounded-full text-xs font-semibold tracking-wide px-3 py-1.5 border-none cursor-pointer shadow-[0_4px_12px_rgba(56,102,65,0.35)] ${className}`}
+      style={{ top: 'calc(env(safe-area-inset-top) + 16px)' }}
     >
       {state.lang === 'en' ? 'AR' : 'EN'}
     </button>

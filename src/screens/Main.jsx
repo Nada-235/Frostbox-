@@ -49,7 +49,12 @@ export function Main(){
           className="flex-1 min-h-0 overflow-y-auto px-3 pb-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          <div className="-mx-3 px-3 pt-2.5 glass-brand"><Header /></div>
+          <div
+            className="-mx-3 px-3 mb-3 glass-brand"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top) + 10px)' }}
+          >
+            <Header />
+          </div>
           <Body />
         </div>
         <div
