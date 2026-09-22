@@ -80,6 +80,12 @@
     --color-berry: #DC2626; --color-fog: #64748B; --color-line: #E2E8F0;
     --color-teal: #0D9488; --color-track: #E7EBEF;
   }
+  [data-theme="bloom"] {
+    --color-frost: #F5F5F5; --color-card: #FFFFFF; --color-kale: #262626;
+    --color-mint: #E34989; --color-mint-deep: #AA3767; --color-citrus: #E8A33D;
+    --color-berry: #D4557A; --color-fog: #6B7280; --color-line: #E5E5E5;
+    --color-teal: #7A9420; --color-track: #ECECEC;
+  }
 
   /* Arabic mode: switch the whole shell to Tajawal, except spots that must
      stay monospace + LTR (codes, prices rendered as digits). */

@@ -9,6 +9,7 @@ export const THEMES = [
   { id: 'sunset', name: 'Sunset', swatch: '#E76F51' },
   { id: 'berry', name: 'Berry', swatch: '#A63A6B' },
   { id: 'slate', name: 'Slate', swatch: '#475569' },
+  { id: 'bloom', name: 'Bloom', swatch: '#E34989' },
 ];
 
 export function isValidTheme(id){

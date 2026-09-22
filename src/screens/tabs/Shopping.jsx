@@ -108,7 +108,7 @@ export function ShoppingBody(){
 
   return (
     <>
-      <div className="flex gap-2 mb-[18px]">
+      <div className="flex gap-2 mb-[18px] pt-3">
         <input
           type="text"
           value={value}

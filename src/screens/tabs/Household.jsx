@@ -67,7 +67,7 @@ export function HouseholdBody(){
   return (
     <>
       <div
-        className="rounded-[20px] px-5 py-[26px] text-center text-card mb-5 shadow-[var(--shadow-app)]"
+        className="rounded-[20px] px-5 py-[26px] text-center text-card mb-5 mt-3 shadow-[var(--shadow-app)]"
         style={{ background: 'var(--gradient-brand)' }}
       >
         <div className="text-xs text-white/75 uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case font-bold mb-2.5">{t('your_code_label')}</div>
