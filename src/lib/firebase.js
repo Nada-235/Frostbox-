@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
-  collection, onSnapshot, arrayUnion, enableIndexedDbPersistence
+  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  doc, getDoc, setDoc, updateDoc, deleteDoc,
+  collection, onSnapshot, arrayUnion
 } from 'firebase/firestore';
 import { firebaseConfig } from './firebase-config.js';
 import { catalogIdFromName } from './utils.js';
@@ -16,9 +17,9 @@ export function isConfigured(){
 export function initFirebase(){
   if(!isConfigured()) return false;
   const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  try{ enableIndexedDbPersistence(db); }
-  catch(e){ /* fails harmlessly if multiple tabs are open */ }
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+  });
   return true;
 }
 
