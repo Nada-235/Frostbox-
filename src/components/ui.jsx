@@ -8,7 +8,7 @@ export function Switch({ on, onToggle }){
       className={`relative w-[46px] h-[27px] rounded-full border-none shrink-0 cursor-pointer transition-colors duration-200 ${on ? 'bg-mint' : 'bg-line'}`}
     >
       <span
-        className={`absolute top-[3px] w-[21px] h-[21px] rounded-full bg-card shadow-[0_1px_3px_rgba(0,0,0,0.25)] transition-all duration-200 ${on ? 'start-[22px]' : 'start-[3px]'}`}
+        className={`absolute top-[3px] w-[21px] h-[21px] rounded-full bg-card shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-all duration-200 ${on ? 'start-[22px]' : 'start-[3px]'}`}
       />
     </button>
   );
@@ -40,7 +40,7 @@ export function SegButton({ active, onClick, children }){
       type="button"
       onClick={onClick}
       className={`flex-1 py-[9px] text-center rounded-[9px] border-none text-[13.5px] font-bold cursor-pointer transition-colors ${
-        active ? 'bg-card text-mint-deep shadow-[0_2px_6px_rgba(40,54,24,0.16)]' : 'bg-transparent text-fog'
+        active ? 'bg-card text-mint-deep shadow-[0_1px_4px_rgba(40,54,24,0.09)]' : 'bg-transparent text-fog'
       }`}
     >
       {children}

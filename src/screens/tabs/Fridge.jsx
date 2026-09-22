@@ -61,7 +61,7 @@ export function FridgeHeader(){
       </div>
       <button
         onClick={() => shareHouseholdCode(state.code, state.lang)}
-        className="force-mono bg-card text-mint-deep text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_4px_12px_rgba(40,54,24,0.25)]"
+        className="force-mono bg-card text-mint-deep text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_2px_8px_rgba(40,54,24,0.14)]"
       >
         {state.code}
       </button>

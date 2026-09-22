@@ -47,10 +47,10 @@
   /* Derived, theme-reactive shadows/gradients — color-mix() against the
      active theme's own tokens, so these never need per-theme overrides. */
   :root {
-    --shadow-app: 0 8px 28px color-mix(in srgb, var(--color-kale) 16%, transparent);
-    --shadow-sm: 0 2px 8px color-mix(in srgb, var(--color-kale) 8%, transparent);
-    --shadow-fab: 0 10px 24px color-mix(in srgb, var(--color-mint) 50%, transparent);
-    --shadow-banner: 0 6px 18px color-mix(in srgb, var(--color-berry) 35%, transparent);
+    --shadow-app: 0 6px 20px color-mix(in srgb, var(--color-kale) 9%, transparent);
+    --shadow-sm: 0 2px 6px color-mix(in srgb, var(--color-kale) 5%, transparent);
+    --shadow-fab: 0 6px 16px color-mix(in srgb, var(--color-mint) 28%, transparent);
+    --shadow-banner: 0 4px 12px color-mix(in srgb, var(--color-berry) 20%, transparent);
     --gradient-brand: linear-gradient(135deg, var(--color-mint), var(--color-mint-deep));
     --gradient-banner: linear-gradient(135deg, var(--color-berry), color-mix(in srgb, var(--color-berry) 80%, black));
   }

@@ -47,7 +47,7 @@ export function Onboarding(){
 
       <button
         onClick={handleStart}
-        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_8px_20px_rgba(56,102,65,0.35)]"
+        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_4px_12px_rgba(56,102,65,0.2)]"
       >
         {t('start_fridge')}
       </button>
@@ -72,7 +72,7 @@ export function Onboarding(){
           <button
             onClick={handleJoin}
             disabled={joining}
-            className="btn-brand w-full py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer active:scale-[0.97] transition-transform disabled:opacity-60 shadow-[0_8px_20px_rgba(56,102,65,0.35)]"
+            className="btn-brand w-full py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer active:scale-[0.97] transition-transform disabled:opacity-60 shadow-[0_4px_12px_rgba(56,102,65,0.2)]"
           >
             {t('join_fridge_confirm')}
           </button>
