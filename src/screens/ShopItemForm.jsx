@@ -5,7 +5,7 @@ import { SHOP_CATEGORIES } from '../lib/constants.js';
 import { catLabel, backArrow } from '../lib/formatting.js';
 import { uid } from '../lib/utils.js';
 import { saveShoppingItem, deleteShoppingItem } from '../lib/firebase.js';
-import { CatChip } from '../components/ui.jsx';
+import { CatChip, IconButton } from '../components/ui.jsx';
 
 function blankItem(){
   return { id: null, name: '', category: 'other', prices: [] };
@@ -136,14 +136,10 @@ export function ShopItemForm(){
       </Field>
 
       <div className="flex gap-2.5">
-        <button onClick={goBack} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_cancel')}</button>
-        <button onClick={handleSave} disabled={saving} className="btn-brand flex-1 py-[15px] rounded-2xl border-none text-[15.5px] font-bold cursor-pointer disabled:opacity-60">{t('btn_save_item')}</button>
+        <IconButton onClick={goBack} icon="✕" label={t('btn_cancel')} variant="ghost" />
+        {isEdit && <IconButton onClick={handleDelete} icon="🗑️" label={t('btn_delete')} variant="danger" />}
+        <IconButton onClick={handleSave} disabled={saving} icon="✓" label={t('btn_save_item')} variant="primary" grow />
       </div>
-      {isEdit && (
-        <div className="flex gap-2.5 mt-2.5">
-          <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#FFD3DB] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
-        </div>
-      )}
       </div>
     </>
   );

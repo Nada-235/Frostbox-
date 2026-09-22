@@ -6,7 +6,7 @@ import { catLabel, backArrow } from '../lib/formatting.js';
 import { todayStr, defaultReminderAt, uid } from '../lib/utils.js';
 import { saveFridgeItem, deleteFridgeItem, quickAddShoppingItem } from '../lib/firebase.js';
 import { showToast } from '../lib/toast.js';
-import { CatChip, SegButton, Switch } from '../components/ui.jsx';
+import { CatChip, SegButton, Switch, IconButton } from '../components/ui.jsx';
 
 function blankItem(){
   return {
@@ -192,19 +192,13 @@ export function ItemForm(){
         </Field>
       </div>
 
-      <div className="shrink-0 py-3.5 glass border-t border-line sticky bottom-0">
+      <div className="shrink-0 py-3.5 px-3 glass border-t border-line sticky bottom-0">
         <div className="flex gap-2.5">
-          <button onClick={goBack} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_cancel')}</button>
-          <button onClick={handleSave} disabled={saving} className="btn-brand flex-1 py-[15px] rounded-2xl border-none text-[15.5px] font-bold cursor-pointer disabled:opacity-60">
-            {isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')}
-          </button>
+          <IconButton onClick={goBack} icon="✕" label={t('btn_cancel')} variant="ghost" />
+          {isEdit && <IconButton onClick={handleAddToShopping} icon="🛒" label={t('btn_add_to_shopping')} variant="ghost" />}
+          {isEdit && <IconButton onClick={handleDelete} icon="🗑️" label={t('btn_delete')} variant="danger" />}
+          <IconButton onClick={handleSave} disabled={saving} icon="✓" label={isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')} variant="primary" grow />
         </div>
-        {isEdit && (
-          <div className="flex gap-2.5 mt-2.5">
-            <button onClick={handleAddToShopping} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_add_to_shopping')}</button>
-            <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#FFD3DB] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
-          </div>
-        )}
       </div>
     </>
   );

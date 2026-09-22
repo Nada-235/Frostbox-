@@ -60,6 +60,30 @@ export function SectionLabel({ icon, color, children }){
   );
 }
 
+const ICON_BTN_VARIANTS = {
+  ghost: 'bg-card border border-line text-kale',
+  primary: 'btn-brand border-none',
+  danger: 'bg-card border-[1.5px] border-[#FFD3DB] text-berry',
+};
+
+/** Compact icon-only action button (form footers) — label is used for a11y (aria-label/title), not shown. */
+export function IconButton({ onClick, icon, label, variant = 'ghost', disabled, grow }){
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      className={`h-11 rounded-2xl text-lg flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-60 ${
+        ICON_BTN_VARIANTS[variant]
+      } ${grow ? 'flex-1' : 'w-11 shrink-0'}`}
+    >
+      <span aria-hidden="true">{icon}</span>
+    </button>
+  );
+}
+
 export function EmptyState({ emoji, children }){
   return (
     <div className="text-center py-[60px] px-5 text-fog">
