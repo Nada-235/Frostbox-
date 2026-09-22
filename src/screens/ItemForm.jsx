@@ -158,7 +158,7 @@ export function ItemForm(){
         </Field>
 
         <Field label={t('label_storage')}>
-          <div className="flex bg-track rounded-xl p-[3px]">
+          <div className="flex bg-frost rounded-xl p-[3px]">
             <SegButton active={location === 'fridge'} onClick={() => setLocation('fridge')}>🧊 {t('filter_fridge')}</SegButton>
             <SegButton active={location === 'freezer'} onClick={() => setLocation('freezer')}>❄️ {t('filter_freezer')}</SegButton>
           </div>

@@ -87,7 +87,7 @@ export function HouseholdBody(){
       ))}
 
       <SectionLabel>{t('language_label')}</SectionLabel>
-      <div className="flex bg-track rounded-xl p-[3px] mb-3.5">
+      <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
         <SegButton active={state.lang === 'en'} onClick={() => changeLang('en')}>English</SegButton>
         <SegButton active={state.lang === 'ar'} onClick={() => changeLang('ar')}>العربية</SegButton>
       </div>
