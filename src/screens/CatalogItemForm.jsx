@@ -2,13 +2,13 @@ import { useRef, useState } from 'react';
 import { X, Check, Trash2, Plus, Camera } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
-import { backArrow } from '../lib/formatting.js';
-import { uid, catalogIdFromName, mergePrices } from '../lib/utils.js';
+import { backArrow, formatIQD } from '../lib/formatting.js';
+import { uid, catalogRecords, mergeRecords } from '../lib/utils.js';
 import { upsertCatalogItem, deleteCatalogItem } from '../lib/firebase.js';
 import { IconButton, noAutofillProps } from '../components/ui.jsx';
 
 function blankItem(){
-  return { id: null, name: '', photo: null, brand: '', size: '', prices: [] };
+  return { id: null, name: '', photo: null, records: [] };
 }
 
 export function CatalogItemForm(){
@@ -22,10 +22,10 @@ export function CatalogItemForm(){
 
   const [name, setName] = useState(original.name);
   const [photo, setPhoto] = useState(original.photo || null);
-  const [brand, setBrand] = useState(original.brand || '');
-  const [size, setSize] = useState(original.size || '');
-  const [prices, setPrices] = useState(original.prices ? original.prices.slice() : []);
-  const [place, setPlace] = useState('');
+  const [records, setRecords] = useState(catalogRecords(original));
+  const [brand, setBrand] = useState('');
+  const [size, setSize] = useState('');
+  const [supermarket, setSupermarket] = useState('');
   const [price, setPrice] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -54,37 +54,37 @@ export function CatalogItemForm(){
     reader.readAsDataURL(file);
   }
 
-  function addPrice(){
-    const p = place.trim();
+  function addRecord(){
+    const m = supermarket.trim();
     const amount = price.trim();
-    if(!p || !amount) return;
-    setPrices(prev => mergePrices(prev, [{ id: uid(), place: p, price: amount }]));
-    setPlace('');
+    if(!m || !amount) return;
+    setRecords(prev => mergeRecords(prev, [{ id: uid(), brand: brand.trim(), size: size.trim(), supermarket: m, price: amount }]));
+    setBrand('');
+    setSize('');
+    setSupermarket('');
     setPrice('');
   }
 
-  function removePrice(id){
-    setPrices(prev => prev.filter(p => p.id !== id));
+  function removeRecord(id){
+    setRecords(prev => prev.filter(r => r.id !== id));
   }
 
   async function handleSave(){
     const trimmedName = name.trim();
     if(!trimmedName){ alert(t('name_required_alert')); return; }
-    // A place/price pair typed but not explicitly added via the "+" button
-    // would otherwise be silently discarded on save.
-    const pendingPlace = place.trim();
+    // A record typed but not explicitly added via the "+" button would
+    // otherwise be silently discarded on save.
+    const pendingSupermarket = supermarket.trim();
     const pendingPrice = price.trim();
-    const finalPrices = (pendingPlace && pendingPrice)
-      ? mergePrices(prices, [{ id: uid(), place: pendingPlace, price: pendingPrice }])
-      : prices;
+    const finalRecords = (pendingSupermarket && pendingPrice)
+      ? mergeRecords(records, [{ id: uid(), brand: brand.trim(), size: size.trim(), supermarket: pendingSupermarket, price: pendingPrice }])
+      : records;
     setSaving(true);
     try{
       const newId = await upsertCatalogItem(state.code, {
         name: trimmedName,
         photo,
-        brand: brand.trim(),
-        size: size.trim(),
-        prices: finalPrices,
+        records: finalRecords,
       });
       if(isEdit && original.id && newId !== original.id){
         await deleteCatalogItem(state.code, original.id);
@@ -103,8 +103,8 @@ export function CatalogItemForm(){
     dispatch({ type: 'SET_SCREEN', screen: 'catalog' });
   }
 
-  const sortedPrices = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-  const bestId = sortedPrices[0]?.id;
+  const sortedRecords = records.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  const bestId = sortedRecords[0]?.id;
 
   const BackIcon = backArrow(lang);
 
@@ -140,56 +140,62 @@ export function CatalogItemForm(){
           <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} name="fb-catalog-item-name" {...noAutofillProps} />
         </Field>
 
-        <div className="flex gap-2.5">
-          <div className="flex-1 min-w-0">
-            <Field label={t('label_brand')}>
-              <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder={t('brand_placeholder')} className={inputCls} name="fb-catalog-item-brand" {...noAutofillProps} />
-            </Field>
-          </div>
-          <div className="flex-1 min-w-0">
-            <Field label={t('label_size')}>
-              <input type="text" value={size} onChange={e => setSize(e.target.value)} placeholder={t('size_placeholder')} className={inputCls} name="fb-catalog-item-size" {...noAutofillProps} />
-            </Field>
-          </div>
-        </div>
-
         <Field label={t('label_prices')}>
-          {!prices.length ? (
+          {!records.length ? (
             <p className="text-[13px] text-fog mb-2.5">{t('no_prices_yet')}</p>
           ) : (
             <div>
-              {sortedPrices.map(p => (
-                <div key={p.id} className="flex items-center gap-2.5 bg-card border border-line rounded-[13px] px-3.5 py-[11px] mb-2">
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{p.place}</span>
-                    {p.id === bestId && (
-                      <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
-                        {t('best_price_badge')}
-                      </span>
+              {sortedRecords.map(r => (
+                <div key={r.id} className="flex items-center gap-2.5 bg-card border border-line rounded-[13px] px-3.5 py-[11px] mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{r.supermarket}</span>
+                      {r.id === bestId && (
+                        <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
+                          {t('best_price_badge')}
+                        </span>
+                      )}
+                    </div>
+                    {(r.brand || r.size) && (
+                      <div className="text-xs text-fog whitespace-nowrap overflow-hidden text-ellipsis mt-0.5">{[r.brand, r.size].filter(Boolean).join(' · ')}</div>
                     )}
                   </div>
-                  <div className="force-mono font-semibold text-sm shrink-0">{String(p.price)}</div>
-                  <button onClick={() => removePrice(p.id)} className="bg-transparent border-none text-fog cursor-pointer p-0.5 shrink-0 flex items-center justify-center">
+                  <div className="force-mono font-semibold text-sm shrink-0">{formatIQD(r.price)}</div>
+                  <button onClick={() => removeRecord(r.id)} className="bg-transparent border-none text-fog cursor-pointer p-0.5 shrink-0 flex items-center justify-center">
                     <X size={14} strokeWidth={2.25} />
                   </button>
                 </div>
               ))}
             </div>
           )}
+          <div className="flex gap-1.5 mb-1.5">
+            <input
+              type="text" value={brand} onChange={e => setBrand(e.target.value)}
+              placeholder={t('brand_placeholder')}
+              className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+              name="fb-catalog-record-brand" {...noAutofillProps}
+            />
+            <input
+              type="text" value={size} onChange={e => setSize(e.target.value)}
+              placeholder={t('size_placeholder')}
+              className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
+              name="fb-catalog-record-size" {...noAutofillProps}
+            />
+          </div>
           <div className="flex gap-1.5 mb-[18px]">
             <input
-              type="text" value={place} onChange={e => setPlace(e.target.value)}
-              placeholder={t('place_placeholder')}
+              type="text" value={supermarket} onChange={e => setSupermarket(e.target.value)}
+              placeholder={t('supermarket_placeholder')}
               className="flex-[1.3] min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
-              name="fb-catalog-item-place" {...noAutofillProps}
+              name="fb-catalog-record-supermarket" {...noAutofillProps}
             />
             <input
               type="text" value={price} onChange={e => setPrice(e.target.value)} inputMode="decimal"
-              placeholder={t('price_placeholder')}
+              placeholder={t('label_price_iqd')}
               className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
-              name="fb-catalog-item-price" {...noAutofillProps}
+              name="fb-catalog-record-price" {...noAutofillProps}
             />
-            <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
+            <button onClick={addRecord} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
               <Plus size={20} strokeWidth={2.25} />
             </button>
           </div>

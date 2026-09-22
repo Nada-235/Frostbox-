@@ -24,3 +24,10 @@ export function backArrow(lang){
 export function catLabel(cat, lang){
   return lang === 'ar' ? cat.ar : cat.en;
 }
+
+/** Formats a raw price as "12,000 IQD" — thousands-separated, unit-labeled. */
+export function formatIQD(price){
+  const n = parseFloat(price);
+  if(isNaN(n)) return price ? String(price) : '';
+  return `${n.toLocaleString('en-US')} IQD`;
+}

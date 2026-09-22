@@ -1,15 +1,15 @@
 import { useMemo, useRef, useState } from 'react';
-import { X, Check, Trash2, Plus, Camera, TrendingDown, Store, Search } from 'lucide-react';
+import { X, Check, Trash2, Camera, TrendingDown, Store, Search } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { SHOP_CATEGORIES } from '../lib/constants.js';
-import { catLabel, backArrow } from '../lib/formatting.js';
-import { uid, catalogIdFromName, mergePrices } from '../lib/utils.js';
+import { catLabel, backArrow, formatIQD } from '../lib/formatting.js';
+import { uid, catalogIdFromName, catalogRecords, mergeRecords } from '../lib/utils.js';
 import { saveShoppingItem, deleteShoppingItem, upsertCatalogItem } from '../lib/firebase.js';
 import { CatChip, IconButton, noAutofillProps } from '../components/ui.jsx';
 
 function blankItem(){
-  return { id: null, name: '', category: 'other', prices: [], photo: null, brand: '', size: '' };
+  return { id: null, name: '', category: 'other', photo: null, brand: '', size: '', supermarket: '', price: '' };
 }
 
 export function ShopItemForm(){
@@ -23,12 +23,11 @@ export function ShopItemForm(){
 
   const [name, setName] = useState(original.name);
   const [category, setCategory] = useState(original.category || 'other');
-  const [prices, setPrices] = useState(original.prices ? original.prices.slice() : []);
   const [photo, setPhoto] = useState(original.photo || null);
   const [brand, setBrand] = useState(original.brand || '');
   const [size, setSize] = useState(original.size || '');
-  const [place, setPlace] = useState('');
-  const [price, setPrice] = useState('');
+  const [supermarket, setSupermarket] = useState(original.supermarket || '');
+  const [price, setPrice] = useState(original.price ? String(original.price) : '');
   const [saving, setSaving] = useState(false);
   const [nameFocused, setNameFocused] = useState(false);
 
@@ -39,6 +38,14 @@ export function ShopItemForm(){
     const id = catalogIdFromName(trimmed);
     return catalog.find(c => c.id === id) || null;
   }, [name, catalog]);
+
+  const records = useMemo(() => {
+    return catalogRecords(matchedCatalogEntry)
+      .filter(r => !isNaN(parseFloat(r.price)))
+      .slice()
+      .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  }, [matchedCatalogEntry]);
+  const cheapestRecordId = records[0]?.id;
 
   const suggestions = useMemo(() => {
     const q = name.trim().toLowerCase();
@@ -56,23 +63,15 @@ export function ShopItemForm(){
 
   function selectSuggestion(entry){
     setName(entry.name);
-    setPhoto(entry.photo || null);
-    setBrand(entry.brand || '');
-    setSize(entry.size || '');
-    setPrices(entry.prices ? entry.prices.slice() : []);
     setNameFocused(false);
   }
 
-  const comparePrices = useMemo(() => {
-    const list = (matchedCatalogEntry?.prices || []).filter(p => !isNaN(parseFloat(p.price)));
-    return list.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-  }, [matchedCatalogEntry]);
-
-  const avgMarketPrice = useMemo(() => {
-    if(!comparePrices.length) return null;
-    const sum = comparePrices.reduce((s, p) => s + parseFloat(p.price), 0);
-    return (sum / comparePrices.length).toFixed(2);
-  }, [comparePrices]);
+  function selectRecord(record){
+    setBrand(record.brand || '');
+    setSize(record.size || '');
+    setSupermarket(record.supermarket || '');
+    setPrice(record.price !== undefined && record.price !== null ? String(record.price) : '');
+  }
 
   function goBack(){
     dispatch({ type: 'SET_EDITING_SHOP_ITEM', item: null });
@@ -99,52 +98,36 @@ export function ShopItemForm(){
     reader.readAsDataURL(file);
   }
 
-  function addPrice(){
-    const p = place.trim();
-    const amount = price.trim();
-    if(!p || !amount) return;
-    // Merge by place so re-entering a price for a place already in the list
-    // updates it in place instead of creating a duplicate row.
-    setPrices(prev => mergePrices(prev, [{ id: uid(), place: p, price: amount }]));
-    setPlace('');
-    setPrice('');
-  }
-
-  function removePrice(id){
-    setPrices(prev => prev.filter(p => p.id !== id));
-  }
-
   async function handleSave(){
     const trimmedName = name.trim();
     if(!trimmedName){ alert(t('name_required_alert')); return; }
     const trimmedBrand = brand.trim();
     const trimmedSize = size.trim();
-    // A place/price pair typed but not explicitly added via the "+" button
-    // would otherwise be silently discarded on save.
-    const pendingPlace = place.trim();
-    const pendingPrice = price.trim();
-    const finalPrices = (pendingPlace && pendingPrice)
-      ? mergePrices(prices, [{ id: uid(), place: pendingPlace, price: pendingPrice }])
-      : prices;
+    const trimmedSupermarket = supermarket.trim();
+    const trimmedPrice = price.trim();
     const newItem = {
       id: original.id || uid(),
       name: trimmedName,
       category,
-      prices: finalPrices,
       photo,
       brand: trimmedBrand,
       size: trimmedSize,
+      supermarket: trimmedSupermarket,
+      price: trimmedPrice,
       checked: original.id ? !!original.checked : false,
     };
     setSaving(true);
     try{
       await saveShoppingItem(state.code, newItem);
+      const hasRecord = trimmedSupermarket && trimmedPrice;
       await upsertCatalogItem(state.code, {
         name: trimmedName,
         photo: photo || matchedCatalogEntry?.photo || null,
-        brand: trimmedBrand || matchedCatalogEntry?.brand || '',
-        size: trimmedSize || matchedCatalogEntry?.size || '',
-        prices: mergePrices(matchedCatalogEntry?.prices, finalPrices),
+        records: hasRecord
+          ? mergeRecords(catalogRecords(matchedCatalogEntry), [{
+              id: uid(), brand: trimmedBrand, size: trimmedSize, supermarket: trimmedSupermarket, price: trimmedPrice,
+            }])
+          : catalogRecords(matchedCatalogEntry),
       });
       dispatch({ type: 'SET_EDITING_SHOP_ITEM', item: null });
       dispatch({ type: 'SET_TAB', tab: 'shopping' });
@@ -161,10 +144,6 @@ export function ShopItemForm(){
     dispatch({ type: 'SET_TAB', tab: 'shopping' });
     dispatch({ type: 'SET_SCREEN', screen: 'main' });
   }
-
-  const sortedPrices = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-  const bestId = sortedPrices[0]?.id;
-  const cheapestCompareId = comparePrices[0]?.id;
 
   const BackIcon = backArrow(lang);
 
@@ -219,9 +198,6 @@ export function ShopItemForm(){
                   </div>
                   <div className="min-w-0">
                     <div className="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">{s.name}</div>
-                    {(s.brand || s.size) && (
-                      <div className="text-xs text-fog whitespace-nowrap overflow-hidden text-ellipsis">{[s.brand, s.size].filter(Boolean).join(' · ')}</div>
-                    )}
                   </div>
                 </button>
               ))}
@@ -240,6 +216,37 @@ export function ShopItemForm(){
         </div>
       </Field>
 
+      {records.length > 0 && (
+        <div className="bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-4">
+          <div className="flex items-center gap-1.5 mb-0.5 text-[12.5px] font-bold text-fog uppercase tracking-[0.05em] rtl:tracking-normal rtl:normal-case">
+            <TrendingDown size={14} strokeWidth={2.25} /> {t('compare_title')}
+          </div>
+          <p className="text-[12px] text-fog mb-2.5">{t('compare_subtitle')}</p>
+          {records.map(r => (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => selectRecord(r)}
+              className="w-full flex items-center gap-2.5 py-2 border-b border-line last:border-b-0 text-start bg-transparent border-t-0 border-x-0 cursor-pointer active:bg-frost"
+            >
+              <Store size={13} strokeWidth={2.25} className="text-fog shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">{r.supermarket}</div>
+                {(r.brand || r.size) && (
+                  <div className="text-xs text-fog whitespace-nowrap overflow-hidden text-ellipsis">{[r.brand, r.size].filter(Boolean).join(' · ')}</div>
+                )}
+              </div>
+              {r.id === cheapestRecordId && (
+                <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
+                  {t('compare_cheapest')}
+                </span>
+              )}
+              <span className="force-mono font-semibold text-sm shrink-0">{formatIQD(r.price)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="flex gap-2.5">
         <div className="flex-1 min-w-0">
           <Field label={t('label_brand')}>
@@ -253,74 +260,18 @@ export function ShopItemForm(){
         </div>
       </div>
 
-      {comparePrices.length > 0 && (
-        <div className="bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-4">
-          <div className="flex items-center gap-1.5 mb-0.5 text-[12.5px] font-bold text-fog uppercase tracking-[0.05em] rtl:tracking-normal rtl:normal-case">
-            <TrendingDown size={14} strokeWidth={2.25} /> {t('compare_title')}
-          </div>
-          <p className="text-[12px] text-fog mb-2.5">{t('compare_subtitle')}</p>
-          {matchedCatalogEntry?.brand && (
-            <div className="text-[13px] font-semibold mb-2">{t('compare_known_brand', matchedCatalogEntry.brand)}</div>
-          )}
-          {comparePrices.map(p => (
-            <div key={p.id || p.place} className="flex items-center gap-2.5 py-1.5 border-b border-line last:border-b-0">
-              <Store size={13} strokeWidth={2.25} className="text-fog shrink-0" />
-              <span className="flex-1 min-w-0 text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">{p.place}</span>
-              {(p.id || p.place) === cheapestCompareId && (
-                <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
-                  {t('compare_cheapest')}
-                </span>
-              )}
-              <span className="force-mono font-semibold text-sm shrink-0">{String(p.price)}</span>
-            </div>
-          ))}
-          {avgMarketPrice && (
-            <div className="text-[12.5px] text-fog font-semibold mt-2.5">{t('compare_avg', avgMarketPrice)}</div>
-          )}
+      <div className="flex gap-2.5">
+        <div className="flex-1 min-w-0">
+          <Field label={t('label_supermarket')}>
+            <input type="text" value={supermarket} onChange={e => setSupermarket(e.target.value)} placeholder={t('supermarket_placeholder')} className={inputCls} name="fb-shop-item-supermarket" {...noAutofillProps} />
+          </Field>
         </div>
-      )}
-
-      <Field label={t('label_prices')}>
-        {!prices.length ? (
-          <p className="text-[13px] text-fog mb-2.5">{t('no_prices_yet')}</p>
-        ) : (
-          <div>
-            {sortedPrices.map(p => (
-              <div key={p.id} className="flex items-center gap-2.5 bg-card border border-line rounded-[13px] px-3.5 py-[11px] mb-2">
-                <div className="flex-1 min-w-0 flex items-center gap-2">
-                  <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{p.place}</span>
-                  {p.id === bestId && (
-                    <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
-                      {t('best_price_badge')}
-                    </span>
-                  )}
-                </div>
-                <div className="force-mono font-semibold text-sm shrink-0">{String(p.price)}</div>
-                <button onClick={() => removePrice(p.id)} className="bg-transparent border-none text-fog cursor-pointer p-0.5 shrink-0 flex items-center justify-center">
-                  <X size={14} strokeWidth={2.25} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex gap-1.5 mb-[18px]">
-          <input
-            type="text" value={place} onChange={e => setPlace(e.target.value)}
-            placeholder={t('place_placeholder')}
-            className="flex-[1.3] min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
-            name="fb-shop-item-place" {...noAutofillProps}
-          />
-          <input
-            type="text" value={price} onChange={e => setPrice(e.target.value)} inputMode="decimal"
-            placeholder={t('price_placeholder')}
-            className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
-            name="fb-shop-item-price" {...noAutofillProps}
-          />
-          <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none cursor-pointer flex items-center justify-center">
-            <Plus size={20} strokeWidth={2.25} />
-          </button>
+        <div className="flex-1 min-w-0">
+          <Field label={t('label_price_iqd')}>
+            <input type="text" value={price} onChange={e => setPrice(e.target.value)} inputMode="decimal" placeholder={t('price_placeholder')} className={inputCls} name="fb-shop-item-price" {...noAutofillProps} />
+          </Field>
         </div>
-      </Field>
+      </div>
 
       <div className="flex gap-2.5">
         <IconButton onClick={goBack} icon={X} label={t('btn_cancel')} variant="ghost" />

@@ -76,7 +76,7 @@ export async function saveShoppingItem(code, item){
   await setDoc(doc(db, 'households', code, 'shopping', id), data);
 }
 export async function quickAddShoppingItem(code, id, name){
-  await setDoc(doc(db, 'households', code, 'shopping', id), { name, checked: false, category: 'other', prices: [] });
+  await setDoc(doc(db, 'households', code, 'shopping', id), { name, checked: false, category: 'other' });
 }
 export async function toggleShoppingItem(code, id, checked){
   await updateDoc(doc(db, 'households', code, 'shopping', id), { checked });

@@ -1,24 +1,25 @@
 import { Plus, X, Tag, Database } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
-import { backArrow } from '../lib/formatting.js';
+import { backArrow, formatIQD } from '../lib/formatting.js';
+import { catalogRecords } from '../lib/utils.js';
 import { deleteCatalogItem } from '../lib/firebase.js';
 import { EmptyState } from '../components/ui.jsx';
 
 function CatalogRow({ item, t, onOpen, onDelete }){
-  const prices = item.prices || [];
+  const records = catalogRecords(item).filter(r => !isNaN(parseFloat(r.price)));
   let priceLine = null;
-  if(prices.length){
-    const sorted = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  if(records.length){
+    const sorted = records.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     const best = sorted[0];
-    const more = prices.length > 1 ? ` +${prices.length - 1} ${t('more_suffix')}` : '';
+    const meta = [best.brand, best.size].filter(Boolean).join(' · ');
+    const more = records.length > 1 ? ` +${records.length - 1} ${t('more_suffix')}` : '';
     priceLine = (
       <div className="text-xs text-teal font-bold mt-0.5 flex items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis">
-        <Tag size={11} strokeWidth={2.25} className="shrink-0" /> {String(best.price)} · {best.place}{more}
+        <Tag size={11} strokeWidth={2.25} className="shrink-0" /> {formatIQD(best.price)} · {best.supermarket}{meta ? ` (${meta})` : ''}{more}
       </div>
     );
   }
-  const meta = [item.brand, item.size].filter(Boolean).join(' · ');
 
   return (
     <div className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-2.5">
@@ -34,7 +35,6 @@ function CatalogRow({ item, t, onOpen, onDelete }){
       </button>
       <div className="flex-1 min-w-0 cursor-pointer" onClick={onOpen}>
         <div className="text-[15px] font-medium whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</div>
-        {meta && <div className="text-xs text-fog mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">{meta}</div>}
         {priceLine}
       </div>
       <button

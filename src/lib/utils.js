@@ -43,11 +43,31 @@ export function catalogIdFromName(name){
   return slug || uid();
 }
 
-/** Merges a new set of {place,price} entries into an existing price history — same place updates in place, a new one is appended. */
-export function mergePrices(existing, incoming){
+/** Normalizes a catalog entry's records regardless of shape — reads the
+ *  current {brand,size,records:[{brand,size,supermarket,price}]} shape, and
+ *  falls back to synthesizing records from the older {brand,size,prices:
+ *  [{place,price}]} shape so entries saved before the restructure still show up. */
+export function catalogRecords(entry){
+  if(!entry) return [];
+  if(Array.isArray(entry.records)) return entry.records;
+  return (entry.prices || []).map(p => ({
+    id: p.id || uid(),
+    brand: entry.brand || '',
+    size: entry.size || '',
+    supermarket: p.place || p.supermarket || '',
+    price: p.price,
+  }));
+}
+
+/** Merges a new set of {brand,size,supermarket,price} records into an existing
+ *  list — a record matching the same brand+size+supermarket (case/whitespace
+ *  insensitive) has its price updated in place; anything new is appended, and
+ *  every other record is left untouched. */
+export function mergeRecords(existing, incoming){
+  const key = r => [r.brand, r.size, r.supermarket].map(v => (v || '').trim().toLowerCase()).join('|');
   const merged = (existing || []).slice();
   (incoming || []).forEach(next => {
-    const i = merged.findIndex(p => (p.place || '').trim().toLowerCase() === (next.place || '').trim().toLowerCase());
+    const i = merged.findIndex(r => key(r) === key(next));
     if(i >= 0) merged[i] = { ...merged[i], price: next.price };
     else merged.push(next);
   });

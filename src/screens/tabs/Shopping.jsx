@@ -3,21 +3,18 @@ import { Check, X, Tag, ClipboardList } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { SHOP_CATEGORIES } from '../../lib/constants.js';
-import { catLabel } from '../../lib/formatting.js';
+import { catLabel, formatIQD } from '../../lib/formatting.js';
 import { uid } from '../../lib/utils.js';
 import { quickAddShoppingItem, toggleShoppingItem, deleteShoppingItem } from '../../lib/firebase.js';
 import { SectionLabel, EmptyState, noAutofillProps } from '../../components/ui.jsx';
 
 function ShopRow({ item, t, color, onOpen }){
-  const prices = item.prices || [];
+  const meta = [item.brand, item.size].filter(Boolean).join(' · ');
   let priceLine = null;
-  if(prices.length){
-    const sorted = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    const best = sorted[0];
-    const more = prices.length > 1 ? ` +${prices.length - 1} ${t('more_suffix')}` : '';
+  if(item.supermarket && item.price){
     priceLine = (
       <div className="text-xs text-teal font-bold mt-0.5 flex items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis">
-        <Tag size={11} strokeWidth={2.25} className="shrink-0" /> {String(best.price)} · {best.place}{more}
+        <Tag size={11} strokeWidth={2.25} className="shrink-0" /> {formatIQD(item.price)} · {item.supermarket}{meta ? ` (${meta})` : ''}
       </div>
     );
   }
