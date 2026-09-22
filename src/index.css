@@ -2,32 +2,37 @@
 @import "tailwindcss";
 
 @theme {
-  --color-frost: #F6FAF9;
+  /* Vibrant palette: violet brand, coral danger, amber warning, teal success. */
+  --color-frost: #F6F3FF;
   --color-card: #FFFFFF;
-  --color-kale: #163832;
-  --color-mint: #4FB6A8;
-  --color-mint-deep: #38948A;
-  --color-citrus: #F2A33B;
-  --color-berry: #E1503F;
-  --color-fog: #7C918D;
-  --color-line: #E4EEEC;
+  --color-kale: #1D1836;
+  --color-mint: #7C5CFC;
+  --color-mint-deep: #5B3FD9;
+  --color-citrus: #FFB020;
+  --color-berry: #FF5470;
+  --color-fog: #756E92;
+  --color-line: #EAE4FB;
+  --color-teal: #06D6A0;
+  --color-track: #F1EDFF;
 
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-arabic: 'Tajawal', 'Inter', sans-serif;
 
-  --shadow-app: 0 8px 24px rgba(22,56,50,0.08);
-  --shadow-sm: 0 2px 8px rgba(22,56,50,0.06);
-  --shadow-fab: 0 10px 22px rgba(79,182,168,0.45);
-  --shadow-banner: 0 6px 16px rgba(225,80,63,0.3);
+  --shadow-app: 0 8px 28px rgba(92,63,217,0.16);
+  --shadow-sm: 0 2px 8px rgba(29,24,54,0.06);
+  --shadow-fab: 0 10px 24px rgba(124,92,252,0.5);
+  --shadow-banner: 0 6px 18px rgba(255,84,112,0.35);
+  --gradient-brand: linear-gradient(135deg, #7C5CFC, #C44FE0);
+  --gradient-banner: linear-gradient(135deg, #FF5470, #FF3E8E);
 }
 
 @layer base {
   * { -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    background: #DCE8E6;
+    background: linear-gradient(160deg, #EDE7FE 0%, #FBE4F1 100%);
     font-family: var(--font-sans);
     color: var(--color-kale);
     display: flex;
@@ -54,6 +59,11 @@
   .glass {
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(14px);
+  }
+
+  .btn-brand {
+    background: var(--gradient-brand);
+    color: var(--color-card);
   }
 
   @keyframes fade-in-up {

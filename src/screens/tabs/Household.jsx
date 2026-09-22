@@ -6,6 +6,13 @@ import { shareHouseholdCode } from '../../lib/share.js';
 import { useHouseholdSession } from '../../app/useHouseholdSession.js';
 import { SectionLabel, Switch, SegButton } from '../../components/ui.jsx';
 
+const AVATAR_COLORS = ['#7C5CFC', '#FF5470', '#06D6A0', '#F59E0B', '#EC4899', '#3B82F6'];
+function colorForName(name){
+  let hash = 0;
+  for(let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
 export function HouseholdHeader(){
   const t = useT();
   return (
@@ -51,13 +58,16 @@ export function HouseholdBody(){
 
   return (
     <>
-      <div className="bg-kale rounded-[20px] px-5 py-[26px] text-center text-card mb-5">
-        <div className="text-xs text-[#B9D4CF] uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case font-bold mb-2.5">{t('your_code_label')}</div>
+      <div
+        className="rounded-[20px] px-5 py-[26px] text-center text-card mb-5 shadow-[var(--shadow-app)]"
+        style={{ background: 'var(--gradient-brand)' }}
+      >
+        <div className="text-xs text-white/75 uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case font-bold mb-2.5">{t('your_code_label')}</div>
         <div className="force-mono text-[34px] font-semibold tracking-[4px] mb-4">{state.code}</div>
-        <div className="text-[13px] text-[#B9D4CF] leading-relaxed mb-[18px]">{t('share_desc')}</div>
+        <div className="text-[13px] text-white/80 leading-relaxed mb-[18px]">{t('share_desc')}</div>
         <button
           onClick={() => shareHouseholdCode(state.code, state.lang)}
-          className="bg-mint text-card border-none px-[22px] py-3 rounded-[13px] font-bold text-sm cursor-pointer"
+          className="bg-card text-mint-deep border-none px-[22px] py-3 rounded-[13px] font-bold text-sm cursor-pointer"
         >
           {t('share_code_btn')}
         </button>
@@ -66,7 +76,10 @@ export function HouseholdBody(){
       <SectionLabel>{t('members_label')}</SectionLabel>
       {members.map((m, i) => (
         <div key={i} className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3 mb-2.5">
-          <div className="w-[34px] h-[34px] rounded-full bg-mint text-card flex items-center justify-center font-bold text-[13px] shrink-0">
+          <div
+            className="w-[34px] h-[34px] rounded-full text-card flex items-center justify-center font-bold text-[13px] shrink-0"
+            style={{ background: colorForName(m) }}
+          >
             {m.slice(0, 1).toUpperCase()}
           </div>
           <div>{m}</div>
@@ -74,7 +87,7 @@ export function HouseholdBody(){
       ))}
 
       <SectionLabel>{t('language_label')}</SectionLabel>
-      <div className="flex bg-[#EAF2F0] rounded-xl p-[3px] mb-3.5">
+      <div className="flex bg-track rounded-xl p-[3px] mb-3.5">
         <SegButton active={state.lang === 'en'} onClick={() => changeLang('en')}>English</SegButton>
         <SegButton active={state.lang === 'ar'} onClick={() => changeLang('ar')}>العربية</SegButton>
       </div>
@@ -89,7 +102,7 @@ export function HouseholdBody(){
       <SectionLabel>{t('tab_fridge')}</SectionLabel>
       <button
         onClick={handleLeave}
-        className="w-full bg-card text-berry border-[1.5px] border-[#F3CDC8] rounded-[14px] py-[15px] text-[15.5px] font-bold cursor-pointer"
+        className="w-full bg-card text-berry border-[1.5px] border-[#FFD3DB] rounded-[14px] py-[15px] text-[15.5px] font-bold cursor-pointer"
       >
         {t('leave_household_btn')}
       </button>

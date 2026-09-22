@@ -14,14 +14,16 @@ export function Switch({ on, onToggle }){
   );
 }
 
-export function CatChip({ selected, onClick, children }){
+/** color: optional hex used for the selected fill (per-category accent). Falls back to the brand gradient. */
+export function CatChip({ selected, onClick, color, children }){
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border text-[13.5px] font-semibold whitespace-nowrap cursor-pointer ${
-        selected ? 'bg-kale border-kale text-card' : 'bg-card border-line text-kale'
+      className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border text-[13.5px] font-semibold whitespace-nowrap cursor-pointer transition-colors ${
+        selected ? 'border-transparent text-card' : 'bg-card border-line text-kale'
       }`}
+      style={selected ? { background: color || 'var(--gradient-brand)' } : undefined}
     >
       {children}
     </button>
@@ -33,8 +35,8 @@ export function SegButton({ active, onClick, children }){
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 py-[9px] text-center rounded-[9px] border-none text-[13.5px] font-bold cursor-pointer ${
-        active ? 'bg-card text-kale shadow-[0_2px_6px_rgba(22,56,50,0.12)]' : 'bg-transparent text-fog'
+      className={`flex-1 py-[9px] text-center rounded-[9px] border-none text-[13.5px] font-bold cursor-pointer transition-colors ${
+        active ? 'bg-card text-mint-deep shadow-[0_2px_6px_rgba(92,63,217,0.16)]' : 'bg-transparent text-fog'
       }`}
     >
       {children}
@@ -42,10 +44,17 @@ export function SegButton({ active, onClick, children }){
   );
 }
 
-export function SectionLabel({ icon, children }){
+export function SectionLabel({ icon, color, children }){
   return (
-    <div className="text-xs font-bold uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case text-fog mt-[22px] mb-2.5 flex items-center gap-1.5">
-      {icon && <span>{icon}</span>}
+    <div className="text-xs font-bold uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case text-fog mt-[22px] mb-2.5 flex items-center gap-2">
+      {icon && (
+        <span
+          className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] shrink-0"
+          style={{ background: color ? `${color}26` : 'var(--color-track)' }}
+        >
+          {icon}
+        </span>
+      )}
       {children}
     </div>
   );

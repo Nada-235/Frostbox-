@@ -7,21 +7,22 @@ import { uid } from '../../lib/utils.js';
 import { quickAddShoppingItem, toggleShoppingItem, deleteShoppingItem } from '../../lib/firebase.js';
 import { SectionLabel, EmptyState } from '../../components/ui.jsx';
 
-function ShopRow({ item, t, onOpen }){
+function ShopRow({ item, t, color, onOpen }){
   const prices = item.prices || [];
   let priceLine = null;
   if(prices.length){
     const sorted = prices.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     const best = sorted[0];
     const more = prices.length > 1 ? ` +${prices.length - 1} ${t('more_suffix')}` : '';
-    priceLine = <div className="text-xs text-mint-deep font-bold mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">🏷️ {String(best.price)} · {best.place}{more}</div>;
+    priceLine = <div className="text-xs text-teal font-bold mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">🏷️ {String(best.price)} · {best.place}{more}</div>;
   }
 
   return (
     <div className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-2.5">
       <button
         onClick={() => toggleShoppingItem(item.householdCode, item.id, !item.checked)}
-        className={`w-[23px] h-[23px] rounded-full border-2 border-mint shrink-0 cursor-pointer flex items-center justify-center text-[13px] text-card ${item.checked ? 'bg-mint' : ''}`}
+        className="w-[23px] h-[23px] rounded-full border-2 shrink-0 cursor-pointer flex items-center justify-center text-[13px] text-card transition-colors"
+        style={{ borderColor: color || 'var(--color-mint)', background: item.checked ? (color || 'var(--color-mint)') : 'transparent' }}
       >
         {item.checked ? '✓' : ''}
       </button>
@@ -85,8 +86,8 @@ export function ShoppingBody(){
           if(!items.length) return null;
           return (
             <div key={cat.id}>
-              <SectionLabel icon={cat.icon}>{catLabel(cat, state.lang)}</SectionLabel>
-              {items.map(item => <ShopRow key={item.id} item={withCode(item)} t={t} onOpen={() => openItem(item)} />)}
+              <SectionLabel icon={cat.icon} color={cat.color}>{catLabel(cat, state.lang)}</SectionLabel>
+              {items.map(item => <ShopRow key={item.id} item={withCode(item)} t={t} color={cat.color} onOpen={() => openItem(item)} />)}
             </div>
           );
         })}

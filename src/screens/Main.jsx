@@ -16,7 +16,7 @@ function TabButton({ icon, label, active, onClick }){
       onClick={onClick}
       className={`bg-transparent border-none flex flex-col items-center gap-1 text-[11px] font-semibold cursor-pointer w-20 ${active ? 'text-mint-deep' : 'text-fog'}`}
     >
-      <span className="text-[21px]">{icon}</span>
+      <span className={`text-[19px] w-9 h-9 rounded-full flex items-center justify-center transition-colors ${active ? 'bg-track' : ''}`}>{icon}</span>
       {label}
     </button>
   );
@@ -63,7 +63,7 @@ export function Main(){
       {showFab && (
         <button
           onClick={openAdd}
-          className="fixed end-5 bottom-24 w-[58px] h-[58px] rounded-full bg-mint text-card border-none text-[28px] font-normal leading-none flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94]"
+          className="btn-brand fixed end-5 bottom-24 w-[58px] h-[58px] rounded-full border-none text-[28px] font-normal leading-none flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94]"
         >
           +
         </button>

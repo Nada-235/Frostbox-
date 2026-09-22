@@ -9,13 +9,16 @@ export function Setup(){
     <div
       className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-7 py-8 text-center"
       style={{
-        background: `radial-gradient(circle at 20% 10%, rgba(79,182,168,0.18), transparent 40%),
-          radial-gradient(circle at 85% 85%, rgba(242,163,59,0.14), transparent 45%),
+        background: `radial-gradient(circle at 20% 10%, rgba(124,92,252,0.22), transparent 40%),
+          radial-gradient(circle at 85% 85%, rgba(255,84,112,0.16), transparent 45%),
           var(--color-frost)`,
       }}
     >
       <LangSwitchButton />
-      <div className="w-[74px] h-[74px] rounded-[22px] bg-kale flex items-center justify-center mb-5 shadow-[var(--shadow-app)] shrink-0">
+      <div
+        className="w-[74px] h-[74px] rounded-[22px] flex items-center justify-center mb-5 shadow-[var(--shadow-app)] shrink-0"
+        style={{ background: 'var(--gradient-brand)' }}
+      >
         <Logo />
       </div>
       <h1 className={`${headingFont} text-[30px] text-kale mb-2`}>Frostbox</h1>

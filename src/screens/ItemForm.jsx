@@ -150,7 +150,7 @@ export function ItemForm(){
         <Field label={t('label_category')}>
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
             {FOOD_CATEGORIES.map(c => (
-              <CatChip key={c.id} selected={category === c.id} onClick={() => setCategory(c.id)}>
+              <CatChip key={c.id} selected={category === c.id} color={c.color} onClick={() => setCategory(c.id)}>
                 {c.icon} {catLabel(c, lang)}
               </CatChip>
             ))}
@@ -158,7 +158,7 @@ export function ItemForm(){
         </Field>
 
         <Field label={t('label_storage')}>
-          <div className="flex bg-[#EAF2F0] rounded-xl p-[3px]">
+          <div className="flex bg-track rounded-xl p-[3px]">
             <SegButton active={location === 'fridge'} onClick={() => setLocation('fridge')}>🧊 {t('filter_fridge')}</SegButton>
             <SegButton active={location === 'freezer'} onClick={() => setLocation('freezer')}>❄️ {t('filter_freezer')}</SegButton>
           </div>
@@ -196,14 +196,14 @@ export function ItemForm(){
       <div className="shrink-0 py-3.5 glass border-t border-line sticky bottom-0">
         <div className="flex gap-2.5">
           <button onClick={goBack} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_cancel')}</button>
-          <button onClick={handleSave} disabled={saving} className="flex-1 py-[15px] rounded-2xl border-none bg-kale text-card text-[15.5px] font-bold cursor-pointer disabled:opacity-60">
+          <button onClick={handleSave} disabled={saving} className="btn-brand flex-1 py-[15px] rounded-2xl border-none text-[15.5px] font-bold cursor-pointer disabled:opacity-60">
             {isEdit ? t('btn_save_changes') : t('btn_add_to_fridge')}
           </button>
         </div>
         {isEdit && (
           <div className="flex gap-2.5 mt-2.5">
             <button onClick={handleAddToShopping} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_add_to_shopping')}</button>
-            <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#F3CDC8] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
+            <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#FFD3DB] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
           </div>
         )}
       </div>

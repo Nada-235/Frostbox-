@@ -92,7 +92,7 @@ export function ShopItemForm(){
       <Field label={t('label_category')}>
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
           {SHOP_CATEGORIES.map(c => (
-            <CatChip key={c.id} selected={category === c.id} onClick={() => setCategory(c.id)}>
+            <CatChip key={c.id} selected={category === c.id} color={c.color} onClick={() => setCategory(c.id)}>
               {c.icon} {catLabel(c, lang)}
             </CatChip>
           ))}
@@ -109,7 +109,7 @@ export function ShopItemForm(){
                 <div className="flex-1 min-w-0 flex items-center gap-2">
                   <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{p.place}</span>
                   {p.id === bestId && (
-                    <span className="text-[10.5px] font-bold bg-[#E4F5F2] text-mint-deep py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
+                    <span className="text-[10.5px] font-bold bg-[#DBFAF0] text-[#04966F] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
                       {t('best_price_badge')}
                     </span>
                   )}
@@ -131,17 +131,17 @@ export function ShopItemForm(){
             placeholder={t('price_placeholder')}
             className="flex-1 min-w-0 px-[13px] py-3 rounded-xl border-[1.5px] border-line text-[14.5px] text-kale bg-card"
           />
-          <button onClick={addPrice} className="w-11 shrink-0 rounded-xl border-none bg-mint text-card text-xl cursor-pointer">+</button>
+          <button onClick={addPrice} className="btn-brand w-11 shrink-0 rounded-xl border-none text-xl cursor-pointer">+</button>
         </div>
       </Field>
 
       <div className="flex gap-2.5">
         <button onClick={goBack} className="flex-1 py-[15px] rounded-2xl border border-line bg-card text-kale text-[15.5px] font-bold cursor-pointer">{t('btn_cancel')}</button>
-        <button onClick={handleSave} disabled={saving} className="flex-1 py-[15px] rounded-2xl border-none bg-kale text-card text-[15.5px] font-bold cursor-pointer disabled:opacity-60">{t('btn_save_item')}</button>
+        <button onClick={handleSave} disabled={saving} className="btn-brand flex-1 py-[15px] rounded-2xl border-none text-[15.5px] font-bold cursor-pointer disabled:opacity-60">{t('btn_save_item')}</button>
       </div>
       {isEdit && (
         <div className="flex gap-2.5 mt-2.5">
-          <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#F3CDC8] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
+          <button onClick={handleDelete} className="flex-1 py-[15px] rounded-2xl border-[1.5px] border-[#FFD3DB] bg-card text-berry text-[15.5px] font-bold cursor-pointer">{t('btn_delete')}</button>
         </div>
       )}
     </div>
