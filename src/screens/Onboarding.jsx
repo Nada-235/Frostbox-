@@ -30,8 +30,8 @@ export function Onboarding(){
     <div
       className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-3 py-8 text-center"
       style={{
-        background: `radial-gradient(circle at 20% 10%, rgba(124,92,252,0.22), transparent 40%),
-          radial-gradient(circle at 85% 85%, rgba(255,84,112,0.16), transparent 45%),
+        background: `radial-gradient(circle at 20% 10%, rgba(106,153,78,0.22), transparent 40%),
+          radial-gradient(circle at 85% 85%, rgba(188,71,73,0.14), transparent 45%),
           var(--color-frost)`,
       }}
     >
@@ -47,7 +47,7 @@ export function Onboarding(){
 
       <button
         onClick={handleStart}
-        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_8px_20px_rgba(124,92,252,0.35)]"
+        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_8px_20px_rgba(56,102,65,0.35)]"
       >
         {t('start_fridge')}
       </button>
@@ -72,7 +72,7 @@ export function Onboarding(){
           <button
             onClick={handleJoin}
             disabled={joining}
-            className="btn-brand w-full py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer active:scale-[0.97] transition-transform disabled:opacity-60 shadow-[0_8px_20px_rgba(124,92,252,0.35)]"
+            className="btn-brand w-full py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer active:scale-[0.97] transition-transform disabled:opacity-60 shadow-[0_8px_20px_rgba(56,102,65,0.35)]"
           >
             {t('join_fridge_confirm')}
           </button>

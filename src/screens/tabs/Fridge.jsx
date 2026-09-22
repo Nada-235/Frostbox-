@@ -7,9 +7,9 @@ import { shareHouseholdCode } from '../../lib/share.js';
 import { CatChip, SegButton, SectionLabel, EmptyState } from '../../components/ui.jsx';
 
 const CHIP_STYLES = {
-  fresh: 'bg-[#DBFAF0] text-[#04966F]',
-  soon: 'bg-[#FFF1D6] text-[#B8730A]',
-  expired: 'bg-[#FFE1E7] text-berry',
+  fresh: 'bg-[#E9F1DC] text-[#3F6B2A]',
+  soon: 'bg-[#FBEAD2] text-[#9C5A1F]',
+  expired: 'bg-[#F6DCDC] text-berry',
 };
 
 function ItemCard({ item, lang, onOpen }){
@@ -57,7 +57,7 @@ export function FridgeHeader(){
       </div>
       <button
         onClick={() => shareHouseholdCode(state.code, state.lang)}
-        className="btn-brand force-mono text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_4px_12px_rgba(124,92,252,0.35)]"
+        className="btn-brand force-mono text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_4px_12px_rgba(56,102,65,0.35)]"
       >
         {state.code}
       </button>

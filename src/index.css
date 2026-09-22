@@ -2,37 +2,37 @@
 @import "tailwindcss";
 
 @theme {
-  /* Vibrant palette: violet brand, coral danger, amber warning, teal success. */
-  --color-frost: #F6F3FF;
+  /* Sage & cream palette: 386641 / 6A994E / A7C957 / F2E8CF / BC4749 */
+  --color-frost: #F2E8CF;
   --color-card: #FFFFFF;
-  --color-kale: #1D1836;
-  --color-mint: #7C5CFC;
-  --color-mint-deep: #5B3FD9;
-  --color-citrus: #FFB020;
-  --color-berry: #FF5470;
-  --color-fog: #756E92;
-  --color-line: #EAE4FB;
-  --color-teal: #06D6A0;
-  --color-track: #EEF0F3;
+  --color-kale: #283618;
+  --color-mint: #6A994E;
+  --color-mint-deep: #386641;
+  --color-citrus: #DDA15E;
+  --color-berry: #BC4749;
+  --color-fog: #6B6B4F;
+  --color-line: #E3D9B8;
+  --color-teal: #4C6B2C;
+  --color-track: #EAE0C2;
 
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-arabic: 'Tajawal', 'Inter', sans-serif;
 
-  --shadow-app: 0 8px 28px rgba(92,63,217,0.16);
-  --shadow-sm: 0 2px 8px rgba(29,24,54,0.06);
-  --shadow-fab: 0 10px 24px rgba(124,92,252,0.5);
-  --shadow-banner: 0 6px 18px rgba(255,84,112,0.35);
-  --gradient-brand: linear-gradient(135deg, #7C5CFC, #C44FE0);
-  --gradient-banner: linear-gradient(135deg, #FF5470, #FF3E8E);
+  --shadow-app: 0 8px 28px rgba(40,54,24,0.16);
+  --shadow-sm: 0 2px 8px rgba(40,54,24,0.08);
+  --shadow-fab: 0 10px 24px rgba(106,153,78,0.5);
+  --shadow-banner: 0 6px 18px rgba(188,71,73,0.35);
+  --gradient-brand: linear-gradient(135deg, #6A994E, #386641);
+  --gradient-banner: linear-gradient(135deg, #BC4749, #9C3A3C);
 }
 
 @layer base {
   * { -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    background: linear-gradient(160deg, #EDE7FE 0%, #FBE4F1 100%);
+    background: linear-gradient(160deg, #F2E8CF 0%, #E3D9B8 100%);
     font-family: var(--font-sans);
     color: var(--color-kale);
     display: flex;

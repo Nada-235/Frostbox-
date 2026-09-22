@@ -36,7 +36,7 @@ export function SegButton({ active, onClick, children }){
       type="button"
       onClick={onClick}
       className={`flex-1 py-[9px] text-center rounded-[9px] border-none text-[13.5px] font-bold cursor-pointer transition-colors ${
-        active ? 'bg-card text-mint-deep shadow-[0_2px_6px_rgba(92,63,217,0.16)]' : 'bg-transparent text-fog'
+        active ? 'bg-card text-mint-deep shadow-[0_2px_6px_rgba(40,54,24,0.16)]' : 'bg-transparent text-fog'
       }`}
     >
       {children}
@@ -63,7 +63,7 @@ export function SectionLabel({ icon, color, children }){
 const ICON_BTN_VARIANTS = {
   ghost: 'bg-card border border-line text-kale',
   primary: 'btn-brand border-none',
-  danger: 'bg-card border-[1.5px] border-[#FFD3DB] text-berry',
+  danger: 'bg-card border-[1.5px] border-[#EFC9C9] text-berry',
 };
 
 /** Compact icon-only action button (form footers) — label is used for a11y (aria-label/title), not shown. */

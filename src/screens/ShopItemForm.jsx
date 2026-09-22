@@ -109,7 +109,7 @@ export function ShopItemForm(){
                 <div className="flex-1 min-w-0 flex items-center gap-2">
                   <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{p.place}</span>
                   {p.id === bestId && (
-                    <span className="text-[10.5px] font-bold bg-[#DBFAF0] text-[#04966F] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
+                    <span className="text-[10.5px] font-bold bg-[#E9F1DC] text-[#3F6B2A] py-[3px] px-2 rounded-lg shrink-0 uppercase rtl:normal-case tracking-[0.04em] rtl:tracking-normal">
                       {t('best_price_badge')}
                     </span>
                   )}

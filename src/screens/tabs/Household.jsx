@@ -102,7 +102,7 @@ export function HouseholdBody(){
       <SectionLabel>{t('tab_fridge')}</SectionLabel>
       <button
         onClick={handleLeave}
-        className="w-full bg-card text-berry border-[1.5px] border-[#FFD3DB] rounded-[14px] py-[15px] text-[15.5px] font-bold cursor-pointer"
+        className="w-full bg-card text-berry border-[1.5px] border-[#EFC9C9] rounded-[14px] py-[15px] text-[15.5px] font-bold cursor-pointer"
       >
         {t('leave_household_btn')}
       </button>
