@@ -82,7 +82,7 @@ export function ShopItemForm(){
   return (
     <>
       <div
-        className="shrink-0 flex items-center gap-2.5 px-3 pb-3.5 mb-3 sticky top-0 glass-brand z-[100]"
+        className="shrink-0 flex items-center gap-2.5 px-3 pb-[26px] sticky top-0 glass-brand z-[100]"
         style={{ paddingTop: 'calc(env(safe-area-inset-top) + 20px)' }}
       >
         <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-kale shrink-0">

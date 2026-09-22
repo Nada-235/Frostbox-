@@ -50,7 +50,7 @@ export function Main(){
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <div
-            className="-mx-3 px-3 mb-3 glass-brand"
+            className="-mx-3 px-3 pb-3 glass-brand"
             style={{ paddingTop: 'calc(env(safe-area-inset-top) + 10px)' }}
           >
             <Header />
