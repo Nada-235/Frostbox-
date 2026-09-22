@@ -28,7 +28,7 @@ export function Onboarding(){
 
   return (
     <div
-      className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-7 py-8 text-center"
+      className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-3 py-8 text-center"
       style={{
         background: `radial-gradient(circle at 20% 10%, rgba(124,92,252,0.22), transparent 40%),
           radial-gradient(circle at 85% 85%, rgba(255,84,112,0.16), transparent 45%),

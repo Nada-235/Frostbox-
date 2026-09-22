@@ -40,6 +40,15 @@
   }
   button, input, textarea { font-family: inherit; }
 
+  /* #app is the actual flex item of body (the React root div in index.html
+     has no Tailwind classes of its own) — without an explicit width here it
+     sizes to its widest descendant's content instead of the viewport. */
+  #app {
+    width: 100%;
+    max-width: 460px;
+    min-width: 0;
+  }
+
   /* Arabic mode: switch the whole shell to Tajawal, except spots that must
      stay monospace + LTR (codes, prices rendered as digits). */
   [dir="rtl"] {

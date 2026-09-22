@@ -43,7 +43,7 @@ export function Main(){
     <>
       <div className="flex flex-col flex-1 min-h-0">
         <div
-          className="flex-1 min-h-0 overflow-y-auto px-[18px] pb-6"
+          className="flex-1 min-h-0 overflow-y-auto px-3 pb-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <div className="pt-2.5"><Header /></div>

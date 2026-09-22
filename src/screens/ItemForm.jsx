@@ -119,7 +119,7 @@ export function ItemForm(){
 
   return (
     <>
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-[18px] pt-5 pb-10">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-5 pb-10">
         <div className="flex items-center gap-2.5 mb-[18px]">
           <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-base text-kale shrink-0">
             {backArrow(lang)}
