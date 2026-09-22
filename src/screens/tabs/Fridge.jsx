@@ -96,13 +96,13 @@ export function FridgeBody(){
   );
 
   const filters = (
-    <div className="w-full bg-track sticky z-[99] pb-3.5">
-      <div className="flex bg-track rounded-xl p-[3px] mb-3.5 sticky top-0 z-40">
+    <div className="w-full bg-track sticky top-0 z-[99] pb-3.5 border-b border-line">
+      <div className="flex bg-track rounded-xl p-[3px] mb-3.5">
         <SegButton active={locationFilter === 'all'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'all' })}>{t('filter_all')}</SegButton>
         <SegButton active={locationFilter === 'fridge'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'fridge' })}>🧊 {t('filter_fridge')}</SegButton>
         <SegButton active={locationFilter === 'freezer'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'freezer' })}>❄️ {t('filter_freezer')}</SegButton>
       </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5 mb-4 glass border-b border-line pt-2">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
         <CatChip selected={categoryFilter === 'all'} onClick={() => dispatch({ type: 'SET_CATEGORY_FILTER', value: 'all' })}>{t('filter_all')}</CatChip>
         {FOOD_CATEGORIES.map(c => (
           <CatChip key={c.id} selected={categoryFilter === c.id} color={c.color} onClick={() => dispatch({ type: 'SET_CATEGORY_FILTER', value: c.id })}>
