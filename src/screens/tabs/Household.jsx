@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Check, Database, ChevronRight } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
-import { setLang } from '../../lib/localStorage.js';
 import { shareHouseholdCode } from '../../lib/share.js';
 import { useHouseholdSession } from '../../app/useHouseholdSession.js';
-import { setTheme as persistTheme } from '../../lib/localStorage.js';
-import { THEMES } from '../../lib/themes.js';
+import {
+  setLang, setTheme as persistTheme, setMode as persistMode,
+  setCustomColor as persistCustomColor, setFontEn as persistFontEn, setFontAr as persistFontAr,
+} from '../../lib/localStorage.js';
+import { THEMES, CUSTOM_THEME_ID, FONTS } from '../../lib/themes.js';
 import { SectionLabel, Switch, SegButton } from '../../components/ui.jsx';
+import { ColorWheelPicker } from '../../components/ColorWheelPicker.jsx';
 
 const AVATAR_COLORS = ['#7C5CFC', '#FF5470', '#06D6A0', '#F59E0B', '#EC4899', '#3B82F6'];
 function colorForName(name){
@@ -47,6 +50,26 @@ export function HouseholdBody(){
   function changeTheme(themeId){
     persistTheme(themeId);
     dispatch({ type: 'SET_THEME', theme: themeId });
+  }
+
+  function changeCustomColor(hex){
+    persistCustomColor(hex);
+    dispatch({ type: 'SET_CUSTOM_COLOR', color: hex });
+  }
+
+  function changeMode(mode){
+    persistMode(mode);
+    dispatch({ type: 'SET_MODE', mode });
+  }
+
+  function changeFontEn(id){
+    persistFontEn(id);
+    dispatch({ type: 'SET_FONT_EN', id });
+  }
+
+  function changeFontAr(id){
+    persistFontAr(id);
+    dispatch({ type: 'SET_FONT_AR', id });
   }
 
   async function toggleNotifications(){
@@ -110,7 +133,7 @@ export function HouseholdBody(){
       ))}
 
       <SectionLabel>{t('theme_label')}</SectionLabel>
-      <div className="flex gap-3 mb-5 px-0.5">
+      <div className="flex gap-3 mb-3 px-0.5 overflow-x-auto no-scrollbar">
         {THEMES.map(theme => (
           <button
             key={theme.id}
@@ -118,7 +141,7 @@ export function HouseholdBody(){
             onClick={() => changeTheme(theme.id)}
             aria-label={theme.name}
             title={theme.name}
-            className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer"
+            className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
           >
             <span
               className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
@@ -134,12 +157,80 @@ export function HouseholdBody(){
             <span className="text-[11px] font-medium text-fog">{theme.name}</span>
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => changeTheme(CUSTOM_THEME_ID)}
+          aria-label={t('theme_custom_name')}
+          title={t('theme_custom_name')}
+          className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
+        >
+          <span
+            className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
+            style={{
+              background: state.theme === CUSTOM_THEME_ID
+                ? state.customColor
+                : 'conic-gradient(from 90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
+              boxShadow: state.theme === CUSTOM_THEME_ID
+                ? `0 0 0 2px var(--color-card), 0 0 0 4px ${state.customColor}`
+                : '0 1px 3px rgba(0,0,0,0.2)',
+            }}
+          >
+            {state.theme === CUSTOM_THEME_ID && <Check size={16} strokeWidth={3} className="text-card" />}
+          </span>
+          <span className="text-[11px] font-medium text-fog">{t('theme_custom_name')}</span>
+        </button>
+      </div>
+
+      {state.theme === CUSTOM_THEME_ID && (
+        <div className="bg-card border border-line rounded-2xl px-3.5 py-5 mb-5 flex justify-center">
+          <ColorWheelPicker value={state.customColor} onChange={changeCustomColor} />
+        </div>
+      )}
+
+      <SectionLabel>{t('mode_label')}</SectionLabel>
+      <div className="flex bg-frost rounded-xl p-[3px] mb-5">
+        <SegButton active={state.mode === 'light'} onClick={() => changeMode('light')}>{t('mode_light')}</SegButton>
+        <SegButton active={state.mode === 'dark'} onClick={() => changeMode('dark')}>{t('mode_dark')}</SegButton>
       </div>
 
       <SectionLabel>{t('language_label')}</SectionLabel>
       <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
         <SegButton active={state.lang === 'en'} onClick={() => changeLang('en')}>English</SegButton>
         <SegButton active={state.lang === 'ar'} onClick={() => changeLang('ar')}>العربية</SegButton>
+      </div>
+
+      <SectionLabel>{t('font_label')}</SectionLabel>
+      <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_english')}</div>
+      <div className="flex gap-2 mb-3 overflow-x-auto no-scrollbar pb-0.5">
+        {FONTS.en.map(f => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => changeFontEn(f.id)}
+            style={{ fontFamily: `'${f.display}', sans-serif` }}
+            className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
+              state.fontEn === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
+            }`}
+          >
+            {f.name}
+          </button>
+        ))}
+      </div>
+      <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_arabic')}</div>
+      <div className="flex gap-2 mb-3.5 overflow-x-auto no-scrollbar pb-0.5">
+        {FONTS.ar.map(f => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => changeFontAr(f.id)}
+            style={{ fontFamily: `'${f.family}', sans-serif` }}
+            className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
+              state.fontAr === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
+            }`}
+          >
+            {f.name}
+          </button>
+        ))}
       </div>
 
       <SectionLabel>{t('notifications_label')}</SectionLabel>

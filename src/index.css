@@ -1,13 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Tajawal:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Tajawal:wght@400;500;700;800&family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Almarai:wght@400;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
   /* Default theme: Sage & cream — 386641 / 6A994E / A7C957 / F2E8CF / BC4749.
      Other themes override these same custom properties under [data-theme="…"]
-     below, so every utility that references var(--color-*) re-themes for free. */
+     below, so every utility that references var(--color-*) re-themes for free.
+     --color-ink is a shadow-only twin of --color-kale: [data-mode="dark"]
+     flips --color-kale (text) to a light color but leaves --color-ink alone,
+     so shadows stay dark-tinted (not a pale, invisible shadow) in dark mode. */
   --color-frost: #FAF6E9;
   --color-card: #FFFFFF;
   --color-kale: #283618;
+  --color-ink: #283618;
   --color-mint: #6A994E;
   --color-mint-deep: #386641;
   --color-citrus: #DDA15E;
@@ -55,8 +59,8 @@
   /* Derived, theme-reactive shadows/gradients — color-mix() against the
      active theme's own tokens, so these never need per-theme overrides. */
   :root {
-    --shadow-app: 0 6px 20px color-mix(in srgb, var(--color-kale) 9%, transparent);
-    --shadow-sm: 0 2px 6px color-mix(in srgb, var(--color-kale) 5%, transparent);
+    --shadow-app: 0 6px 20px color-mix(in srgb, var(--color-ink) 9%, transparent);
+    --shadow-sm: 0 2px 6px color-mix(in srgb, var(--color-ink) 5%, transparent);
     --shadow-fab: 0 6px 16px color-mix(in srgb, var(--color-mint) 28%, transparent);
     --shadow-banner: 0 4px 12px color-mix(in srgb, var(--color-berry) 20%, transparent);
     --gradient-brand: linear-gradient(135deg, var(--color-mint), var(--color-mint-deep));
@@ -65,38 +69,65 @@
 
   /* ---- Theme presets — pick one, see lib/themes.js for the picker list ---- */
   [data-theme="ocean"] {
-    --color-frost: #EFF6F8; --color-card: #FFFFFF; --color-kale: #0B2E3D;
+    --color-frost: #EFF6F8; --color-card: #FFFFFF; --color-kale: #0B2E3D; --color-ink: #0B2E3D;
     --color-mint: #2E86AB; --color-mint-deep: #145C7A; --color-citrus: #E6A23C;
     --color-berry: #D64550; --color-fog: #5C7A88; --color-line: #D3E6EC;
     --color-teal: #1B998B; --color-track: #E3EFF3;
   }
   [data-theme="sunset"] {
-    --color-frost: #FFF3E9; --color-card: #FFFFFF; --color-kale: #4A2511;
+    --color-frost: #FFF3E9; --color-card: #FFFFFF; --color-kale: #4A2511; --color-ink: #4A2511;
     --color-mint: #E76F51; --color-mint-deep: #C9482E; --color-citrus: #E9C46A;
     --color-berry: #9D2933; --color-fog: #8C6A56; --color-line: #F0DCC8;
     --color-teal: #2A9D8F; --color-track: #FBE8D5;
   }
   [data-theme="berry"] {
-    --color-frost: #FBF0F5; --color-card: #FFFFFF; --color-kale: #3B0B2E;
+    --color-frost: #FBF0F5; --color-card: #FFFFFF; --color-kale: #3B0B2E; --color-ink: #3B0B2E;
     --color-mint: #A63A6B; --color-mint-deep: #7A2350; --color-citrus: #E0A96D;
     --color-berry: #C1495A; --color-fog: #8C6478; --color-line: #F0D9E4;
     --color-teal: #4C8577; --color-track: #F7E3EE;
   }
   [data-theme="slate"] {
-    --color-frost: #F1F3F5; --color-card: #FFFFFF; --color-kale: #1F2937;
+    --color-frost: #F1F3F5; --color-card: #FFFFFF; --color-kale: #1F2937; --color-ink: #1F2937;
     --color-mint: #475569; --color-mint-deep: #334155; --color-citrus: #D97706;
     --color-berry: #DC2626; --color-fog: #64748B; --color-line: #E2E8F0;
     --color-teal: #0D9488; --color-track: #E7EBEF;
   }
   [data-theme="bloom"] {
-    --color-frost: #F5F5F5; --color-card: #FFFFFF; --color-kale: #262626;
+    --color-frost: #F5F5F5; --color-card: #FFFFFF; --color-kale: #262626; --color-ink: #262626;
     --color-mint: #E34989; --color-mint-deep: #AA3767; --color-citrus: #E8A33D;
     --color-berry: #D4557A; --color-fog: #6B7280; --color-line: #E5E5E5;
     --color-teal: #7A9420; --color-track: #ECECEC;
   }
 
-  /* Arabic mode: switch the whole shell to Tajawal, except spots that must
-     stay monospace + LTR (codes, prices rendered as digits). */
+  /* Custom theme: neutrals stay a plain light grey regardless of which color
+     is picked — only the accent (mint/mint-deep/teal) is driven by the
+     user's own --user-accent, set inline by the color wheel picker. */
+  [data-theme="custom"] {
+    --color-frost: #F2F2F3; --color-card: #FFFFFF; --color-kale: #22252A; --color-ink: #22252A;
+    --color-mint: var(--user-accent, #6A994E);
+    --color-mint-deep: color-mix(in srgb, var(--user-accent, #6A994E) 78%, black);
+    --color-citrus: color-mix(in srgb, var(--user-accent, #6A994E) 55%, #DDA15E 45%);
+    --color-berry: #BC4749;
+    --color-fog: #6B6E76; --color-line: #E2E4E8;
+    --color-teal: color-mix(in srgb, var(--user-accent, #6A994E) 75%, black 15%);
+    --color-track: #E9EAEC;
+  }
+
+  /* Dark mode — a mode toggle layered on top of whichever color theme is
+     active. Only the neutral surface/text tokens flip; the theme's accent
+     colors (mint/mint-deep/citrus/berry/teal) and --color-ink (used for
+     shadow tinting) are left as the theme defines them. */
+  :root[data-mode="dark"] {
+    --color-frost: #17191D;
+    --color-card: #1E2126;
+    --color-kale: #ECEDEF;
+    --color-fog: #9BA1AA;
+    --color-line: #2B2F36;
+    --color-track: #24272D;
+  }
+
+  /* Arabic mode: switch the whole shell to the chosen Arabic font, except
+     spots that must stay monospace + LTR (codes, prices rendered as digits). */
   [dir="rtl"] {
     font-family: var(--font-arabic);
   }

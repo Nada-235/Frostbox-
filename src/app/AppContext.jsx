@@ -10,6 +10,10 @@ const initialState = {
   myName: null,
   lang: 'en',
   theme: 'sage',
+  mode: 'light',            // 'light' | 'dark'
+  customColor: '#6A994E',   // accent color for theme: 'custom', picked via the color wheel
+  fontEn: 'default',
+  fontAr: 'tajawal',
   data: { items: [], shopping: [], members: [], catalog: [] },
   tab: 'fridge',           // 'fridge' | 'shopping' | 'household'
   screen: 'loading',       // 'loading' | 'setup' | 'onboard' | 'main' | 'add' | 'shopadd'
@@ -23,11 +27,11 @@ const initialState = {
   dueReminders: [],
 };
 
-function signedOutState(lang, theme){
+function signedOutState(lang, prefs){
   return {
     ...initialState,
     lang,
-    theme,
+    ...prefs,
     screen: 'onboard',
   };
 }
@@ -36,6 +40,10 @@ function reducer(state, action){
   switch(action.type){
     case 'SET_LANG': return { ...state, lang: action.lang };
     case 'SET_THEME': return { ...state, theme: action.theme };
+    case 'SET_MODE': return { ...state, mode: action.mode };
+    case 'SET_CUSTOM_COLOR': return { ...state, customColor: action.color };
+    case 'SET_FONT_EN': return { ...state, fontEn: action.id };
+    case 'SET_FONT_AR': return { ...state, fontAr: action.id };
     case 'SET_SCREEN': return { ...state, screen: action.screen };
     case 'SET_TAB': return { ...state, tab: action.tab };
     case 'SET_JOIN_BOX_OPEN': return { ...state, joinBoxOpen: action.open };
@@ -67,7 +75,10 @@ function reducer(state, action){
         },
       };
     }
-    case 'RESET': return signedOutState(action.lang, state.theme);
+    case 'RESET': return signedOutState(action.lang, {
+      theme: state.theme, mode: state.mode, customColor: state.customColor,
+      fontEn: state.fontEn, fontAr: state.fontAr,
+    });
     default: return state;
   }
 }
