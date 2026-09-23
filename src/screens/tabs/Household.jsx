@@ -12,7 +12,7 @@ import {
 import { THEMES, CUSTOM_THEME_ID, FONTS } from '../../lib/themes.js';
 import { SectionLabel, Switch, SegButton } from '../../components/ui.jsx';
 import { ColorWheelPicker } from '../../components/ColorWheelPicker.jsx';
-import { removeHouseholdMember } from '../../lib/firebase.js';
+import { removeHouseholdMember, signOutAccount, getCurrentUser } from '../../lib/firebase.js';
 
 const AVATAR_COLORS = ['#7C5CFC', '#FF5470', '#06D6A0', '#F59E0B', '#EC4899', '#3B82F6'];
 function colorForName(name){
@@ -99,8 +99,12 @@ export function HouseholdBody(){
     }
   }
 
-  function handleLeave(){
-    if(!confirm(t('confirm_leave'))) return;
+  async function handleSignOut(){
+    const user = getCurrentUser();
+    const label = user?.isAnonymous ? (state.lang === 'ar' ? 'حساب الضيف' : 'guest session') : (user?.email || (state.lang === 'ar' ? 'الحساب' : 'account'));
+    const message = state.lang === 'ar' ? `تسجيل الخروج من ${label}؟` : `Sign out of ${label}?`;
+    if(!confirm(message)) return;
+    await signOutAccount();
     leaveHousehold(state.lang);
   }
 
@@ -259,10 +263,10 @@ export function HouseholdBody(){
 
       <SectionLabel>{t('tab_fridge')}</SectionLabel>
       <button
-        onClick={handleLeave}
+        onClick={handleSignOut}
         className="w-full bg-card text-berry border-[1.5px] border-[#EFC9C9] rounded-full py-[15px] text-[15.5px] font-bold cursor-pointer"
       >
-        {t('leave_household_btn')}
+        {getCurrentUser()?.isAnonymous ? (state.lang === 'ar' ? 'إنهاء جلسة الضيف' : 'End Guest Session') : (state.lang === 'ar' ? 'تسجيل الخروج' : 'Sign Out')}
       </button>
     </>
   );
