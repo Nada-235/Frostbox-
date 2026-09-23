@@ -178,7 +178,7 @@ export function ItemForm(){
 
         <div className={`flex items-center justify-between bg-frost rounded-2xl px-3.5 py-[13px] ${goodUntil?'mb-3':'mb-1 opacity-60'}`}>
           <div><div className="text-[14.5px] font-semibold">{t('label_remind')}</div>{!goodUntil&&<div className="text-xs text-fog mt-0.5">{t('reminder_needs_expiry')}</div>}</div>
-          <Switch on={reminderOn && !!goodUntil} onToggle={goodUntil ? onReminderToggle : ()=>{}}/>
+          <Switch on={reminderOn && !!goodUntil} onToggle={onReminderToggle} disabled={!goodUntil} ariaLabel={t('label_remind')}/>
         </div>
         {reminderOn && goodUntil && <Field label={t('label_reminder_time')}><input type="datetime-local" value={reminderAt || defaultReminderAt(goodUntil)} onChange={e=>setReminderAt(e.target.value)} className={inputCls}/></Field>}
         <Field label={t('label_note')}><textarea value={note} onChange={e=>setNote(e.target.value)} placeholder={t('note_placeholder')} className={`${inputCls} resize-y min-h-[84px]`} {...noAutofillProps}/></Field>
