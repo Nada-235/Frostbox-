@@ -42,17 +42,24 @@ function Shell(){
     dispatch({ type: 'SET_FONT_AR', id: getFontAr() });
     dispatch({ type: 'SET_LIST_VIEW', view: getListView() });
 
-    if(!initFirebase()){
-      dispatch({ type: 'SET_SCREEN', screen: 'setup' });
-      return;
+    async function connect(){
+      try{
+        if(!(await initFirebase())){
+          dispatch({ type: 'SET_SCREEN', screen: 'setup' });
+          return;
+        }
+        const me = getMe();
+        if(me && me.code){
+          resumeHousehold(me.code, me.name || 'You');
+        } else {
+          dispatch({ type: 'SET_SCREEN', screen: 'onboard' });
+        }
+      } catch(error){
+        console.error('Firebase authentication failed', error);
+        dispatch({ type: 'SET_SCREEN', screen: 'setup' });
+      }
     }
-
-    const me = getMe();
-    if(me && me.code){
-      resumeHousehold(me.code, me.name || 'You');
-    } else {
-      dispatch({ type: 'SET_SCREEN', screen: 'onboard' });
-    }
+    connect();
     // Runs once on mount, mirroring the original app.js init() sequence.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

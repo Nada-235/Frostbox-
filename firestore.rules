@@ -1,0 +1,58 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function household(code) {
+      return get(/databases/$(database)/documents/households/$(code)).data;
+    }
+
+    function isMember(code) {
+      return signedIn() && household(code).memberProfiles[request.auth.uid] is string;
+    }
+
+    function isAdmin(code) {
+      return signedIn() && household(code).adminUid == request.auth.uid;
+    }
+
+    match /households/{code} {
+      // A signed-in anonymous user may look up a household by its shared code.
+      allow get: if signedIn();
+      allow list: if false;
+
+      // The creator becomes the immutable admin for this household.
+      allow create: if signedIn()
+        && request.resource.data.adminUid == request.auth.uid
+        && request.resource.data.adminName == 'Ddo'
+        && request.resource.data.memberProfiles[request.auth.uid] == 'Ddo'
+        && request.resource.data.members.size() == 1
+        && request.resource.data.members[0] == 'Ddo';
+
+      // Admin can manage members but cannot transfer admin ownership.
+      allow update: if isAdmin(code)
+        && request.resource.data.adminUid == resource.data.adminUid
+        && request.resource.data.adminName == resource.data.adminName
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['members', 'memberProfiles']);
+
+      // A non-member may only add their own authenticated UID/profile.
+      allow update: if signedIn()
+        && !(resource.data.memberProfiles[request.auth.uid] is string)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['members', 'memberProfiles'])
+        && request.resource.data.memberProfiles.diff(resource.data.memberProfiles)
+          .affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data.memberProfiles[request.auth.uid] is string
+        && request.resource.data.members.size() == resource.data.members.size() + 1;
+
+      allow delete: if false;
+
+      match /{subcollection}/{docId} {
+        allow read, write: if isMember(code);
+      }
+    }
+  }
+}
