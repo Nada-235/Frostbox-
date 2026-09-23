@@ -2,9 +2,9 @@
 import { List, LayoutGrid } from 'lucide-react';
 
 /** List/grid switcher shared by every item list (Fridge, Shopping, Catalog). */
-export function ViewToggle({ value, onChange }){
+export function ViewToggle({ value, onChange, floating = false }){
   return (
-    <div className="flex bg-frost rounded-[11px] p-[3px] gap-px shrink-0">
+    <div className={`flex rounded-full p-[3px] gap-px shrink-0 ${floating ? 'bg-card border border-line shadow-[var(--shadow-float)]' : 'bg-frost rounded-[11px]'}`}>
       <button
         type="button"
         onClick={() => onChange('list')}
