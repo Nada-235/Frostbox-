@@ -157,7 +157,7 @@ export function ShoppingBody(){
 
   return (
     <>
-      <div className="flex gap-2 mb-[18px] pt-3">
+      <div className="flex gap-2 mb-2 pt-3">
         <input
           type="text"
           value={value}
@@ -167,7 +167,9 @@ export function ShoppingBody(){
           className="flex-1 px-[15px] py-[13px] rounded-[13px] border-[1.5px] border-line text-[15px] text-kale bg-card"
           name="fb-quick-add" {...noAutofillProps}
         />
-        <ViewToggle value={listView} onChange={changeView} />
+      </div>
+      <div className="flex justify-end mb-[18px]">
+        <ViewToggle value={listView} onChange={changeView} floating />
       </div>
       {sections}
     </>
