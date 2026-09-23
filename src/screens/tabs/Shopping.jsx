@@ -48,7 +48,7 @@ function ShopCardGrid({ item, color, onOpen }){
   const hasPrice = item.supermarket && item.price;
 
   return (
-    <div className="bg-card rounded-[18px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
+    <div className="bg-card rounded-[22px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
       <button
         onClick={() => toggleShoppingItem(item.householdCode, item.id, !item.checked)}
         className="absolute top-1.5 start-1.5 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center text-card transition-colors"
@@ -83,8 +83,8 @@ export function ShoppingHeader(){
   return (
     <div className="flex items-center justify-between pb-4">
       <div>
-        <div className="text-[13px] text-card/80 font-medium">{state.code}</div>
-        <h1 className="font-display rtl:font-arabic text-2xl m-0 text-card">{t('shopping_list_title')}</h1>
+        <div className="text-[13px] text-fog font-medium">{state.code}</div>
+        <h1 className="font-display rtl:font-arabic text-[28px] font-bold m-0 text-kale">{t('shopping_list_title')}</h1>
       </div>
     </div>
   );

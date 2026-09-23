@@ -50,7 +50,7 @@ export function Main(){
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <div
-            className="-mx-3 px-3 pb-3 glass-brand"
+            className="-mx-3 px-3 pb-3"
             style={{ paddingTop: 'calc(env(safe-area-inset-top) + 10px)' }}
           >
             <Header />
@@ -69,7 +69,7 @@ export function Main(){
       {showFab && (
         <button
           onClick={openAdd}
-          className="glass-brand fixed end-5 bottom-24 w-[58px] h-[58px] rounded-full flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94] text-card"
+          className="btn-brand fixed end-5 bottom-24 w-[60px] h-[60px] rounded-full flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94]"
         >
           <Plus size={26} strokeWidth={2.25} />
         </button>

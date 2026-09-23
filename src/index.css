@@ -56,17 +56,20 @@
     height: var(--app-height, 100dvh);
   }
 
-  /* Derived, theme-reactive shadows — color-mix() against the active theme's
-     own tokens, so these never need per-theme overrides. Flat solid fills
-     (not gradients) for the brand/banner surfaces — a single confident tone
-     reads more like a considered choice than a generic glossy sheen. */
+  /* Derived, theme-reactive shadows/gradients — color-mix() against the
+     active theme's own tokens, so these never need per-theme overrides.
+     A soft two-stop gradient on primary CTAs/FAB (pill-shaped, floating
+     look) reads as a considered accent rather than a generic sheen when
+     it's the ONLY gradient surface in the app — everything else (headers,
+     bars) stays flat. */
   :root {
     --shadow-app: 0 6px 20px color-mix(in srgb, var(--color-ink) 9%, transparent);
     --shadow-sm: 0 2px 6px color-mix(in srgb, var(--color-ink) 5%, transparent);
-    --shadow-fab: 0 6px 16px color-mix(in srgb, var(--color-mint) 28%, transparent);
+    --shadow-float: 0 4px 14px color-mix(in srgb, var(--color-ink) 12%, transparent);
+    --shadow-fab: 0 10px 22px color-mix(in srgb, var(--color-mint) 38%, transparent);
     --shadow-banner: 0 4px 12px color-mix(in srgb, var(--color-berry) 20%, transparent);
-    --gradient-brand: var(--color-mint-deep);
-    --gradient-banner: color-mix(in srgb, var(--color-berry) 92%, black);
+    --gradient-brand: linear-gradient(135deg, var(--color-mint), var(--color-mint-deep));
+    --gradient-banner: linear-gradient(135deg, var(--color-berry), color-mix(in srgb, var(--color-berry) 80%, black));
   }
 
   /* ---- Theme presets — pick one, see lib/themes.js for the picker list ---- */
@@ -162,6 +165,23 @@
   .btn-brand {
     background: var(--gradient-brand);
     color: var(--color-card);
+  }
+
+  /* Floating circular icon button — for back/action buttons sitting
+     directly on the page background (transparent headers) instead of on
+     a solid color band. */
+  .icon-btn-float {
+    background: var(--color-card);
+    box-shadow: var(--shadow-float);
+  }
+
+  /* Translucent dark pill for a short stat/label overlaid on a photo —
+     e.g. an expiry or price badge sitting on top of an item's image. */
+  .stat-pill {
+    background: color-mix(in srgb, black 45%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
   }
 
   @keyframes fade-in-up {

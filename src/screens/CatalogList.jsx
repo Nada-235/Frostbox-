@@ -53,7 +53,7 @@ function CatalogCardGrid({ item, t, onOpen, onDelete }){
   const best = records.length ? records.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[0] : null;
 
   return (
-    <div className="bg-card rounded-[18px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
+    <div className="bg-card rounded-[22px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
       <button
         onClick={onDelete}
         className="absolute top-1.5 end-1.5 z-10 w-6 h-6 rounded-full bg-card border border-line flex items-center justify-center text-fog"
@@ -112,19 +112,19 @@ export function CatalogList(){
   return (
     <>
       <div
-        className="shrink-0 flex items-center gap-2.5 px-3 pb-[26px] sticky top-0 glass-brand z-[100]"
+        className="shrink-0 flex items-center gap-2.5 px-3 pb-[18px] sticky top-0 z-[100]"
         style={{ paddingTop: 'calc(env(safe-area-inset-top) + 20px)' }}
       >
-        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-kale shrink-0">
+        <button onClick={goBack} className="icon-btn-float w-9 h-9 rounded-full border-none flex items-center justify-center cursor-pointer text-kale shrink-0">
           <BackIcon size={18} strokeWidth={2.25} />
         </button>
         <div className="flex-1 min-w-0">
-          <h2 className={`text-[19px] m-0 text-card ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{t('catalog_title')}</h2>
-          {list.length > 0 && <div className="text-[12px] text-card/80 mt-0.5">{t('entries_count', list.length)}</div>}
+          <h2 className={`text-[19px] font-bold m-0 text-kale ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{t('catalog_title')}</h2>
+          {list.length > 0 && <div className="text-[12px] text-fog mt-0.5">{t('entries_count', list.length)}</div>}
         </div>
         <button
           onClick={openAdd}
-          className="w-9 h-9 rounded-[11px] border border-white/25 bg-card/20 text-card flex items-center justify-center cursor-pointer shrink-0"
+          className="icon-btn-float w-9 h-9 rounded-full border-none text-kale flex items-center justify-center cursor-pointer shrink-0"
         >
           <Plus size={18} strokeWidth={2.25} />
         </button>

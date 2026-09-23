@@ -150,13 +150,13 @@ export function ShopItemForm(){
   return (
     <>
       <div
-        className="shrink-0 flex items-center gap-2.5 px-3 pb-[26px] sticky top-0 glass-brand z-[100]"
+        className="shrink-0 flex items-center gap-2.5 px-3 pb-[18px] sticky top-0 z-[100]"
         style={{ paddingTop: 'calc(env(safe-area-inset-top) + 20px)' }}
       >
-        <button onClick={goBack} className="w-9 h-9 rounded-[11px] border border-line bg-card flex items-center justify-center cursor-pointer text-kale shrink-0">
+        <button onClick={goBack} className="icon-btn-float w-9 h-9 rounded-full border-none flex items-center justify-center cursor-pointer text-kale shrink-0">
           <BackIcon size={18} strokeWidth={2.25} />
         </button>
-        <h2 className={`text-[19px] m-0 text-card ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
+        <h2 className={`text-[19px] font-bold m-0 text-kale ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-3 pb-10">
       <button

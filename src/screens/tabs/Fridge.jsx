@@ -23,7 +23,7 @@ function ItemCard({ item, lang, onOpen }){
   return (
     <div
       onClick={onOpen}
-      className="bg-card rounded-[18px] p-3 flex items-center gap-3 mb-2.5 shadow-[var(--shadow-app)] cursor-pointer border border-line"
+      className="bg-card rounded-[22px] p-3 flex items-center gap-3 mb-2.5 shadow-[var(--shadow-app)] cursor-pointer border border-line"
     >
       <div
         className="w-[52px] h-[52px] rounded-2xl shrink-0 flex items-center justify-center overflow-hidden relative"
@@ -54,7 +54,7 @@ function ItemCardGrid({ item, lang, onOpen }){
   const CategoryIcon = category.icon;
 
   return (
-    <div onClick={onOpen} className="bg-card rounded-[18px] overflow-hidden shadow-[var(--shadow-app)] cursor-pointer border border-line">
+    <div onClick={onOpen} className="bg-card rounded-[22px] overflow-hidden shadow-[var(--shadow-app)] cursor-pointer border border-line">
       <div
         className="w-full aspect-square relative flex items-center justify-center"
         style={{ background: item.photo ? undefined : `${category.color}1A`, color: item.photo ? undefined : category.color }}
@@ -84,15 +84,15 @@ export function FridgeHeader(){
   return (
     <div className="flex items-center justify-between pb-4">
       <div>
-        <div className="text-[13px] text-card/80 font-medium flex items-center">
-          <span className="w-2 h-2 rounded-full bg-card inline-block me-1.5 shadow-[0_0_0_3px_rgba(255,255,255,0.25)]" />
+        <div className="text-[13px] text-fog font-medium flex items-center">
+          <span className="w-2 h-2 rounded-full bg-mint inline-block me-1.5" />
           {state.synced ? t('synced') : t('connecting')}
         </div>
-        <h1 className="font-display rtl:font-arabic text-2xl m-0 text-card">{t('your_fridge')}</h1>
+        <h1 className="font-display rtl:font-arabic text-[28px] font-bold m-0 text-kale">{t('your_fridge')}</h1>
       </div>
       <button
         onClick={() => shareHouseholdCode(state.code, state.lang)}
-        className="force-mono bg-card text-mint-deep text-xs font-semibold tracking-wide px-3 py-1.5 rounded-full border-none cursor-pointer shadow-[0_2px_8px_rgba(40,54,24,0.14)]"
+        className="icon-btn-float force-mono text-mint-deep text-xs font-semibold tracking-wide px-3.5 py-2 rounded-full border-none cursor-pointer"
       >
         {state.code}
       </button>
@@ -136,7 +136,7 @@ export function FridgeBody(){
   );
 
   const filters = (
-    <div className="-mx-3 px-3 pt-3 glass-tint sticky top-0 z-[99] pb-3.5 border-b border-line">
+    <div className="-mx-3 px-3 pt-3.5 glass-tint sticky top-0 z-[99] pb-3.5 rounded-t-[26px] shadow-[var(--shadow-sm)]">
       <div className="flex items-center gap-2 mb-3.5">
         <div className="flex flex-1 rounded-xl p-[3px]">
           <SegButton active={locationFilter === 'all'} onClick={() => dispatch({ type: 'SET_LOCATION_FILTER', value: 'all' })}>{t('filter_all')}</SegButton>

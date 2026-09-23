@@ -24,8 +24,8 @@ export function HouseholdHeader(){
   return (
     <div className="flex items-center justify-between pb-4">
       <div>
-        <div className="text-[13px] text-card/80 font-medium">{t('sharing_label')}</div>
-        <h1 className="font-display rtl:font-arabic text-2xl m-0 text-card">{t('household_title')}</h1>
+        <div className="text-[13px] text-fog font-medium">{t('sharing_label')}</div>
+        <h1 className="font-display rtl:font-arabic text-[28px] font-bold m-0 text-kale">{t('household_title')}</h1>
       </div>
     </div>
   );
@@ -90,7 +90,7 @@ export function HouseholdBody(){
   return (
     <>
       <div
-        className="rounded-[20px] px-5 py-[26px] text-center text-card mb-5 mt-3 shadow-[var(--shadow-app)]"
+        className="rounded-[28px] px-5 py-[26px] text-center text-card mb-5 mt-3 shadow-[var(--shadow-fab)]"
         style={{ background: 'var(--gradient-brand)' }}
       >
         <div className="text-xs text-white/75 uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case font-bold mb-2.5">{t('your_code_label')}</div>
@@ -98,7 +98,7 @@ export function HouseholdBody(){
         <div className="text-[13px] text-white/80 leading-relaxed mb-[18px]">{t('share_desc')}</div>
         <button
           onClick={() => shareHouseholdCode(state.code, state.lang)}
-          className="bg-card text-mint-deep border-none px-[22px] py-3 rounded-[13px] font-bold text-sm cursor-pointer"
+          className="bg-card text-mint-deep border-none px-[22px] py-3 rounded-full font-bold text-sm cursor-pointer"
         >
           {t('share_code_btn')}
         </button>
@@ -243,7 +243,7 @@ export function HouseholdBody(){
       <SectionLabel>{t('tab_fridge')}</SectionLabel>
       <button
         onClick={handleLeave}
-        className="w-full bg-card text-berry border-[1.5px] border-[#EFC9C9] rounded-[14px] py-[15px] text-[15.5px] font-bold cursor-pointer"
+        className="w-full bg-card text-berry border-[1.5px] border-[#EFC9C9] rounded-full py-[15px] text-[15.5px] font-bold cursor-pointer"
       >
         {t('leave_household_btn')}
       </button>

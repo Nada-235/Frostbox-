@@ -124,7 +124,7 @@ export function IconButton({ onClick, icon: Icon, label, variant = 'ghost', disa
       disabled={disabled}
       aria-label={label}
       title={label}
-      className={`h-11 rounded-2xl flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-60 ${
+      className={`h-11 rounded-full flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-60 ${
         ICON_BTN_VARIANTS[variant]
       } ${grow ? 'flex-1' : 'w-11 shrink-0'}`}
     >
