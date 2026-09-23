@@ -40,7 +40,7 @@ export function HouseholdBody(){
   const [notifPermission, setNotifPermission] = useState(
     typeof window !== 'undefined' && window.Notification ? Notification.permission : 'unsupported'
   );
-  const notifOn = notifPermission === 'granted';\n  const me = getMe();\n  const isAdmin = me?.role === 'admin' && !!me?.adminToken;\n\n  async function handleRemoveMember(memberName){\n    if(!isAdmin || memberName === state.myName) return;\n    const message = state.lang === 'ar'\n      ? `هل تريد إزالة ${memberName} من الثلاجة؟`\n      : `Remove ${memberName} from this fridge?`;\n    if(!confirm(message)) return;\n    const removed = await removeHouseholdMember(state.code, memberName, me.adminToken);\n    if(!removed){\n      alert(state.lang === 'ar' ? 'تعذر إزالة هذا العضو.' : 'Could not remove this member.');\n    }\n  }
+  const notifOn = notifPermission === 'granted';\n  const me = getMe();\n  const isAdmin = me?.role === 'admin' && !!me?.uid;\n\n  async function handleRemoveMember(memberName){\n    if(!isAdmin || memberName === state.myName) return;\n    const message = state.lang === 'ar'\n      ? `هل تريد إزالة ${memberName} من الثلاجة؟`\n      : `Remove ${memberName} from this fridge?`;\n    if(!confirm(message)) return;\n    const memberIndex = members.indexOf(memberName);\n    const memberUid = Object.keys(me?.memberUids || {})[memberIndex] || null;\n    const removed = memberUid ? await removeHouseholdMember(state.code, memberName, memberUid) : false;\n    if(!removed){\n      alert(state.lang === 'ar' ? 'تعذر إزالة هذا العضو.' : 'Could not remove this member.');\n    }\n  }
 
   function changeLang(lang){
     setLang(lang);
