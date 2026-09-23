@@ -7,11 +7,11 @@ import {
   subscribeToHousehold, unsubscribeFromHousehold,
 } from '../lib/firebase.js';
 
-/**
- * Household lifecycle (start / join / resume / leave), ported from
- * household-session.js. Firestore's live listeners feed straight into the
- * reducer instead of mutating a shared `state` object.
- */
+function createAdminToken(){
+  if(globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+}
+
 export function useHouseholdSession(){
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,6 @@ export function useHouseholdSession(){
     });
   }, [dispatch]);
 
-  /** Called on app load when this device already remembers a household. */
   const resumeHousehold = useCallback(async (code, name) => {
     dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: name });
     attachLiveSubscriptions(code);
@@ -32,14 +31,14 @@ export function useHouseholdSession(){
 
   const startNewHousehold = useCallback(async () => {
     const code = genCode();
-    const name = 'You';
-    await createHousehold(code, name);
-    setMe({ code, name });
+    const name = 'Ddo';
+    const adminToken = createAdminToken();
+    await createHousehold(code, name, adminToken);
+    setMe({ code, name, role: 'admin', adminToken });
     dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: name });
     attachLiveSubscriptions(code);
   }, [dispatch, attachLiveSubscriptions]);
 
-  /** Returns false if the code doesn't match an existing household. */
   const joinHousehold = useCallback(async (code, name, memberType) => {
     const exists = await findHousehold(code);
     if(!exists) return false;
@@ -49,7 +48,7 @@ export function useHouseholdSession(){
     const displayName = `${cleanName}, ${cleanType}`;
 
     await joinHouseholdAsMember(code, displayName);
-    setMe({ code, name: displayName });
+    setMe({ code, name: displayName, role: 'member' });
     dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: displayName });
     attachLiveSubscriptions(code);
     return true;
