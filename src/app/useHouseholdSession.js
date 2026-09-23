@@ -40,13 +40,17 @@ export function useHouseholdSession(){
   }, [dispatch, attachLiveSubscriptions]);
 
   /** Returns false if the code doesn't match an existing household. */
-  const joinHousehold = useCallback(async (code) => {
+  const joinHousehold = useCallback(async (code, name, memberType) => {
     const exists = await findHousehold(code);
     if(!exists) return false;
-    const name = 'You';
-    await joinHouseholdAsMember(code, name);
-    setMe({ code, name });
-    dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: name });
+
+    const cleanName = name.trim();
+    const cleanType = memberType.trim();
+    const displayName = `${cleanName}, ${cleanType}`;
+
+    await joinHouseholdAsMember(code, displayName);
+    setMe({ code, name: displayName });
+    dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: displayName });
     attachLiveSubscriptions(code);
     return true;
   }, [dispatch, attachLiveSubscriptions]);
