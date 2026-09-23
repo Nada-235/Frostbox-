@@ -64,6 +64,24 @@ function uid(){
   return value;
 }
 
+/* ---- Account membership ---- */
+export async function getMyHousehold(){
+  const userId = uid();
+  const snap = await getDoc(doc(db, 'users', userId));
+  if(!snap.exists()) return null;
+  return snap.data() || null;
+}
+
+async function saveMyHousehold(code, name, role){
+  const userId = uid();
+  await setDoc(doc(db, 'users', userId), {
+    householdCode: code,
+    displayName: name,
+    role,
+    updatedAt: Date.now(),
+  });
+}
+
 /* ---- Household lifecycle ---- */
 export async function createHousehold(code, memberName){
   const userId = uid();
@@ -74,6 +92,7 @@ export async function createHousehold(code, memberName){
     adminUid: userId,
     createdAt: Date.now(),
   });
+  await saveMyHousehold(code, memberName, 'admin');
 }
 export async function findHousehold(code){
   const snap = await getDoc(doc(db, 'households', code));
@@ -85,6 +104,7 @@ export async function joinHouseholdAsMember(code, memberName){
     members: arrayUnion(memberName),
     [`memberProfiles.${userId}`]: memberName,
   });
+  await saveMyHousehold(code, memberName, 'member');
 }
 export async function removeHouseholdMember(code, memberName, memberUid){
   const userId = uid();
