@@ -52,7 +52,7 @@ export async function joinHouseholdAsMember(code, memberName){
   const userId = uid();
   await updateDoc(doc(db, 'households', code), {
     members: arrayUnion(memberName),
-    [`memberUids.${userId}`]: true,
+    [`memberProfiles.${userId}`]: memberName,
   });
 }
 export async function removeHouseholdMember(code, memberName, memberUid){
@@ -64,7 +64,7 @@ export async function removeHouseholdMember(code, memberName, memberUid){
   if(data.adminUid !== userId || memberUid === data.adminUid) return false;
   await updateDoc(ref, {
     members: arrayRemove(memberName),
-    [`memberUids.${memberUid}`]: deleteField(),
+    [`memberProfiles.${memberUid}`]: deleteField(),
   });
   return true;
 }
