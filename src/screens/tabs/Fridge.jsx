@@ -15,7 +15,7 @@ const CHIP_STYLES = {
 };
 
 function ItemCard({ item, lang, onOpen }){
-  const chip = chipFor(daysUntil(item.goodUntil), lang);
+  const chip = item.goodUntil ? chipFor(daysUntil(item.goodUntil), lang) : null;
   const category = catById(FOOD_CATEGORIES, item.category || 'other');
   const isFreezer = (item.location || 'fridge') === 'freezer';
   const CategoryIcon = category.icon;
@@ -38,17 +38,15 @@ function ItemCard({ item, lang, onOpen }){
       </div>
       <div className="flex-1 min-w-0">
         <div className="font-semibold text-[15px] mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</div>
-        <div className="text-[12.5px] text-fog whitespace-nowrap overflow-hidden text-ellipsis">{item.note || fmtDate(item.goodUntil, lang)}</div>
+        <div className="text-[12.5px] text-fog whitespace-nowrap overflow-hidden text-ellipsis">{item.note || [item.quantity && `${item.quantity} ${item.unit === 'custom' ? (item.customUnit || '') : (item.unit || '')}`, item.goodUntil && fmtDate(item.goodUntil, lang)].filter(Boolean).join(' · ')}</div>
       </div>
-      <div className={`force-mono text-[11px] font-semibold py-1.5 px-2.5 rounded-[9px] tracking-[0.03em] rtl:tracking-normal shrink-0 whitespace-nowrap ${CHIP_STYLES[chip.cls]}`}>
-        {chip.txt}
-      </div>
+      {chip && <div className={`force-mono text-[11px] font-semibold py-1.5 px-2.5 rounded-[9px] tracking-[0.03em] rtl:tracking-normal shrink-0 whitespace-nowrap ${CHIP_STYLES[chip.cls]}`}>{chip.txt}</div>}
     </div>
   );
 }
 
 function ItemCardGrid({ item, lang, onOpen }){
-  const chip = chipFor(daysUntil(item.goodUntil), lang);
+  const chip = item.goodUntil ? chipFor(daysUntil(item.goodUntil), lang) : null;
   const category = catById(FOOD_CATEGORIES, item.category || 'other');
   const isFreezer = (item.location || 'fridge') === 'freezer';
   const CategoryIcon = category.icon;
@@ -173,7 +171,7 @@ export function FridgeBody(){
     sections = FOOD_CATEGORIES.map(category => {
       const inCategory = items
         .filter(i => (i.category || 'other') === category.id)
-        .sort((a, b) => daysUntil(a.goodUntil) - daysUntil(b.goodUntil)); // soonest-to-expire first, within the category
+        .sort((a, b) => (a.goodUntil ? daysUntil(a.goodUntil) : Number.POSITIVE_INFINITY) - (b.goodUntil ? daysUntil(b.goodUntil) : Number.POSITIVE_INFINITY)); // dated items first; undated items remain valid and sort last
       if(!inCategory.length) return null;
       return (
         <div key={category.id}>

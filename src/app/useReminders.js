@@ -45,7 +45,7 @@ export function useReminders(){
       dispatch({
         type: 'SET_DUE_REMINDERS',
         list: items.filter(item =>
-          item.reminderEnabled && item.reminderAt && daysUntil(item.goodUntil) <= 2
+          item.reminderEnabled && item.reminderAt && item.goodUntil && daysUntil(item.goodUntil) <= 2
         ),
       });
     }
