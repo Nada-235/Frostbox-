@@ -44,12 +44,16 @@ export const noAutofillProps = {
   'data-lpignore': true,
 };
 
-export function Switch({ on, onToggle }){
+export function Switch({ on, onToggle, disabled = false, ariaLabel }){
   return (
     <button
       type="button"
       onClick={onToggle}
-      className={`relative w-[46px] h-[27px] rounded-full border-none shrink-0 cursor-pointer transition-colors duration-200 ${on ? 'bg-mint' : 'bg-line'}`}
+      disabled={disabled}
+      role="switch"
+      aria-checked={on}
+      aria-label={ariaLabel}
+      className={`relative w-[46px] h-[27px] rounded-full border-none shrink-0 cursor-pointer transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${on ? 'bg-mint' : 'bg-line'}`}
     >
       <span
         className={`absolute top-[3px] w-[21px] h-[21px] rounded-full bg-card shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-all duration-200 ${on ? 'start-[22px]' : 'start-[3px]'}`}
