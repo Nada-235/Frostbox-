@@ -67,10 +67,10 @@ export function CatChip({ selected, onClick, color, icon: Icon, children }){
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 flex items-center gap-1.5 px-2 py-2.5 rounded-full border-none bg-transparent text-[13.5px] font-semibold whitespace-nowrap cursor-pointer transition-colors ${
-        selected ? 'text-mint-deep' : 'text-fog'
+      className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border text-[13.5px] font-semibold whitespace-nowrap cursor-pointer transition-colors ${
+        selected ? 'border-transparent text-card' : 'bg-card border-line text-kale'
       }`}
-      style={selected && color ? { color } : undefined}
+      style={selected ? { background: color || 'var(--color-kale)' } : undefined}
     >
       {Icon && <Icon size={15} strokeWidth={2.25} className="shrink-0" />}
       {children}
@@ -84,7 +84,7 @@ export function SegButton({ active, onClick, children }){
       type="button"
       onClick={onClick}
       className={`flex-1 py-[9px] text-center rounded-[9px] border-none text-[13.5px] font-bold cursor-pointer transition-colors ${
-        active ? 'bg-transparent text-mint-deep' : 'bg-transparent text-fog'
+        active ? 'bg-card text-mint-deep shadow-[0_1px_4px_rgba(40,54,24,0.09)]' : 'bg-transparent text-fog'
       }`}
     >
       {children}
