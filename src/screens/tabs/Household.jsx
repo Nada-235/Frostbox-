@@ -220,9 +220,16 @@ export function HouseholdBody(){
       )}
 
       <SectionLabel>{t('mode_label')}</SectionLabel>
-      <div className="flex bg-frost rounded-xl p-[3px] mb-5">
-        <SegButton active={state.mode === 'light'} onClick={() => changeMode('light')}>{t('mode_light')}</SegButton>
-        <SegButton active={state.mode === 'dark'} onClick={() => changeMode('dark')}>{t('mode_dark')}</SegButton>
+      <div className="flex items-center justify-between bg-card border border-line rounded-2xl px-3.5 py-[13px] mb-5">
+        <div>
+          <div className="text-[14.5px] font-semibold">{t('mode_dark')}</div>
+          <div className="text-[12px] text-fog mt-0.5">{state.mode === 'dark' ? t('mode_dark') : t('mode_light')}</div>
+        </div>
+        <Switch
+          on={state.mode === 'dark'}
+          onToggle={() => changeMode(state.mode === 'dark' ? 'light' : 'dark')}
+          ariaLabel={t('mode_label')}
+        />
       </div>
 
       <SectionLabel>{t('language_label')}</SectionLabel>
@@ -268,7 +275,7 @@ export function HouseholdBody(){
       <SectionLabel>{t('notifications_label')}</SectionLabel>
       <div className="flex items-center justify-between bg-card border border-line rounded-2xl px-3.5 py-[13px] mb-3">
         <div className="text-[14.5px] font-semibold">{t('enable_alerts')}</div>
-        <Switch on={notifOn} onToggle={toggleNotifications} />
+        <Switch on={notifOn} onToggle={toggleNotifications} disabled={notifPermission === 'denied' || notifPermission === 'unsupported'} ariaLabel={t('enable_alerts')} />
       </div>
       <p className="text-[12.5px] text-fog leading-relaxed -mt-1 mx-0.5 mb-5">{t('alerts_note')}</p>
 
