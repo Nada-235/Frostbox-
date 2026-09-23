@@ -4,7 +4,7 @@ import { useHouseholdSession } from './app/useHouseholdSession.js';
 import { useReminders } from './app/useReminders.js';
 import { useViewportHeight } from './app/useViewportHeight.js';
 import { getMe, getLang, getTheme, getMode, getCustomColor, getFontEn, getFontAr, getListView } from './lib/localStorage.js';
-import { initFirebase } from './lib/firebase.js';
+import { initFirebase, waitForAuth } from './lib/firebase.js';
 import { FONTS } from './lib/themes.js';
 import { Setup } from './screens/Setup.jsx';
 import { Onboarding } from './screens/Onboarding.jsx';

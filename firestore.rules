@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.firebase.sign_in_provider == 'google.com';
     }
 
     function household(code) {
@@ -19,7 +19,7 @@ service cloud.firestore {
     }
 
     match /households/{code} {
-      // A signed-in anonymous user may look up a household by its shared code.
+      // A Google-authenticated user may look up a household by its shared code.
       allow get: if signedIn();
       allow list: if false;
 
