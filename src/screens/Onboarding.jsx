@@ -11,7 +11,7 @@ export function Onboarding(){
   const dispatch = useAppDispatch();
   const t = useT();
   const headingFont = useHeadingFont();
-  const { startNewHousehold, joinHousehold } = useHouseholdSession();
+  const { startNewHousehold, joinHousehold, resumeMyHousehold } = useHouseholdSession();
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [memberType, setMemberType] = useState('');
@@ -23,7 +23,12 @@ export function Onboarding(){
     if(getCurrentUser()) return getCurrentUser();
     setAuthBusy(true);
     try{
-      return await signInWithGoogle();
+      const signedInUser = await signInWithGoogle();
+      if(signedInUser){
+        const restored = await resumeMyHousehold();
+        if(restored) return { ...signedInUser, householdRestored: true };
+      }
+      return signedInUser;
     } finally {
       setAuthBusy(false);
     }
@@ -31,7 +36,7 @@ export function Onboarding(){
 
   async function handleStart(){
     const signedInUser = await ensureGoogleUser();
-    if(!signedInUser) return;
+    if(!signedInUser || signedInUser.householdRestored) return;
     await startNewHousehold();
   }
 
@@ -51,7 +56,7 @@ export function Onboarding(){
     }
 
     const signedInUser = await ensureGoogleUser();
-    if(!signedInUser) return;
+    if(!signedInUser || signedInUser.householdRestored) return;
 
     setJoining(true);
     const ok = await joinHousehold(value, memberName, type);
