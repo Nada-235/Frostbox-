@@ -30,12 +30,12 @@ export function useHouseholdSession(){
     attachLiveSubscriptions(code);
   }, [dispatch, attachLiveSubscriptions]);
 
-  const startNewHousehold = useCallback(async () => {
+  const startNewHousehold = useCallback(async (name, memberType) => {
     const code = genCode();
-    const name = 'Ddo';
-    await createHousehold(code, name);
-    setMe({ code, name, role: 'admin', uid: currentUserId() });
-    dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: name });
+    const displayName = `${name.trim()}, ${memberType.trim()}`;
+    await createHousehold(code, displayName);
+    setMe({ code, name: displayName, role: 'admin', uid: currentUserId() });
+    dispatch({ type: 'ENTER_HOUSEHOLD', code, myName: displayName });
     attachLiveSubscriptions(code);
   }, [dispatch, attachLiveSubscriptions]);
 
