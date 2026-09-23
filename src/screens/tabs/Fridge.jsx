@@ -77,10 +77,11 @@ function ItemCardGrid({ item, lang, onOpen }){
 
 export function FridgeHeader(){
   const state = useAppState();
+  const dispatch = useAppDispatch();
   const t = useT();
 
   return (
-    <div className="flex items-center justify-between pb-4">
+    <div className="flex items-start justify-between pb-4">
       <div>
         <div className="text-[13px] text-fog font-medium flex items-center">
           <span className="w-2 h-2 rounded-full bg-mint inline-block me-1.5" />
@@ -88,12 +89,15 @@ export function FridgeHeader(){
         </div>
         <h1 className="font-display rtl:font-arabic text-[28px] font-bold m-0 text-kale">{t('your_fridge')}</h1>
       </div>
-      <button
-        onClick={() => shareHouseholdCode(state.code, state.lang)}
-        className="icon-btn-float force-mono text-mint-deep text-xs font-semibold tracking-wide px-3.5 py-2 rounded-full border-none cursor-pointer"
-      >
-        {state.code}
-      </button>
+      <div className="flex flex-col items-end gap-2">
+        <button
+          onClick={() => shareHouseholdCode(state.code, state.lang)}
+          className="icon-btn-float force-mono text-mint-deep text-xs font-semibold tracking-wide px-3.5 py-2 rounded-full border-none cursor-pointer"
+        >
+          {state.code}
+        </button>
+        <ViewToggle value={state.listView} onChange={changeView} />
+      </div>
     </div>
   );
 }
@@ -157,7 +161,7 @@ export function FridgeBody(){
             ))}
           </div>
         </div>
-        <ViewToggle value={listView} onChange={changeView} />
+        
       </div>
     </div>
   );
