@@ -8,18 +8,18 @@
      --color-ink is a shadow-only twin of --color-kale: [data-mode="dark"]
      flips --color-kale (text) to a light color but leaves --color-ink alone,
      so shadows stay dark-tinted (not a pale, invisible shadow) in dark mode. */
-  --color-frost: #FAF6E9;
+  --color-frost: #EEF5FB;
   --color-card: #FFFFFF;
-  --color-kale: #283618;
-  --color-ink: #283618;
-  --color-mint: #6A994E;
-  --color-mint-deep: #386641;
-  --color-citrus: #DDA15E;
-  --color-berry: #BC4749;
-  --color-fog: #6B6B4F;
-  --color-line: #E3D9B8;
-  --color-teal: #4C6B2C;
-  --color-track: #F2EEDC;
+  --color-kale: #17202A;
+  --color-ink: #17202A;
+  --color-mint: #65A9FF;
+  --color-mint-deep: #3F8EF6;
+  --color-citrus: #F3B75B;
+  --color-berry: #E26B7A;
+  --color-fog: #8A94A3;
+  --color-line: #DDE7F0;
+  --color-teal: #3D8FD9;
+  --color-track: #E4EEF8;
 
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -192,4 +192,135 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-fade-in-up { animation: none; }
   }
+}
+
+
+/* 2026 glass / airy mobile refresh inspired by the supplied visual reference.
+   Feature behavior is unchanged: this layer only changes presentation. */
+@layer base {
+  body {
+    background:
+      radial-gradient(circle at 20% 12%, rgba(132, 188, 255, .34), transparent 31%),
+      radial-gradient(circle at 82% 88%, rgba(174, 198, 255, .28), transparent 34%),
+      #e7eef4;
+  }
+
+  #app {
+    padding: 14px 0;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 520px) {
+    #app { padding: 0; }
+  }
+
+  input, textarea, select {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+  }
+
+  :root {
+    --shadow-app: 0 18px 45px color-mix(in srgb, var(--color-ink) 12%, transparent);
+    --shadow-sm: 0 6px 18px color-mix(in srgb, var(--color-ink) 7%, transparent);
+    --shadow-float: 0 10px 28px color-mix(in srgb, var(--color-ink) 12%, transparent);
+    --shadow-fab: 0 14px 34px color-mix(in srgb, var(--color-mint) 38%, transparent);
+    --gradient-brand: linear-gradient(100deg, var(--color-mint-deep), color-mix(in srgb, var(--color-mint) 68%, #c7c2ff));
+  }
+}
+
+@layer utilities {
+  /* Frosted surfaces like the reference: translucent white, fine borders,
+     soft shadows, and restrained blur instead of heavy solid panels. */
+  .glass,
+  .glass-tint {
+    background: color-mix(in srgb, var(--color-card) 76%, transparent);
+    border-color: color-mix(in srgb, white 72%, var(--color-line));
+    backdrop-filter: blur(22px) saturate(135%);
+    -webkit-backdrop-filter: blur(22px) saturate(135%);
+  }
+
+  .icon-btn-float {
+    background: color-mix(in srgb, var(--color-card) 66%, transparent);
+    border: 1px solid color-mix(in srgb, white 76%, var(--color-line));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.72), var(--shadow-sm);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .btn-brand {
+    background: var(--gradient-brand);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.32), 0 10px 24px color-mix(in srgb, var(--color-mint) 28%, transparent);
+  }
+
+  .stat-pill {
+    background: rgba(34, 43, 55, .42);
+    border: 1px solid rgba(255,255,255,.26);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+  }
+
+  /* Existing cards/forms inherit these classes, so this gives the whole app
+     the rounded, floating visual language without changing any feature code. */
+  .bg-card {
+    background-color: color-mix(in srgb, var(--color-card) 84%, transparent) !important;
+    backdrop-filter: blur(16px) saturate(125%);
+    -webkit-backdrop-filter: blur(16px) saturate(125%);
+  }
+
+  .border-line {
+    border-color: color-mix(in srgb, var(--color-line) 62%, white) !important;
+  }
+
+  .bg-frost {
+    background-color: color-mix(in srgb, var(--color-frost) 82%, transparent) !important;
+  }
+
+  .bg-track {
+    background-color: color-mix(in srgb, var(--color-track) 82%, white) !important;
+  }
+
+  /* Give the app shell a device-like floating canvas on desktop while
+     remaining edge-to-edge on phones. */
+  #app > div {
+    background:
+      radial-gradient(circle at 84% 2%, color-mix(in srgb, var(--color-mint) 18%, transparent), transparent 27%),
+      radial-gradient(circle at 4% 20%, color-mix(in srgb, #b9d9ff 32%, transparent), transparent 30%),
+      color-mix(in srgb, var(--color-frost) 90%, white);
+    border: 1px solid rgba(255,255,255,.72);
+    border-radius: 44px;
+    box-shadow: 0 28px 70px rgba(39, 60, 82, .18), inset 0 1px 0 rgba(255,255,255,.85);
+  }
+
+  @media (max-width: 520px) {
+    #app > div {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+
+  /* Softer modern field treatment, matching the rounded controls in the reference. */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea {
+    border-radius: 18px !important;
+    background: color-mix(in srgb, var(--color-card) 72%, transparent) !important;
+    border-color: rgba(255,255,255,.78) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 6px 18px rgba(39,60,82,.055);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  button {
+    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, opacity .18s ease;
+  }
+
+  button:active {
+    transform: scale(.97);
+  }
+}
+
+:root[data-mode="dark"] #app > div {
+  background:
+    radial-gradient(circle at 84% 2%, color-mix(in srgb, var(--color-mint) 15%, transparent), transparent 27%),
+    #171b22;
+  border-color: rgba(255,255,255,.08);
 }
