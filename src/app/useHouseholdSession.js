@@ -12,10 +12,10 @@ export function useHouseholdSession(){
 
   const attachLiveSubscriptions = useCallback((code) => {
     subscribeToHousehold(code, {
-      onMembers: (members, adminUid) => {
+      onMembers: (members, adminUid, memberProfiles) => {
         const isAdmin = !!adminUid && adminUid === currentUserId();
         const me = JSON.parse(localStorage.getItem('frostbox_me') || 'null');
-        if(me) setMe({ ...me, role: isAdmin ? 'admin' : 'member' });
+        const memberUids = Object.fromEntries(Object.entries(memberProfiles || {}).map(([uid, displayName]) => [displayName, uid]));\n        if(me) setMe({ ...me, role: isAdmin ? 'admin' : 'member', memberUids });
         dispatch({ type: 'SET_MEMBERS', members });
       },
       onItems: items => dispatch({ type: 'SET_ITEMS', items }),
