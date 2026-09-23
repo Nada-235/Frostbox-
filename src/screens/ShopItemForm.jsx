@@ -20,6 +20,8 @@ export function ShopItemForm(){
   const original = state.editingShopItem || blankItem();
   const isEdit = !!original.id;
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
 
   const [name, setName] = useState(original.name);
   const [category, setCategory] = useState(original.category || 'other');
@@ -161,7 +163,7 @@ export function ShopItemForm(){
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-3 pb-10">
       <button
         type="button"
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => setPhotoPickerOpen(true)}
         className="w-full h-[150px] rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
       >
         {photo ? (
@@ -173,7 +175,17 @@ export function ShopItemForm(){
           </>
         )}
       </button>
-      <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+      <input ref={fileInputRef} type="file" accept="image/*" onChange={onPhotoChange} className="hidden" />
+      <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+      {photoPickerOpen && (
+        <div className="fixed inset-0 z-[250] bg-black/30 flex items-end justify-center p-3" onClick={() => setPhotoPickerOpen(false)}>
+          <div className="w-full max-w-[420px] bg-card rounded-[24px] p-3 shadow-[var(--shadow-app)]" onClick={e => e.stopPropagation()}>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); cameraInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Take photo</button>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); fileInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Choose from gallery</button>
+            <button type="button" onClick={() => setPhotoPickerOpen(false)} className="w-full py-3.5 rounded-2xl bg-transparent text-fog font-semibold">Cancel</button>
+          </div>
+        </div>
+      )}
 
       <Field label={t('label_name')}>
         <div className="relative">
