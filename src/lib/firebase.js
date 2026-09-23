@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signInAnonymously, signOut } from 'firebase/auth';
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
   doc, getDoc, setDoc, updateDoc, deleteDoc,
@@ -53,7 +53,12 @@ export async function signInWithGoogle(){
   }
 }
 
-export async function signOutGoogle(){
+export async function signInAsGuest(){
+  const result = await signInAnonymously(auth);
+  return result.user;
+}
+
+export async function signOutAccount(){
   unsubscribeFromHousehold();
   await signOut(auth);
 }
