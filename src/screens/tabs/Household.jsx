@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Database, ChevronRight } from 'lucide-react';
+import { Check, Database, ChevronRight, Trash2 } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { shareHouseholdCode } from '../../lib/share.js';
@@ -7,10 +7,10 @@ import { useHouseholdSession } from '../../app/useHouseholdSession.js';
 import {
   setLang, setTheme as persistTheme, setMode as persistMode,
   setCustomColor as persistCustomColor, setFontEn as persistFontEn, setFontAr as persistFontAr,
-} from '../../lib/localStorage.js';
+  getMe,\n} from '../../lib/localStorage.js';
 import { THEMES, CUSTOM_THEME_ID, FONTS } from '../../lib/themes.js';
 import { SectionLabel, Switch, SegButton } from '../../components/ui.jsx';
-import { ColorWheelPicker } from '../../components/ColorWheelPicker.jsx';
+import { ColorWheelPicker } from '../../components/ColorWheelPicker.jsx';\nimport { removeHouseholdMember } from '../../lib/firebase.js';
 
 const AVATAR_COLORS = ['#7C5CFC', '#FF5470', '#06D6A0', '#F59E0B', '#EC4899', '#3B82F6'];
 function colorForName(name){
@@ -40,7 +40,7 @@ export function HouseholdBody(){
   const [notifPermission, setNotifPermission] = useState(
     typeof window !== 'undefined' && window.Notification ? Notification.permission : 'unsupported'
   );
-  const notifOn = notifPermission === 'granted';
+  const notifOn = notifPermission === 'granted';\n  const me = getMe();\n  const isAdmin = me?.role === 'admin' && !!me?.adminToken;\n\n  async function handleRemoveMember(memberName){\n    if(!isAdmin || memberName === state.myName) return;\n    const message = state.lang === 'ar'\n      ? `هل تريد إزالة ${memberName} من الثلاجة؟`\n      : `Remove ${memberName} from this fridge?`;\n    if(!confirm(message)) return;\n    const removed = await removeHouseholdMember(state.code, memberName, me.adminToken);\n    if(!removed){\n      alert(state.lang === 'ar' ? 'تعذر إزالة هذا العضو.' : 'Could not remove this member.');\n    }\n  }
 
   function changeLang(lang){
     setLang(lang);

@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
   doc, getDoc, setDoc, updateDoc, deleteDoc,
-  collection, onSnapshot, arrayUnion
+  collection, onSnapshot, arrayUnion, arrayRemove
 } from 'firebase/firestore';
 import { firebaseConfig } from './firebase-config.js';
 import { catalogIdFromName } from './utils.js';
@@ -24,8 +24,13 @@ export function initFirebase(){
 }
 
 /* ---- Household lifecycle ---- */
-export async function createHousehold(code, memberName){
-  await setDoc(doc(db, 'households', code), { members: [memberName], createdAt: Date.now() });
+export async function createHousehold(code, memberName, adminToken){
+  await setDoc(doc(db, 'households', code), {
+    members: [memberName],
+    adminName: memberName,
+    adminToken,
+    createdAt: Date.now(),
+  });
 }
 export async function findHousehold(code){
   const snap = await getDoc(doc(db, 'households', code));
@@ -33,6 +38,16 @@ export async function findHousehold(code){
 }
 export async function joinHouseholdAsMember(code, memberName){
   await updateDoc(doc(db, 'households', code), { members: arrayUnion(memberName) });
+}
+export async function removeHouseholdMember(code, memberName, adminToken){
+  const ref = doc(db, 'households', code);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return false;
+  const data = snap.data() || {};
+  if(!data.adminToken || data.adminToken !== adminToken) return false;
+  if(memberName === data.adminName) return false;
+  await updateDoc(ref, { members: arrayRemove(memberName) });
+  return true;
 }
 
 /** Wires up real-time listeners. Callbacks receive plain arrays/objects, no Firestore types leak out. */
