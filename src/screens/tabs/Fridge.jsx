@@ -80,6 +80,11 @@ export function FridgeHeader(){
   const dispatch = useAppDispatch();
   const t = useT();
 
+  function changeView(view){
+    setListView(view);
+    dispatch({ type: 'SET_LIST_VIEW', view });
+  }
+
   return (
     <div className="flex items-start justify-between pb-4">
       <div>
