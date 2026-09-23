@@ -12,6 +12,8 @@ export function Onboarding(){
   const headingFont = useHeadingFont();
   const { startNewHousehold, joinHousehold } = useHouseholdSession();
   const [code, setCode] = useState('');
+  const [name, setName] = useState('');
+  const [memberType, setMemberType] = useState('');
   const [joining, setJoining] = useState(false);
 
   async function handleStart(){
@@ -20,9 +22,21 @@ export function Onboarding(){
 
   async function handleJoin(){
     const value = code.trim().toUpperCase();
+    const memberName = name.trim();
+    const type = memberType.trim();
+
     if(!value){ alert(t('enter_code_first')); return; }
+    if(!memberName){
+      alert(state.lang === 'ar' ? 'أدخل اسمك أولاً' : 'Enter your name first');
+      return;
+    }
+    if(!type){
+      alert(state.lang === 'ar' ? 'أدخل صفتك أو علاقتك أولاً' : 'Enter your type or relationship first');
+      return;
+    }
+
     setJoining(true);
-    const ok = await joinHousehold(value);
+    const ok = await joinHousehold(value, memberName, type);
     setJoining(false);
     if(!ok){ alert(t('code_not_found')); return; }
   }
@@ -65,6 +79,24 @@ export function Onboarding(){
             dir="ltr"
             className="force-mono w-full px-3.5 py-[13px] rounded-[13px] border-[1.5px] border-line text-[15.5px] text-kale bg-card mb-2.5 text-center tracking-[2px] uppercase font-semibold"
             name="fb-join-code" {...noAutofillProps}
+          />
+          <input
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder={state.lang === 'ar' ? 'اسمك' : 'Your name'}
+            maxLength={40}
+            className="w-full px-3.5 py-[13px] rounded-[13px] border-[1.5px] border-line text-[15.5px] text-kale bg-card mb-2.5"
+            name="fb-member-name" {...noAutofillProps}
+          />
+          <input
+            type="text"
+            value={memberType}
+            onChange={e => setMemberType(e.target.value)}
+            placeholder={state.lang === 'ar' ? 'الصفة أو العلاقة، مثال: زوجة' : 'Type / relationship, e.g. Wife'}
+            maxLength={40}
+            className="w-full px-3.5 py-[13px] rounded-[13px] border-[1.5px] border-line text-[15.5px] text-kale bg-card mb-2.5"
+            name="fb-member-type" {...noAutofillProps}
           />
           <button
             onClick={handleJoin}
