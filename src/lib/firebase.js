@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
   doc, getDoc, setDoc, updateDoc, deleteDoc,
@@ -25,6 +25,38 @@ export async function initFirebase(){
   });
   await signInAnonymously(auth);
   return true;
+}
+
+export function getCurrentUser(){ return auth?.currentUser || null; }
+
+export function waitForAuth(){
+  return new Promise(resolve => {
+    if(!auth) return resolve(null);
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      unsubscribe();
+      resolve(user);
+    });
+  });
+}
+
+export async function signInWithGoogle(){
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  try{
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch(error){
+    if(error?.code === 'auth/popup-blocked' || error?.code === 'auth/operation-not-supported-in-this-environment'){
+      await signInWithRedirect(auth, provider);
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function signOutGoogle(){
+  unsubscribeFromHousehold();
+  await signOut(auth);
 }
 
 function uid(){
