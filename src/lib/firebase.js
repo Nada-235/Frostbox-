@@ -23,7 +23,6 @@ export async function initFirebase(){
   db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
-  await signInAnonymously(auth);
   return true;
 }
 
