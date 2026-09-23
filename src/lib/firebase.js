@@ -38,7 +38,7 @@ export async function createHousehold(code, memberName){
   const userId = uid();
   await setDoc(doc(db, 'households', code), {
     members: [memberName],
-    memberUids: { [userId]: true },
+    memberProfiles: { [userId]: memberName },
     adminName: memberName,
     adminUid: userId,
     createdAt: Date.now(),
@@ -74,7 +74,7 @@ export function currentUserId(){ return auth?.currentUser?.uid || null; }
 export function subscribeToHousehold(code, { onMembers, onItems, onShopping, onCatalog }){
   unsubscribers.household = onSnapshot(doc(db, 'households', code), snap => {
     const data = snap.data() || {};
-    onMembers(data.members || [], data.adminUid || null, data.memberUids || {});
+    onMembers(data.members || [], data.adminUid || null, data.memberProfiles || {});
   });
   unsubscribers.items = onSnapshot(collection(db, 'households', code, 'items'), snap => {
     onItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
