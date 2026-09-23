@@ -149,7 +149,18 @@ export function HouseholdBody(){
           >
             {m.slice(0, 1).toUpperCase()}
           </div>
-          <div>{m}</div>
+          <div className="flex-1 min-w-0">{m}</div>
+          {isAdmin && m !== state.myName && (
+            <button
+              type="button"
+              onClick={() => handleRemoveMember(m)}
+              aria-label={state.lang === 'ar' ? `إزالة ${m}` : `Remove ${m}`}
+              title={state.lang === 'ar' ? 'إزالة العضو' : 'Remove member'}
+              className="w-9 h-9 rounded-full border border-[#EFC9C9] bg-card text-berry flex items-center justify-center cursor-pointer shrink-0 active:scale-95"
+            >
+              <Trash2 size={16} strokeWidth={2.25} />
+            </button>
+          )}
         </div>
       ))}
 
