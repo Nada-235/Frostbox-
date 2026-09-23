@@ -77,13 +77,7 @@ function ItemCardGrid({ item, lang, onOpen }){
 
 export function FridgeHeader(){
   const state = useAppState();
-  const dispatch = useAppDispatch();
   const t = useT();
-
-  function changeView(view){
-    setListView(view);
-    dispatch({ type: 'SET_LIST_VIEW', view });
-  }
 
   return (
     <div className="flex items-start justify-between pb-4">
@@ -101,7 +95,6 @@ export function FridgeHeader(){
         >
           {state.code}
         </button>
-        <ViewToggle value={state.listView} onChange={changeView} />
       </div>
     </div>
   );
@@ -166,7 +159,9 @@ export function FridgeBody(){
             ))}
           </div>
         </div>
-        
+      </div>
+      <div className="flex justify-end pt-1">
+        <ViewToggle value={listView} onChange={changeView} floating />
       </div>
     </div>
   );
