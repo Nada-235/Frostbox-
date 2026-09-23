@@ -353,3 +353,24 @@
     scroll-margin-bottom: 180px;
   }
 }
+
+
+/* iOS gives date/datetime controls an intrinsic width based on their native
+   formatted value. Constrain every date field to its form column so Arabic
+   and localized dates cannot push the page wider than the screen. */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="datetime-local"]::-webkit-date-and-time-value {
+  min-width: 0;
+  text-align: start;
+}
