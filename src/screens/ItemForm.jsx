@@ -27,6 +27,8 @@ export function ItemForm(){
   const original = state.editingItem || blankItem();
   const isEdit = !!original.id;
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(isEdit);
 
   const [name, setName] = useState(original.name || '');
@@ -131,10 +133,20 @@ export function ItemForm(){
     </div>
 
     <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-2 pb-10">
-      <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full h-[190px] rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
+      <button type="button" onClick={() => setPhotoPickerOpen(true)} className="w-full h-[190px] rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
         {photo ? <img src={photo} alt="" className="w-full h-full object-cover absolute inset-0"/> : <><span className="w-12 h-12 rounded-full bg-track flex items-center justify-center"><Camera size={22}/></span><span>{t('add_photo')}</span></>}
       </button>
-      <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden"/>
+      <input ref={fileInputRef} type="file" accept="image/*" onChange={onPhotoChange} className="hidden" />
+      <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+      {photoPickerOpen && (
+        <div className="fixed inset-0 z-[250] bg-black/30 flex items-end justify-center p-3" onClick={() => setPhotoPickerOpen(false)}>
+          <div className="w-full max-w-[420px] bg-card rounded-[24px] p-3 shadow-[var(--shadow-app)]" onClick={e => e.stopPropagation()}>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); cameraInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Take photo</button>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); fileInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Choose from gallery</button>
+            <button type="button" onClick={() => setPhotoPickerOpen(false)} className="w-full py-3.5 rounded-2xl bg-transparent text-fog font-semibold">Cancel</button>
+          </div>
+        </div>
+      )}
 
       <Field label={t('label_name')}><input value={name} onChange={e=>setName(e.target.value)} placeholder={t('name_placeholder_food')} className={inputCls} name="fb-fridge-item-name" {...noAutofillProps}/></Field>
 
