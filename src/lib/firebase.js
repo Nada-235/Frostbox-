@@ -122,6 +122,7 @@ export async function removeHouseholdMember(code, memberName, memberUid){
     members: arrayRemove(memberName),
     [`memberProfiles.${memberUid}`]: deleteField(),
   });
+  await deleteDoc(doc(db, 'users', memberUid));
   return true;
 }
 export function currentUserId(){ return auth?.currentUser?.uid || null; }
