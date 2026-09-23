@@ -39,6 +39,12 @@
   }
   button, input, textarea { font-family: inherit; }
 
+  /* Prevent iOS Safari from zooming the page when a text field receives
+     focus. 16px is the minimum input font size that avoids auto-zoom. */
+  @supports (-webkit-touch-callout: none) {
+    input, textarea, select { font-size: 16px !important; }
+  }
+
   /* #app is the actual flex item of body (the React root div in index.html
      has no Tailwind classes of its own) — without an explicit width here it
      sizes to its widest descendant's content instead of the viewport. Also
@@ -323,4 +329,27 @@
     radial-gradient(circle at 84% 2%, color-mix(in srgb, var(--color-mint) 15%, transparent), transparent 27%),
     #171b22;
   border-color: rgba(255,255,255,.08);
+}
+
+
+/* Mobile keyboard: keep forms scrollable inside the reduced visual viewport
+   and leave enough scroll room to center the last focused field above iOS'
+   keyboard/accessory bar. */
+@media (max-width: 520px) {
+  html.keyboard-open #app,
+  html.keyboard-open #app > div {
+    height: var(--app-height) !important;
+    max-height: var(--app-height) !important;
+  }
+
+  html.keyboard-open #app > div {
+    overflow: hidden;
+  }
+
+  html.keyboard-open input:focus,
+  html.keyboard-open textarea:focus,
+  html.keyboard-open select:focus {
+    scroll-margin-top: 96px;
+    scroll-margin-bottom: 180px;
+  }
 }
