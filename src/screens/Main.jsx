@@ -17,7 +17,7 @@ function TabButton({ icon: Icon, label, active, onClick }){
       onClick={onClick}
       className={`bg-transparent border-none flex flex-col items-center gap-1 text-[11px] font-semibold cursor-pointer w-20 ${active ? 'text-mint-deep' : 'text-fog'}`}
     >
-      <span className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${active ? 'bg-track' : ''}`}>
+      <span className="w-9 h-9 rounded-full flex items-center justify-center bg-transparent transition-colors">
         <Icon size={19} strokeWidth={active ? 2.25 : 2} />
       </span>
       {label}
@@ -58,7 +58,7 @@ export function Main(){
           <Body />
         </div>
         <div
-          className="shrink-0 min-h-[82px] glass-tint border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
+          className="shrink-0 min-h-[82px] bg-transparent border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <TabButton icon={Refrigerator} label={t('tab_fridge')} active={state.tab === 'fridge'} onClick={() => dispatch({ type: 'SET_TAB', tab: 'fridge' })} />
