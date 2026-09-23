@@ -3,7 +3,7 @@ import { useAppDispatch } from './AppContext.jsx';
 import { setMe, clearMe } from '../lib/localStorage.js';
 import { genCode } from '../lib/utils.js';
 import {
-  createHousehold, findHousehold, joinHouseholdAsMember,
+  createHousehold, findHousehold, joinHouseholdAsMember, getMyHousehold,
   subscribeToHousehold, unsubscribeFromHousehold, currentUserId,
 } from '../lib/firebase.js';
 
@@ -56,5 +56,18 @@ export function useHouseholdSession(){
     dispatch({ type: 'RESET', lang });
   }, [dispatch]);
 
-  return { resumeHousehold, startNewHousehold, joinHousehold, leaveHousehold };
+  const resumeMyHousehold = useCallback(async () => {
+    const membership = await getMyHousehold();
+    if(!membership?.householdCode || !membership?.displayName) return false;
+    setMe({
+      code: membership.householdCode,
+      name: membership.displayName,
+      role: membership.role || 'member',
+      uid: currentUserId(),
+    });
+    await resumeHousehold(membership.householdCode, membership.displayName);
+    return true;
+  }, [resumeHousehold]);
+
+  return { resumeHousehold, resumeMyHousehold, startNewHousehold, joinHousehold, leaveHousehold };
 }

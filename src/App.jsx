@@ -28,7 +28,7 @@ const SCREENS = {
 function Shell(){
   const state = useAppState();
   const dispatch = useAppDispatch();
-  const { resumeHousehold } = useHouseholdSession();
+  const { resumeHousehold, resumeMyHousehold } = useHouseholdSession();
   useReminders();
   useViewportHeight();
 
@@ -48,9 +48,14 @@ function Shell(){
           dispatch({ type: 'SET_SCREEN', screen: 'setup' });
           return;
         }
+        const user = await waitForAuth();
         const me = getMe();
-        if(me && me.code){
-          resumeHousehold(me.code, me.name || 'You');
+        if(user){
+          const restored = await resumeMyHousehold();
+          if(restored) return;
+        }
+        if(user && me && me.code){
+          resumeHousehold(me.code, me.name || user.displayName || 'Member');
         } else {
           dispatch({ type: 'SET_SCREEN', screen: 'onboard' });
         }

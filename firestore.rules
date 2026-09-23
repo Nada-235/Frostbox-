@@ -18,6 +18,16 @@ service cloud.firestore {
       return signedIn() && household(code).adminUid == request.auth.uid;
     }
 
+    match /users/{userId} {
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.householdCode is string
+        && request.resource.data.displayName is string
+        && request.resource.data.role in ['admin', 'member'];
+      allow delete: if signedIn() && request.auth.uid == userId;
+    }
+
     match /households/{code} {
       // A Google-authenticated user may look up a household by its shared code.
       allow get: if signedIn();
