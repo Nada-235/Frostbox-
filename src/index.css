@@ -56,15 +56,17 @@
     height: var(--app-height, 100dvh);
   }
 
-  /* Derived, theme-reactive shadows/gradients — color-mix() against the
-     active theme's own tokens, so these never need per-theme overrides. */
+  /* Derived, theme-reactive shadows — color-mix() against the active theme's
+     own tokens, so these never need per-theme overrides. Flat solid fills
+     (not gradients) for the brand/banner surfaces — a single confident tone
+     reads more like a considered choice than a generic glossy sheen. */
   :root {
     --shadow-app: 0 6px 20px color-mix(in srgb, var(--color-ink) 9%, transparent);
     --shadow-sm: 0 2px 6px color-mix(in srgb, var(--color-ink) 5%, transparent);
     --shadow-fab: 0 6px 16px color-mix(in srgb, var(--color-mint) 28%, transparent);
     --shadow-banner: 0 4px 12px color-mix(in srgb, var(--color-berry) 20%, transparent);
-    --gradient-brand: linear-gradient(135deg, var(--color-mint), var(--color-mint-deep));
-    --gradient-banner: linear-gradient(135deg, var(--color-berry), color-mix(in srgb, var(--color-berry) 80%, black));
+    --gradient-brand: var(--color-mint-deep);
+    --gradient-banner: color-mix(in srgb, var(--color-berry) 92%, black);
   }
 
   /* ---- Theme presets — pick one, see lib/themes.js for the picker list ---- */
@@ -142,23 +144,19 @@
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 
+  /* Flat, solid surfaces — no frosted-glass blur/translucency. A plain
+     opaque fill reads as a deliberate material choice rather than the
+     ambient-blur sheen every template reaches for by default. */
   .glass {
-    background: color-mix(in srgb, var(--color-card) 88%, transparent);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    background: var(--color-card);
   }
 
-  /* Colorful frosted glass — tinted by the active theme's brand color. */
   .glass-tint {
-    background: color-mix(in srgb, var(--color-mint) 14%, color-mix(in srgb, var(--color-card) 86%, transparent));
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    background: var(--color-card);
   }
 
   .glass-brand {
-    background: color-mix(in srgb, var(--color-mint) 78%, transparent);
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    background: var(--color-mint-deep);
   }
 
   .btn-brand {

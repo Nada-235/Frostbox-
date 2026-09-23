@@ -3,8 +3,9 @@ import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { backArrow, formatIQD } from '../lib/formatting.js';
 import { catalogRecords } from '../lib/utils.js';
+import { setListView } from '../lib/localStorage.js';
 import { deleteCatalogItem } from '../lib/firebase.js';
-import { EmptyState } from '../components/ui.jsx';
+import { EmptyState, ViewToggle } from '../components/ui.jsx';
 
 function CatalogRow({ item, t, onOpen, onDelete }){
   const records = catalogRecords(item).filter(r => !isNaN(parseFloat(r.price)));
@@ -47,6 +48,33 @@ function CatalogRow({ item, t, onOpen, onDelete }){
   );
 }
 
+function CatalogCardGrid({ item, t, onOpen, onDelete }){
+  const records = catalogRecords(item).filter(r => !isNaN(parseFloat(r.price)));
+  const best = records.length ? records.slice().sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[0] : null;
+
+  return (
+    <div className="bg-card rounded-[18px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
+      <button
+        onClick={onDelete}
+        className="absolute top-1.5 end-1.5 z-10 w-6 h-6 rounded-full bg-card border border-line flex items-center justify-center text-fog"
+      >
+        <X size={12} strokeWidth={2.25} />
+      </button>
+      <div onClick={onOpen} className="w-full aspect-square bg-track flex items-center justify-center overflow-hidden cursor-pointer text-fog">
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <Database size={26} strokeWidth={1.5} />}
+      </div>
+      <div onClick={onOpen} className="p-2.5 cursor-pointer">
+        <div className="font-semibold text-[13.5px] whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</div>
+        {best && (
+          <div className="text-[11px] text-teal font-bold mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+            {formatIQD(best.price)} · {best.supermarket}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function CatalogList(){
   const state = useAppState();
   const dispatch = useAppDispatch();
@@ -73,7 +101,13 @@ export function CatalogList(){
     await deleteCatalogItem(state.code, item.id);
   }
 
+  function changeView(view){
+    setListView(view);
+    dispatch({ type: 'SET_LIST_VIEW', view });
+  }
+
   const BackIcon = backArrow(lang);
+  const { listView } = state;
 
   return (
     <>
@@ -99,9 +133,22 @@ export function CatalogList(){
         {!list.length ? (
           <EmptyState icon={Database}>{t('empty_catalog')}</EmptyState>
         ) : (
-          list.map(item => (
-            <CatalogRow key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
-          ))
+          <>
+            <div className="flex justify-end mb-2.5">
+              <ViewToggle value={listView} onChange={changeView} />
+            </div>
+            {listView === 'grid' ? (
+              <div className="grid grid-cols-2 gap-2.5">
+                {list.map(item => (
+                  <CatalogCardGrid key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
+                ))}
+              </div>
+            ) : (
+              list.map(item => (
+                <CatalogRow key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
+              ))
+            )}
+          </>
         )}
       </div>
     </>

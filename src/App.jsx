@@ -3,7 +3,7 @@ import { AppProvider, useAppState, useAppDispatch } from './app/AppContext.jsx';
 import { useHouseholdSession } from './app/useHouseholdSession.js';
 import { useReminders } from './app/useReminders.js';
 import { useViewportHeight } from './app/useViewportHeight.js';
-import { getMe, getLang, getTheme, getMode, getCustomColor, getFontEn, getFontAr } from './lib/localStorage.js';
+import { getMe, getLang, getTheme, getMode, getCustomColor, getFontEn, getFontAr, getListView } from './lib/localStorage.js';
 import { initFirebase } from './lib/firebase.js';
 import { FONTS } from './lib/themes.js';
 import { Setup } from './screens/Setup.jsx';
@@ -40,6 +40,7 @@ function Shell(){
     dispatch({ type: 'SET_CUSTOM_COLOR', color: getCustomColor() });
     dispatch({ type: 'SET_FONT_EN', id: getFontEn() });
     dispatch({ type: 'SET_FONT_AR', id: getFontAr() });
+    dispatch({ type: 'SET_LIST_VIEW', view: getListView() });
 
     if(!initFirebase()){
       dispatch({ type: 'SET_SCREEN', screen: 'setup' });

@@ -10,6 +10,7 @@ const MODE_KEY = 'frostbox_mode';
 const CUSTOM_COLOR_KEY = 'frostbox_custom_color';
 const FONT_EN_KEY = 'frostbox_font_en';
 const FONT_AR_KEY = 'frostbox_font_ar';
+const LIST_VIEW_KEY = 'frostbox_list_view';
 
 export function getMe(){
   try{ return JSON.parse(localStorage.getItem(ME_KEY) || 'null'); }
@@ -35,3 +36,6 @@ export function setFontEn(id){ localStorage.setItem(FONT_EN_KEY, id); }
 
 export function getFontAr(){ return localStorage.getItem(FONT_AR_KEY) || 'tajawal'; }
 export function setFontAr(id){ localStorage.setItem(FONT_AR_KEY, id); }
+
+export function getListView(){ return localStorage.getItem(LIST_VIEW_KEY) || 'list'; }
+export function setListView(view){ localStorage.setItem(LIST_VIEW_KEY, view); }

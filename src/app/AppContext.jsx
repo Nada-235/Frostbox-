@@ -14,6 +14,7 @@ const initialState = {
   customColor: '#6A994E',   // accent color for theme: 'custom', picked via the color wheel
   fontEn: 'default',
   fontAr: 'tajawal',
+  listView: 'list',         // 'list' | 'grid' — shared across Fridge/Shopping/Catalog lists
   data: { items: [], shopping: [], members: [], catalog: [] },
   tab: 'fridge',           // 'fridge' | 'shopping' | 'household'
   screen: 'loading',       // 'loading' | 'setup' | 'onboard' | 'main' | 'add' | 'shopadd'
@@ -44,6 +45,7 @@ function reducer(state, action){
     case 'SET_CUSTOM_COLOR': return { ...state, customColor: action.color };
     case 'SET_FONT_EN': return { ...state, fontEn: action.id };
     case 'SET_FONT_AR': return { ...state, fontAr: action.id };
+    case 'SET_LIST_VIEW': return { ...state, listView: action.view };
     case 'SET_SCREEN': return { ...state, screen: action.screen };
     case 'SET_TAB': return { ...state, tab: action.tab };
     case 'SET_JOIN_BOX_OPEN': return { ...state, joinBoxOpen: action.open };
@@ -77,7 +79,7 @@ function reducer(state, action){
     }
     case 'RESET': return signedOutState(action.lang, {
       theme: state.theme, mode: state.mode, customColor: state.customColor,
-      fontEn: state.fontEn, fontAr: state.fontAr,
+      fontEn: state.fontEn, fontAr: state.fontAr, listView: state.listView,
     });
     default: return state;
   }

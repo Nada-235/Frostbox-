@@ -1,4 +1,33 @@
 /** Small shared UI atoms reused across the tab/form screens. */
+import { List, LayoutGrid } from 'lucide-react';
+
+/** List/grid switcher shared by every item list (Fridge, Shopping, Catalog). */
+export function ViewToggle({ value, onChange }){
+  return (
+    <div className="flex bg-frost rounded-[11px] p-[3px] gap-px shrink-0">
+      <button
+        type="button"
+        onClick={() => onChange('list')}
+        aria-label="List view"
+        className={`w-8 h-8 rounded-[8px] flex items-center justify-center cursor-pointer transition-colors ${
+          value === 'list' ? 'bg-card text-mint-deep shadow-[0_1px_4px_rgba(40,54,24,0.09)]' : 'bg-transparent text-fog'
+        }`}
+      >
+        <List size={15} strokeWidth={2.25} />
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange('grid')}
+        aria-label="Grid view"
+        className={`w-8 h-8 rounded-[8px] flex items-center justify-center cursor-pointer transition-colors ${
+          value === 'grid' ? 'bg-card text-mint-deep shadow-[0_1px_4px_rgba(40,54,24,0.09)]' : 'bg-transparent text-fog'
+        }`}
+      >
+        <LayoutGrid size={15} strokeWidth={2.25} />
+      </button>
+    </div>
+  );
+}
 
 /**
  * Plain text fields (item/brand/place names, prices) aren't passwords,

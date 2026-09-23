@@ -29,12 +29,7 @@ export function Onboarding(){
 
   return (
     <div
-      className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-3 py-8 text-center"
-      style={{
-        background: `radial-gradient(circle at 20% 10%, rgba(106,153,78,0.22), transparent 40%),
-          radial-gradient(circle at 85% 85%, rgba(188,71,73,0.14), transparent 45%),
-          var(--color-frost)`,
-      }}
+      className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up flex flex-col justify-center items-center px-3 py-8 text-center bg-frost"
     >
       <LangSwitchButton />
       <div

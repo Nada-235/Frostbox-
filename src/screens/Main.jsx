@@ -69,13 +69,9 @@ export function Main(){
       {showFab && (
         <button
           onClick={openAdd}
-          className="glass-brand fixed end-5 bottom-24 w-[58px] h-[58px] rounded-full border border-white/25 flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94] text-card overflow-hidden"
+          className="glass-brand fixed end-5 bottom-24 w-[58px] h-[58px] rounded-full flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94] text-card"
         >
-          <span
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.35), transparent 55%)' }}
-          />
-          <Plus size={26} strokeWidth={2.25} className="relative" />
+          <Plus size={26} strokeWidth={2.25} />
         </button>
       )}
     </>
