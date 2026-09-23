@@ -3,7 +3,7 @@ import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT, useHeadingFont } from '../lib/useT.js';
 import { useHouseholdSession } from '../app/useHouseholdSession.js';
 import { Logo, LangSwitchButton } from '../components/Shell.jsx';
-import { noAutofillProps } from '../components/ui.jsx';
+import { noAutofillProps } from '../components/ui.jsx';\nimport { getCurrentUser, signInWithGoogle } from '../lib/firebase.js';
 
 export function Onboarding(){
   const state = useAppState();
@@ -14,7 +14,7 @@ export function Onboarding(){
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [memberType, setMemberType] = useState('');
-  const [joining, setJoining] = useState(false);
+  const [joining, setJoining] = useState(false);\n  const [authBusy, setAuthBusy] = useState(false);\n  const user = getCurrentUser();
 
   async function handleStart(){
     await startNewHousehold();
@@ -57,7 +57,7 @@ export function Onboarding(){
 
       <button
         onClick={handleStart}
-        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_4px_12px_rgba(56,102,65,0.2)]"
+        className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_4px_12px_rgba(56,102,65,0.2)] disabled:opacity-60"
       >
         {t('start_fridge')}
       </button>
