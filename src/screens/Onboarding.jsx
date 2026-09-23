@@ -3,7 +3,8 @@ import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT, useHeadingFont } from '../lib/useT.js';
 import { useHouseholdSession } from '../app/useHouseholdSession.js';
 import { Logo, LangSwitchButton } from '../components/Shell.jsx';
-import { noAutofillProps } from '../components/ui.jsx';\nimport { getCurrentUser, signInWithGoogle } from '../lib/firebase.js';
+import { noAutofillProps } from '../components/ui.jsx';
+import { getCurrentUser, signInWithGoogle } from '../lib/firebase.js';
 
 export function Onboarding(){
   const state = useAppState();
@@ -14,9 +15,23 @@ export function Onboarding(){
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [memberType, setMemberType] = useState('');
-  const [joining, setJoining] = useState(false);\n  const [authBusy, setAuthBusy] = useState(false);\n  const user = getCurrentUser();
+  const [joining, setJoining] = useState(false);
+  const [authBusy, setAuthBusy] = useState(false);
+  const user = getCurrentUser();
+
+  async function ensureGoogleUser(){
+    if(getCurrentUser()) return getCurrentUser();
+    setAuthBusy(true);
+    try{
+      return await signInWithGoogle();
+    } finally {
+      setAuthBusy(false);
+    }
+  }
 
   async function handleStart(){
+    const signedInUser = await ensureGoogleUser();
+    if(!signedInUser) return;
     await startNewHousehold();
   }
 
@@ -34,6 +49,9 @@ export function Onboarding(){
       alert(state.lang === 'ar' ? 'أدخل صفتك أو علاقتك أولاً' : 'Enter your type or relationship first');
       return;
     }
+
+    const signedInUser = await ensureGoogleUser();
+    if(!signedInUser) return;
 
     setJoining(true);
     const ok = await joinHousehold(value, memberName, type);
@@ -55,8 +73,25 @@ export function Onboarding(){
       <h1 className={`${headingFont} text-[30px] text-kale mb-2`}>Frostbox</h1>
       <p className="text-fog text-[15px] leading-relaxed max-w-[290px] mb-9">{t('tagline')}</p>
 
+      {!user && (
+        <button
+          onClick={ensureGoogleUser}
+          disabled={authBusy}
+          className="w-full max-w-[300px] py-4 px-5 rounded-2xl border border-line text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform bg-card text-kale disabled:opacity-60"
+        >
+          {authBusy ? (state.lang === 'ar' ? 'جارٍ تسجيل الدخول…' : 'Signing in…') : (state.lang === 'ar' ? 'المتابعة باستخدام Google' : 'Continue with Google')}
+        </button>
+      )}
+      {user && (
+        <div className="w-full max-w-[300px] mb-3 px-4 py-3 rounded-2xl border border-line bg-card text-left rtl:text-right">
+          <div className="text-[13px] text-fog">{state.lang === 'ar' ? 'تم تسجيل الدخول باسم' : 'Signed in as'}</div>
+          <div className="font-semibold text-kale truncate">{user.displayName || user.email}</div>
+        </div>
+      )}
+
       <button
         onClick={handleStart}
+        disabled={authBusy}
         className="btn-brand w-full max-w-[300px] py-4 px-5 rounded-2xl border-none text-base font-semibold cursor-pointer mb-3 shrink-0 active:scale-[0.97] transition-transform shadow-[0_4px_12px_rgba(56,102,65,0.2)] disabled:opacity-60"
       >
         {t('start_fridge')}
