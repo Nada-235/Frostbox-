@@ -29,7 +29,7 @@
 
 @layer base {
   * { -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; margin: 0; padding: 0; }
+  html, body { height: 100%; min-height: 100%; margin: 0; padding: 0; overscroll-behavior-y: none; }
   body {
     background: linear-gradient(160deg, var(--color-frost) 0%, var(--color-track) 100%);
     font-family: var(--font-sans);

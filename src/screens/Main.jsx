@@ -58,8 +58,8 @@ export function Main(){
           <Body />
         </div>
         <div
-          className="shrink-0 min-h-[82px] glass-tint border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+          className="shrink-0 glass-tint border-t border-line flex items-start justify-around pt-2.5 sticky bottom-0 z-[99]"
+          style={{ minHeight: 'calc(64px + env(safe-area-inset-bottom))', paddingBottom: 'max(env(safe-area-inset-bottom), 6px)' }}
         >
           <TabButton icon={Refrigerator} label={t('tab_fridge')} active={state.tab === 'fridge'} onClick={() => dispatch({ type: 'SET_TAB', tab: 'fridge' })} />
           <TabButton icon={ClipboardList} label={t('tab_shopping')} active={state.tab === 'shopping'} onClick={() => dispatch({ type: 'SET_TAB', tab: 'shopping' })} />
@@ -69,7 +69,8 @@ export function Main(){
       {showFab && (
         <button
           onClick={openAdd}
-          className="btn-brand fixed end-5 bottom-24 w-[60px] h-[60px] rounded-full flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94]"
+          className="btn-brand fixed end-5 w-[60px] h-[60px] rounded-full flex items-center justify-center shadow-[var(--shadow-fab)] cursor-pointer z-30 active:scale-[0.94]"
+          style={{ bottom: 'calc(72px + env(safe-area-inset-bottom))' }}
         >
           <Plus size={26} strokeWidth={2.25} />
         </button>
