@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Refrigerator, Snowflake, AlarmClock, SearchX } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
@@ -105,6 +106,7 @@ export function FridgeBody(){
   const dispatch = useAppDispatch();
   const t = useT();
   const { lang, locationFilter, categoryFilter, dueReminders, listView } = state;
+  const [expiryFilter, setExpiryFilter] = useState('all');
 
   function changeView(view){
     setListView(view);
@@ -113,8 +115,21 @@ export function FridgeBody(){
 
   let items = state.data.items || [];
   const totalCount = items.length;
+  const expiryCounts = items.reduce((counts, item) => {
+    if(!item.goodUntil) return counts;
+    const days = daysUntil(item.goodUntil);
+    if(days < 0) counts.expired++;
+    else if(days <= 3) counts.soon++;
+    else counts.fresh++;
+    return counts;
+  }, { expired: 0, soon: 0, fresh: 0 });
   if(locationFilter !== 'all') items = items.filter(i => (i.location || 'fridge') === locationFilter);
   if(categoryFilter !== 'all') items = items.filter(i => (i.category || 'other') === categoryFilter);
+  if(expiryFilter !== 'all') items = items.filter(item => {
+    if(!item.goodUntil) return false;
+    const days = daysUntil(item.goodUntil);
+    return expiryFilter === 'expired' ? days < 0 : expiryFilter === 'soon' ? days >= 0 && days <= 3 : days > 3;
+  });
 
   function openItem(item){
     dispatch({ type: 'SET_EDITING_ITEM', item });
@@ -147,6 +162,20 @@ export function FridgeBody(){
             <Snowflake size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_freezer')}
           </SegButton>
         </div>
+      </div>
+      <div className="grid grid-cols-4 gap-1.5 mb-3">
+        {[
+          ['all', t('filter_all'), totalCount],
+          ['expired', t('section_expired'), expiryCounts.expired],
+          ['soon', t('section_soon'), expiryCounts.soon],
+          ['fresh', t('section_fresh'), expiryCounts.fresh],
+        ].map(([id, label, count]) => (
+          <button key={id} type="button" onClick={() => setExpiryFilter(id)}
+            className={`min-w-0 rounded-2xl px-1.5 py-2 border text-center ${expiryFilter === id ? 'bg-card border-mint text-mint-deep shadow-[var(--shadow-sm)]' : 'bg-transparent border-line text-fog'}`}>
+            <span className="block force-mono text-[15px] font-bold">{count}</span>
+            <span className="block text-[10.5px] font-semibold truncate">{label}</span>
+          </button>
+        ))}
       </div>
       <div className="flex items-center gap-2 mb-1.5">
         <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar bg-transparent">
