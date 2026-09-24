@@ -44,6 +44,7 @@ export function HouseholdBody(){
   );
   const notifOn = notifPermission === 'granted';
   const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [membersOpen, setMembersOpen] = useState(false);
   const me = getMe();
   const isAdmin = me?.role === 'admin' && !!me?.uid;
 
@@ -141,37 +142,61 @@ export function HouseholdBody(){
         <ChevronRight size={17} strokeWidth={2.25} className="text-fog shrink-0 rtl:rotate-180" />
       </button>
 
-      <SectionLabel>{t('members_label')} · {members.length}</SectionLabel>
-      {members.map((m, i) => (
-        <div key={i} className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3 mb-2.5">
-          <div
-            className="w-[34px] h-[34px] rounded-full text-card flex items-center justify-center font-bold text-[13px] shrink-0"
-            style={{ background: colorForName(m) }}
-          >
-            {m.slice(0, 1).toUpperCase()}
+      <SectionLabel>{t('members_label')}</SectionLabel>
+      <div className="bg-card border border-line rounded-2xl mb-5 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setMembersOpen(open => !open)}
+          aria-expanded={membersOpen}
+          className="w-full flex items-center gap-3 px-3.5 py-3.5 bg-transparent border-none text-start cursor-pointer text-kale"
+        >
+          <div className="flex -space-x-2 rtl:space-x-reverse shrink-0">
+            {members.slice(0, 3).map((m, i) => (
+              <span key={i} className="w-8 h-8 rounded-full border-2 border-card text-card flex items-center justify-center font-bold text-[11px]"
+                style={{ background: colorForName(m) }}>{m.slice(0, 1).toUpperCase()}</span>
+            ))}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-medium truncate">{m}</div>
-            <div className="flex gap-1.5 mt-1">
-              {m === state.myName && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_you')}</span>}
-              {m === state.myName && isAdmin
-                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint/15 text-mint-deep">{t('member_admin')}</span>
-                : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_role')}</span>}
-            </div>
+            <div className="text-[14.5px] font-semibold">{t('members_label')}</div>
+            <div className="text-[12.5px] text-fog mt-0.5">{members.length} {t('members_count_label')}</div>
           </div>
-          {isAdmin && m !== state.myName && (
-            <button
-              type="button"
-              onClick={() => handleRemoveMember(m)}
-              aria-label={state.lang === 'ar' ? `إزالة ${m}` : `Remove ${m}`}
-              title={state.lang === 'ar' ? 'إزالة العضو' : 'Remove member'}
-              className="w-9 h-9 rounded-full border border-[#EFC9C9] bg-card text-berry flex items-center justify-center cursor-pointer shrink-0 active:scale-95"
-            >
-              <Trash2 size={16} strokeWidth={2.25} />
-            </button>
-          )}
-        </div>
-      ))}
+          <ChevronDown size={18} strokeWidth={2.25} className={`text-fog shrink-0 transition-transform ${membersOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {membersOpen && (
+          <div className="px-3 pb-2.5 border-t border-line pt-3">
+            {members.map((m, i) => (
+              <div key={i} className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3 mb-2.5">
+                <div
+                  className="w-[34px] h-[34px] rounded-full text-card flex items-center justify-center font-bold text-[13px] shrink-0"
+                  style={{ background: colorForName(m) }}
+                >
+                  {m.slice(0, 1).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium truncate">{m}</div>
+                  <div className="flex gap-1.5 mt-1">
+                    {m === state.myName && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_you')}</span>}
+                    {m === state.myName && isAdmin
+                      ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint/15 text-mint-deep">{t('member_admin')}</span>
+                      : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_role')}</span>}
+                  </div>
+                </div>
+                {isAdmin && m !== state.myName && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveMember(m)}
+                    aria-label={state.lang === 'ar' ? `إزالة ${m}` : `Remove ${m}`}
+                    title={state.lang === 'ar' ? 'إزالة العضو' : 'Remove member'}
+                    className="w-9 h-9 rounded-full border border-[#EFC9C9] bg-card text-berry flex items-center justify-center cursor-pointer shrink-0 active:scale-95"
+                  >
+                    <Trash2 size={16} strokeWidth={2.25} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <SectionLabel>{t('styling_label')}</SectionLabel>
       <div className="bg-card border border-line rounded-2xl mb-5 overflow-hidden">
