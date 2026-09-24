@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 
 /**
- * Tracks iOS/Android's visual viewport while the software keyboard is open.
- * iOS can move the visual viewport as well as resize it, so expose both its
- * height and top offset and keep the focused field visible after the resize.
+ * Keep the app matched to the usable iOS visual viewport. Safari can report a
+ * visualViewport offset while its browser chrome expands/collapses; moving the
+ * whole app by that offset creates a visible gap at the bottom, so only the
+ * viewport height is applied to the shell.
  */
 export function useViewportHeight(){
   useEffect(() => {
@@ -12,10 +13,9 @@ export function useViewportHeight(){
 
     function setViewport(){
       const height = vv ? vv.height : window.innerHeight;
-      const top = vv ? vv.offsetTop : 0;
-      document.documentElement.style.setProperty('--app-height', `${height}px`);
-      document.documentElement.style.setProperty('--app-top', `${top}px`);
-      document.documentElement.classList.toggle('keyboard-open', height < window.innerHeight * 0.78);
+      const layoutHeight = window.innerHeight;
+      document.documentElement.style.setProperty('--app-height', `${Math.round(height)}px`);
+      document.documentElement.classList.toggle('keyboard-open', height < layoutHeight * 0.78);
     }
 
     function keepFocusedFieldVisible(event){
@@ -23,25 +23,24 @@ export function useViewportHeight(){
       if(!el?.matches?.('input, textarea, select')) return;
       clearTimeout(focusTimer);
       focusTimer = setTimeout(() => {
-        el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+        el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
       }, 280);
     }
 
     setViewport();
     const target = vv || window;
     target.addEventListener('resize', setViewport);
-    target.addEventListener('scroll', setViewport);
+    window.addEventListener('resize', setViewport);
     window.addEventListener('orientationchange', setViewport);
     document.addEventListener('focusin', keepFocusedFieldVisible);
 
     return () => {
       clearTimeout(focusTimer);
       target.removeEventListener('resize', setViewport);
-      target.removeEventListener('scroll', setViewport);
+      window.removeEventListener('resize', setViewport);
       window.removeEventListener('orientationchange', setViewport);
       document.removeEventListener('focusin', keepFocusedFieldVisible);
       document.documentElement.classList.remove('keyboard-open');
-      document.documentElement.style.removeProperty('--app-top');
     };
   }, []);
 }
