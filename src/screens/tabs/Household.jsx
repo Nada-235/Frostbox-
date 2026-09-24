@@ -140,7 +140,7 @@ export function HouseholdBody(){
         <ChevronRight size={17} strokeWidth={2.25} className="text-fog shrink-0 rtl:rotate-180" />
       </button>
 
-      <SectionLabel>{t('members_label')}</SectionLabel>
+      <SectionLabel>{t('members_label')} · {members.length}</SectionLabel>
       {members.map((m, i) => (
         <div key={i} className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3 mb-2.5">
           <div
@@ -149,7 +149,15 @@ export function HouseholdBody(){
           >
             {m.slice(0, 1).toUpperCase()}
           </div>
-          <div className="flex-1 min-w-0">{m}</div>
+          <div className="flex-1 min-w-0">
+            <div className="font-medium truncate">{m}</div>
+            <div className="flex gap-1.5 mt-1">
+              {m === state.myName && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_you')}</span>}
+              {m === state.myName && isAdmin
+                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint/15 text-mint-deep">{t('member_admin')}</span>
+                : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-track text-fog">{t('member_role')}</span>}
+            </div>
+          </div>
           {isAdmin && m !== state.myName && (
             <button
               type="button"
