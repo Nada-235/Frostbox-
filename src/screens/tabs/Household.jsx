@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Database, ChevronRight, Trash2 } from 'lucide-react';
+import { Check, Database, ChevronRight, ChevronDown, Trash2, Palette } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { shareHouseholdCode } from '../../lib/share.js';
@@ -43,6 +43,7 @@ export function HouseholdBody(){
     typeof window !== 'undefined' && window.Notification ? Notification.permission : 'unsupported'
   );
   const notifOn = notifPermission === 'granted';
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
   const me = getMe();
   const isAdmin = me?.role === 'admin' && !!me?.uid;
 
@@ -172,112 +173,134 @@ export function HouseholdBody(){
         </div>
       ))}
 
-      <SectionLabel>{t('theme_label')}</SectionLabel>
-      <div className="flex gap-3 mb-3 px-0.5 overflow-x-auto no-scrollbar">
-        {THEMES.map(theme => (
-          <button
-            key={theme.id}
-            type="button"
-            onClick={() => changeTheme(theme.id)}
-            aria-label={theme.name}
-            title={theme.name}
-            className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
-          >
-            <span
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
-              style={{
-                background: theme.swatch,
-                boxShadow: state.theme === theme.id
-                  ? `0 0 0 2px var(--color-card), 0 0 0 4px ${theme.swatch}`
-                  : '0 1px 3px rgba(0,0,0,0.2)',
-              }}
-            >
-              {state.theme === theme.id && <Check size={16} strokeWidth={3} className="text-card" />}
-            </span>
-            <span className="text-[11px] font-medium text-fog">{theme.name}</span>
-          </button>
-        ))}
+      <SectionLabel>{t('styling_label')}</SectionLabel>
+      <div className="bg-card border border-line rounded-2xl mb-5 overflow-hidden">
         <button
           type="button"
-          onClick={() => changeTheme(CUSTOM_THEME_ID)}
-          aria-label={t('theme_custom_name')}
-          title={t('theme_custom_name')}
-          className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
+          onClick={() => setAppearanceOpen(open => !open)}
+          aria-expanded={appearanceOpen}
+          className="w-full flex items-center gap-3 px-3.5 py-3.5 bg-transparent border-none text-start cursor-pointer text-kale"
         >
-          <span
-            className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
-            style={{
-              background: state.theme === CUSTOM_THEME_ID
-                ? state.customColor
-                : 'conic-gradient(from 90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
-              boxShadow: state.theme === CUSTOM_THEME_ID
-                ? `0 0 0 2px var(--color-card), 0 0 0 4px ${state.customColor}`
-                : '0 1px 3px rgba(0,0,0,0.2)',
-            }}
-          >
-            {state.theme === CUSTOM_THEME_ID && <Check size={16} strokeWidth={3} className="text-card" />}
-          </span>
-          <span className="text-[11px] font-medium text-fog">{t('theme_custom_name')}</span>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-track text-mint-deep">
+            <Palette size={17} strokeWidth={2.25} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[14.5px] font-semibold">{t('styling_label')}</div>
+            <div className="text-[12.5px] text-fog mt-0.5">{t('styling_desc')}</div>
+          </div>
+          <ChevronDown size={18} strokeWidth={2.25} className={`text-fog shrink-0 transition-transform ${appearanceOpen ? 'rotate-180' : ''}`} />
         </button>
-      </div>
+        {appearanceOpen && (
+          <div className="px-3.5 pb-4 border-t border-line pt-4">
+            <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-2.5 rtl:tracking-normal rtl:normal-case">{t('theme_label')}</div>
+            <SectionLabel>{t('theme_label')}</SectionLabel>
+            <div className="flex gap-3 mb-3 px-0.5 overflow-x-auto no-scrollbar">
+              {THEMES.map(theme => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  onClick={() => changeTheme(theme.id)}
+                  aria-label={theme.name}
+                  title={theme.name}
+                  className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
+                >
+                  <span
+                    className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
+                    style={{
+                      background: theme.swatch,
+                      boxShadow: state.theme === theme.id
+                        ? `0 0 0 2px var(--color-card), 0 0 0 4px ${theme.swatch}`
+                        : '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    {state.theme === theme.id && <Check size={16} strokeWidth={3} className="text-card" />}
+                  </span>
+                  <span className="text-[11px] font-medium text-fog">{theme.name}</span>
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => changeTheme(CUSTOM_THEME_ID)}
+                aria-label={t('theme_custom_name')}
+                title={t('theme_custom_name')}
+                className="flex flex-col items-center gap-1.5 bg-transparent border-none cursor-pointer shrink-0"
+              >
+                <span
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-transform active:scale-90"
+                  style={{
+                    background: state.theme === CUSTOM_THEME_ID
+                      ? state.customColor
+                      : 'conic-gradient(from 90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
+                    boxShadow: state.theme === CUSTOM_THEME_ID
+                      ? `0 0 0 2px var(--color-card), 0 0 0 4px ${state.customColor}`
+                      : '0 1px 3px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  {state.theme === CUSTOM_THEME_ID && <Check size={16} strokeWidth={3} className="text-card" />}
+                </span>
+                <span className="text-[11px] font-medium text-fog">{t('theme_custom_name')}</span>
+              </button>
+            </div>
 
-      {state.theme === CUSTOM_THEME_ID && (
-        <div className="bg-card border border-line rounded-2xl px-3.5 py-5 mb-5 flex justify-center">
-          <ColorWheelPicker value={state.customColor} onChange={changeCustomColor} />
-        </div>
-      )}
+            {state.theme === CUSTOM_THEME_ID && (
+              <div className="bg-card border border-line rounded-2xl px-3.5 py-5 mb-5 flex justify-center">
+                <ColorWheelPicker value={state.customColor} onChange={changeCustomColor} />
+              </div>
+            )}
 
-      <SectionLabel>{t('mode_label')}</SectionLabel>
-      <div className="flex items-center justify-between bg-card border border-line rounded-2xl px-3.5 py-[13px] mb-5">
-        <div>
-          <div className="text-[14.5px] font-semibold">{t('mode_dark')}</div>
-          <div className="text-[12px] text-fog mt-0.5">{state.mode === 'dark' ? t('mode_dark') : t('mode_light')}</div>
-        </div>
-        <Switch
-          on={state.mode === 'dark'}
-          onToggle={() => changeMode(state.mode === 'dark' ? 'light' : 'dark')}
-          ariaLabel={t('mode_label')}
-        />
-      </div>
+            <div className="flex items-center justify-between bg-card border border-line rounded-2xl px-3.5 py-[13px] mb-5">
+              <div>
+                <div className="text-[14.5px] font-semibold">{t('mode_dark')}</div>
+                <div className="text-[12px] text-fog mt-0.5">{state.mode === 'dark' ? t('mode_dark') : t('mode_light')}</div>
+              </div>
+              <Switch
+                on={state.mode === 'dark'}
+                onToggle={() => changeMode(state.mode === 'dark' ? 'light' : 'dark')}
+                ariaLabel={t('mode_label')}
+              />
+            </div>
 
-      <SectionLabel>{t('language_label')}</SectionLabel>
-      <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
-        <SegButton active={state.lang === 'en'} onClick={() => changeLang('en')}>English</SegButton>
-        <SegButton active={state.lang === 'ar'} onClick={() => changeLang('ar')}>العربية</SegButton>
-      </div>
+            <div className="flex bg-frost rounded-xl p-[3px] mb-3.5">
+              <SegButton active={state.lang === 'en'} onClick={() => changeLang('en')}>English</SegButton>
+              <SegButton active={state.lang === 'ar'} onClick={() => changeLang('ar')}>العربية</SegButton>
+            </div>
 
-      <SectionLabel>{t('font_label')}</SectionLabel>
-      <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_english')}</div>
-      <div className="flex gap-2 mb-3 overflow-x-auto no-scrollbar pb-0.5">
-        {FONTS.en.map(f => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => changeFontEn(f.id)}
-            style={{ fontFamily: `'${f.display}', sans-serif` }}
-            className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
-              state.fontEn === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
-            }`}
-          >
-            {f.name}
-          </button>
-        ))}
-      </div>
-      <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_arabic')}</div>
-      <div className="flex gap-2 mb-3.5 overflow-x-auto no-scrollbar pb-0.5">
-        {FONTS.ar.map(f => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => changeFontAr(f.id)}
-            style={{ fontFamily: `'${f.family}', sans-serif` }}
-            className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
-              state.fontAr === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
-            }`}
-          >
-            {f.name}
-          </button>
-        ))}
+            <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_english')}</div>
+            <div className="flex gap-2 mb-3 overflow-x-auto no-scrollbar pb-0.5">
+              {FONTS.en.map(f => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => changeFontEn(f.id)}
+                  style={{ fontFamily: `'${f.display}', sans-serif` }}
+                  className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
+                    state.fontEn === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
+                  }`}
+                >
+                  {f.name}
+                </button>
+              ))}
+            </div>
+            <div className="text-[11px] font-bold text-fog uppercase tracking-[0.05em] mb-1.5">{t('font_arabic')}</div>
+            <div className="flex gap-2 mb-3.5 overflow-x-auto no-scrollbar pb-0.5">
+              {FONTS.ar.map(f => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => changeFontAr(f.id)}
+                  style={{ fontFamily: `'${f.family}', sans-serif` }}
+                  className={`shrink-0 px-3.5 py-2.5 rounded-xl border text-[13.5px] font-semibold cursor-pointer bg-card ${
+                    state.fontAr === f.id ? 'border-mint text-mint-deep' : 'border-line text-kale'
+                  }`}
+                >
+                  {f.name}
+                </button>
+              ))}
+            </div>
+
+
+          </div>
+        )}
       </div>
 
       <SectionLabel>{t('notifications_label')}</SectionLabel>
