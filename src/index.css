@@ -374,3 +374,11 @@ input[type="datetime-local"]::-webkit-date-and-time-value {
   min-width: 0;
   text-align: start;
 }
+
+
+/* Final mobile resilience pass: prevent native controls, long labels and
+   flex/grid children from creating horizontal page overflow. */
+html, body, #app { max-width: 100%; overflow-x: hidden; }
+input, textarea, select, button { max-width: 100%; min-width: 0; box-sizing: border-box; }
+img { max-width: 100%; }
+[dir="rtl"] input, [dir="rtl"] textarea { text-align: start; }
