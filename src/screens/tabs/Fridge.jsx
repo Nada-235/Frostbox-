@@ -64,9 +64,9 @@ function ItemCardGrid({ item, lang, onOpen }){
             <Snowflake size={12} strokeWidth={2.25} />
           </span>
         )}
-        <span className={`absolute bottom-1.5 start-1.5 force-mono text-[10px] font-semibold py-1 px-2 rounded-lg tracking-[0.02em] rtl:tracking-normal ${CHIP_STYLES[chip.cls]}`}>
+        {chip && <span className={`absolute bottom-1.5 start-1.5 force-mono text-[10px] font-semibold py-1 px-2 rounded-lg tracking-[0.02em] rtl:tracking-normal ${CHIP_STYLES[chip.cls]}`}>
           {chip.txt}
-        </span>
+        </span>}
       </div>
       <div className="p-2.5">
         <div className="font-semibold text-[13.5px] whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</div>

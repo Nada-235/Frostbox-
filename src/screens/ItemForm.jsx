@@ -142,9 +142,9 @@ export function ItemForm(){
       {photoPickerOpen && (
         <div className="fixed inset-0 z-[250] bg-black/30 flex items-end justify-center p-3" onClick={() => setPhotoPickerOpen(false)}>
           <div className="w-full max-w-[420px] bg-card rounded-[24px] p-3 shadow-[var(--shadow-app)]" onClick={e => e.stopPropagation()}>
-            <button type="button" onClick={() => { setPhotoPickerOpen(false); cameraInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Take photo</button>
-            <button type="button" onClick={() => { setPhotoPickerOpen(false); fileInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">Choose from gallery</button>
-            <button type="button" onClick={() => setPhotoPickerOpen(false)} className="w-full py-3.5 rounded-2xl bg-transparent text-fog font-semibold">Cancel</button>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); cameraInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">{t('take_photo')}</button>
+            <button type="button" onClick={() => { setPhotoPickerOpen(false); fileInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">{t('choose_gallery')}</button>
+            <button type="button" onClick={() => setPhotoPickerOpen(false)} className="w-full py-3.5 rounded-2xl bg-transparent text-fog font-semibold">{t('btn_cancel')}</button>
           </div>
         </div>
       )}
