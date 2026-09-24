@@ -134,10 +134,11 @@ export function ItemForm(){
 
     <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-2 pb-10">
       <button type="button" onClick={() => setPhotoPickerOpen(true)} className="w-full h-[190px] rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
-        {photo ? <img src={photo} alt="" className="w-full h-full object-cover absolute inset-0"/> : <><span className="w-12 h-12 rounded-full bg-track flex items-center justify-center"><Camera size={22}/></span><span>{t('add_photo')}</span></>}
+        {photo ? <><img src={photo} alt="" className="w-full h-full object-cover object-center absolute inset-0"/><span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span></> : <><span className="w-12 h-12 rounded-full bg-track flex items-center justify-center"><Camera size={22}/></span><span>{t('add_photo')}</span></>}
       </button>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={onPhotoChange} className="hidden" />
       <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+      {photo && <button type="button" onClick={() => setPhoto(null)} className="w-full -mt-3 mb-4 text-berry text-xs font-semibold bg-transparent border-none cursor-pointer">{t('remove_photo')}</button>}
       {photoPickerOpen && (
         <div className="fixed inset-0 z-[250] bg-black/30 flex items-end justify-center p-3" onClick={() => setPhotoPickerOpen(false)}>
           <div className="w-full max-w-[420px] bg-card rounded-[24px] p-3 shadow-[var(--shadow-app)]" onClick={e => e.stopPropagation()}>
