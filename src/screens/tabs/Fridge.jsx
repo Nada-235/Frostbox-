@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Refrigerator, Snowflake, AlarmClock, SearchX } from 'lucide-react';
+import { Refrigerator, Snowflake, AlarmClock, SearchX, Search } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../../app/AppContext.jsx';
 import { useT } from '../../lib/useT.js';
 import { FOOD_CATEGORIES, catById } from '../../lib/constants.js';
@@ -107,6 +107,7 @@ export function FridgeBody(){
   const t = useT();
   const { lang, locationFilter, categoryFilter, dueReminders, listView } = state;
   const [expiryFilter, setExpiryFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   function changeView(view){
     setListView(view);
@@ -125,6 +126,8 @@ export function FridgeBody(){
   }, { expired: 0, soon: 0, fresh: 0 });
   if(locationFilter !== 'all') items = items.filter(i => (i.location || 'fridge') === locationFilter);
   if(categoryFilter !== 'all') items = items.filter(i => (i.category || 'other') === categoryFilter);
+  const q = searchQuery.trim().toLocaleLowerCase();
+  if(q) items = items.filter(i => [i.name, i.brand, i.note, i.store].some(v => String(v || '').toLocaleLowerCase().includes(q)));
   if(expiryFilter !== 'all') items = items.filter(item => {
     if(!item.goodUntil) return false;
     const days = daysUntil(item.goodUntil);
@@ -162,6 +165,11 @@ export function FridgeBody(){
             <Snowflake size={14} strokeWidth={2.25} className="inline -mt-0.5 me-1" />{t('filter_freezer')}
           </SegButton>
         </div>
+      </div>
+      <div className="relative mb-3">
+        <Search size={16} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-fog pointer-events-none" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder={t('search_fridge')}
+          className="w-full min-w-0 ps-10 pe-3.5 py-3 rounded-2xl border border-line bg-card text-kale outline-none focus:border-mint" />
       </div>
       <div className="grid grid-cols-4 gap-1.5 mb-3">
         {[
