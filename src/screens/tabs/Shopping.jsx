@@ -9,7 +9,7 @@ import { setListView } from '../../lib/localStorage.js';
 import { quickAddShoppingItem, toggleShoppingItem, deleteShoppingItem } from '../../lib/firebase.js';
 import { SectionLabel, EmptyState, noAutofillProps, ViewToggle } from '../../components/ui.jsx';
 
-function ShopRow({ item, t, color, onOpen }){
+function ShopRow({ item, t, color, onOpen, onToggle }){
   const meta = [item.brand, item.size].filter(Boolean).join(' · ');
   let priceLine = null;
   if(item.supermarket && item.price){
@@ -23,7 +23,7 @@ function ShopRow({ item, t, color, onOpen }){
   return (
     <div className="flex items-center gap-3 bg-card border border-line rounded-2xl px-3.5 py-3.5 mb-2.5">
       <button
-        onClick={() => toggleShoppingItem(item.householdCode, item.id, !item.checked)}
+        onClick={() => onToggle(item)}
         className="w-[23px] h-[23px] rounded-full border-2 shrink-0 cursor-pointer flex items-center justify-center text-card transition-colors"
         style={{ borderColor: color || 'var(--color-mint)', background: item.checked ? (color || 'var(--color-mint)') : 'transparent' }}
       >
@@ -43,14 +43,14 @@ function ShopRow({ item, t, color, onOpen }){
   );
 }
 
-function ShopCardGrid({ item, color, onOpen }){
+function ShopCardGrid({ item, color, onOpen, onToggle }){
   const meta = [item.brand, item.size].filter(Boolean).join(' · ');
   const hasPrice = item.supermarket && item.price;
 
   return (
     <div className="bg-card rounded-[22px] overflow-hidden shadow-[var(--shadow-app)] border border-line relative">
       <button
-        onClick={() => toggleShoppingItem(item.householdCode, item.id, !item.checked)}
+        onClick={() => onToggle(item)}
         className="absolute top-1.5 start-1.5 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center text-card transition-colors"
         style={{ borderColor: color || 'var(--color-mint)', background: item.checked ? (color || 'var(--color-mint)') : 'var(--color-card)' }}
       >
@@ -111,15 +111,42 @@ export function ShoppingBody(){
     dispatch({ type: 'SET_LIST_VIEW', view });
   }
 
+  async function handleToggle(item){
+    const nextChecked = !item.checked;
+    await toggleShoppingItem(state.code, item.id, nextChecked);
+    if(nextChecked && confirm(t('move_to_fridge_prompt', item.name))){
+      dispatch({ type: 'SET_EDITING_ITEM', item: {
+        id: null,
+        name: item.name || '',
+        photo: item.photo || null,
+        brand: item.brand || '',
+        quantity: '',
+        unit: 'pcs',
+        customUnit: '',
+        note: [item.size, item.supermarket].filter(Boolean).join(' · '),
+        category: item.category || 'other',
+        location: 'fridge',
+        goodUntil: '',
+        dateAdded: '',
+        reminderEnabled: false,
+        reminderAt: '',
+        store: item.supermarket || '',
+        price: item.price || '',
+        openedAt: '',
+      }});
+      dispatch({ type: 'SET_SCREEN', screen: 'add' });
+    }
+  }
+
   function renderItems(items, color){
     if(listView === 'grid'){
       return (
         <div className="grid grid-cols-2 gap-2.5">
-          {items.map(item => <ShopCardGrid key={item.id} item={withCode(item)} color={color} onOpen={() => openItem(item)} />)}
+          {items.map(item => <ShopCardGrid key={item.id} item={withCode(item)} color={color} onOpen={() => openItem(item)} onToggle={handleToggle} />)}
         </div>
       );
     }
-    return items.map(item => <ShopRow key={item.id} item={withCode(item)} t={t} color={color} onOpen={() => openItem(item)} />);
+    return items.map(item => <ShopRow key={item.id} item={withCode(item)} t={t} color={color} onOpen={() => openItem(item)} onToggle={handleToggle} />);
   }
 
   async function addQuick(){
