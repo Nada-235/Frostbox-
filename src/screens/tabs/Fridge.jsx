@@ -195,6 +195,23 @@ export function FridgeBody(){
     </div>
   );
 
+  const useFirst = items
+    .filter(item => item.goodUntil && daysUntil(item.goodUntil) >= 0 && daysUntil(item.goodUntil) <= 3)
+    .sort((a, b) => daysUntil(a.goodUntil) - daysUntil(b.goodUntil))
+    .slice(0, 4);
+
+  const useFirstSection = expiryFilter === 'all' && useFirst.length > 0 && (
+    <div className="mb-1">
+      <SectionLabel icon={AlarmClock} color="var(--color-citrus)">{t('use_first')}</SectionLabel>
+      <div className={listView === 'grid' ? 'grid grid-cols-2 gap-2.5' : ''}>
+        {useFirst.map(item => listView === 'grid'
+          ? <ItemCardGrid key={`use-first-${item.id}`} item={item} lang={lang} onOpen={() => openItem(item)} />
+          : <ItemCard key={`use-first-${item.id}`} item={item} lang={lang} onOpen={() => openItem(item)} />
+        )}
+      </div>
+    </div>
+  );
+
   let sections;
   if(!totalCount){
     sections = <EmptyState icon={Refrigerator}>{t('empty_fridge')}</EmptyState>;
@@ -225,6 +242,7 @@ export function FridgeBody(){
     <>
       {banner}
       {filters}
+      {useFirstSection}
       {sections}
     </>
   );
