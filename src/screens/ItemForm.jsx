@@ -61,13 +61,16 @@ export function ItemForm(){
     reader.onload = ev => {
       const img = new Image();
       img.onload = () => {
-        const maxW = 720;
-        const scale = Math.min(1, maxW / img.width);
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side) / 2;
+        const sy = (img.height - side) / 2;
+        const outputSize = Math.min(720, side);
         const canvas = document.createElement('canvas');
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+        canvas.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, outputSize, outputSize);
         setPhoto(canvas.toDataURL('image/jpeg', 0.68));
+        e.target.value = '';
       };
       img.src = ev.target.result;
     };
@@ -133,7 +136,7 @@ export function ItemForm(){
     </div>
 
     <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-2 pb-10">
-      <button type="button" onClick={() => setPhotoPickerOpen(true)} className="w-full h-[190px] rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
+      <button type="button" onClick={() => setPhotoPickerOpen(true)} className="w-full max-w-[320px] aspect-square mx-auto rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
         {photo ? <><img src={photo} alt="" className="w-full h-full object-cover object-center absolute inset-0"/><span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span></> : <><span className="w-12 h-12 rounded-full bg-track flex items-center justify-center"><Camera size={22}/></span><span>{t('add_photo')}</span></>}
       </button>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={onPhotoChange} className="hidden" />

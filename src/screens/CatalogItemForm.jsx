@@ -19,6 +19,8 @@ export function CatalogItemForm(){
   const original = state.editingCatalogItem || blankItem();
   const isEdit = !!original.id;
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
 
   const [name, setName] = useState(original.name);
   const [photo, setPhoto] = useState(original.photo || null);
@@ -41,13 +43,16 @@ export function CatalogItemForm(){
     reader.onload = ev => {
       const img = new Image();
       img.onload = () => {
-        const maxW = 360;
-        const scale = Math.min(1, maxW / img.width);
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side) / 2;
+        const sy = (img.height - side) / 2;
+        const outputSize = Math.min(720, side);
         const canvas = document.createElement('canvas');
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        setPhoto(canvas.toDataURL('image/jpeg', 0.6));
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+        canvas.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, outputSize, outputSize);
+        setPhoto(canvas.toDataURL('image/jpeg', 0.65));
+        e.target.value = '';
       };
       img.src = ev.target.result;
     };
@@ -122,11 +127,11 @@ export function CatalogItemForm(){
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-3 pb-10">
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full h-[150px] rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
+          onClick={() => setPhotoPickerOpen(true)}
+          className="w-full max-w-[320px] aspect-square mx-auto rounded-[28px] border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
         >
           {photo ? (
-            <img src={photo} alt="" className="w-full h-full object-cover absolute inset-0" />
+            <><img src={photo} alt="" className="w-full h-full object-cover object-center absolute inset-0" /><span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span></>
           ) : (
             <>
               <Camera size={26} strokeWidth={1.75} />
@@ -134,7 +139,18 @@ export function CatalogItemForm(){
             </>
           )}
         </button>
-        <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={onPhotoChange} className="hidden" />
+        <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={onPhotoChange} className="hidden" />
+        {photo && <button type="button" onClick={() => setPhoto(null)} className="w-full -mt-2 mb-4 text-berry text-xs font-semibold bg-transparent border-none cursor-pointer">{t('remove_photo')}</button>}
+        {photoPickerOpen && (
+          <div className="fixed inset-0 z-[250] bg-black/30 flex items-end justify-center p-3" onClick={() => setPhotoPickerOpen(false)}>
+            <div className="w-full max-w-[420px] bg-card rounded-[24px] p-3 shadow-[var(--shadow-app)]" onClick={e => e.stopPropagation()}>
+              <button type="button" onClick={() => { setPhotoPickerOpen(false); cameraInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">{t('take_photo')}</button>
+              <button type="button" onClick={() => { setPhotoPickerOpen(false); fileInputRef.current?.click(); }} className="w-full py-3.5 rounded-2xl bg-frost text-kale font-semibold mb-2">{t('choose_gallery')}</button>
+              <button type="button" onClick={() => setPhotoPickerOpen(false)} className="w-full py-3.5 rounded-2xl bg-transparent text-fog font-semibold">{t('btn_cancel')}</button>
+            </div>
+          </div>
+        )}
 
         <Field label={t('label_name')}>
           <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} name="fb-catalog-item-name" {...noAutofillProps} />
