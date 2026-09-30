@@ -171,7 +171,7 @@ export function ShopItemForm(){
       >
         {photo ? (
           <>
-            <img src={photo} alt="" className="w-full h-full object-cover object-center absolute inset-0" />
+            <img src={photo} alt="" className="w-full h-full object-contain object-center absolute inset-0" />
             <span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span>
           </>
         ) : (
@@ -213,7 +213,7 @@ export function ShopItemForm(){
                   className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-start bg-transparent border-0 border-b border-line last:border-b-0 cursor-pointer active:bg-frost"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-track flex items-center justify-center">
-                    {s.photo ? <img src={s.photo} alt="" className="w-full h-full object-cover" /> : <Search size={13} strokeWidth={2} className="text-fog" />}
+                    {s.photo ? <img src={s.photo} alt="" className="w-full h-full object-contain" /> : <Search size={13} strokeWidth={2} className="text-fog" />}
                   </div>
                   <div className="min-w-0">
                     <div className="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">{s.name}</div>
