@@ -167,11 +167,11 @@ export function ShopItemForm(){
       <button
         type="button"
         onClick={() => setPhotoPickerOpen(true)}
-        className="w-full max-w-[320px] aspect-square mx-auto rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
+        className="w-full max-w-[240px] aspect-square mx-auto rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
       >
         {photo ? (
           <>
-            <img src={photo} alt="" className="w-full h-full object-contain object-center absolute inset-0" />
+            <img src={photo} alt="" className="absolute inset-0 w-full h-full object-contain object-center p-3" />
             <span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span>
           </>
         ) : (
