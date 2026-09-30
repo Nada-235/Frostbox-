@@ -1,8 +1,12 @@
-import { Plus, X, Tag, Database } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, X, Tag, Database, Search } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
 import { backArrow, formatIQD } from '../lib/formatting.js';
 import { catalogRecords } from '../lib/utils.js';
+import { SHOP_CATEGORIES } from '../lib/constants.js';
+import { catLabel } from '../lib/formatting.js';
+import { CatChip } from '../components/ui.jsx';
 import { setListView } from '../lib/localStorage.js';
 import { deleteCatalogItem } from '../lib/firebase.js';
 import { EmptyState, ViewToggle } from '../components/ui.jsx';
@@ -80,7 +84,19 @@ export function CatalogList(){
   const dispatch = useAppDispatch();
   const t = useT();
   const lang = state.lang;
-  const list = (state.data.catalog || []).slice().sort((a, b) => a.name.localeCompare(b.name));
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const allItems = (state.data.catalog || []).slice().sort((a, b) => a.name.localeCompare(b.name));
+  const q = searchQuery.trim().toLocaleLowerCase();
+  const list = allItems.filter(item => {
+    const matchesSearch = !q || [item.name, ...(catalogRecords(item).flatMap(r => [r.brand, r.size, r.supermarket]))]
+      .some(value => String(value || '').toLocaleLowerCase().includes(q));
+    const matchesCategory = categoryFilter === 'all' || (item.category || 'other') === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+  const visibleCategories = SHOP_CATEGORIES.filter(category =>
+    allItems.some(item => (item.category || 'other') === category.id)
+  );
 
   function goBack(){
     dispatch({ type: 'SET_SCREEN', screen: 'main' });
@@ -120,7 +136,7 @@ export function CatalogList(){
         </button>
         <div className="flex-1 min-w-0">
           <h2 className={`text-[19px] font-bold m-0 text-kale ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{t('catalog_title')}</h2>
-          {list.length > 0 && <div className="text-[12px] text-fog mt-0.5">{t('entries_count', list.length)}</div>}
+          {allItems.length > 0 && <div className="text-[12px] text-fog mt-0.5">{t('entries_count', allItems.length)}</div>}
         </div>
         <button
           onClick={openAdd}
@@ -130,24 +146,71 @@ export function CatalogList(){
         </button>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-3 pb-10">
-        {!list.length ? (
+        {allItems.length > 0 && (
+          <>
+            <div className="relative mb-3">
+              <Search size={16} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-fog pointer-events-none" />
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder={t('search_catalog')}
+                className="w-full min-w-0 ps-10 pe-3.5 py-3 rounded-2xl border border-line bg-card text-kale outline-none focus:border-mint"
+              />
+            </div>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2.5 mb-1">
+              <CatChip selected={categoryFilter === 'all'} onClick={() => setCategoryFilter('all')}>{t('filter_all')}</CatChip>
+              {visibleCategories.map(category => (
+                <CatChip
+                  key={category.id}
+                  selected={categoryFilter === category.id}
+                  color={category.color}
+                  icon={category.icon}
+                  onClick={() => setCategoryFilter(category.id)}
+                >
+                  {catLabel(category, lang)}
+                </CatChip>
+              ))}
+            </div>
+          </>
+        )}
+        {!allItems.length ? (
           <EmptyState icon={Database}>{t('empty_catalog')}</EmptyState>
+        ) : !list.length ? (
+          <EmptyState icon={Search}>{t('empty_catalog_search')}</EmptyState>
         ) : (
           <>
             <div className="flex justify-end mb-2.5">
               <ViewToggle value={listView} onChange={changeView} />
             </div>
-            {listView === 'grid' ? (
-              <div className="grid grid-cols-2 gap-2.5">
-                {list.map(item => (
-                  <CatalogCardGrid key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
-                ))}
-              </div>
-            ) : (
-              list.map(item => (
-                <CatalogRow key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
-              ))
-            )}
+            {visibleCategories
+              .filter(category => categoryFilter === 'all' || category.id === categoryFilter)
+              .map(category => {
+                const categoryItems = list.filter(item => (item.category || 'other') === category.id);
+                if(!categoryItems.length) return null;
+                const Icon = category.icon;
+                return (
+                  <section key={category.id} className="mb-5">
+                    <div className="flex items-center gap-2 mb-2.5 px-0.5">
+                      <span className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: `${category.color}18`, color: category.color }}>
+                        <Icon size={14} strokeWidth={2.25} />
+                      </span>
+                      <h3 className="text-[13px] font-bold text-kale m-0">{catLabel(category, lang)}</h3>
+                      <span className="force-mono text-[11px] text-fog ms-auto">{categoryItems.length}</span>
+                    </div>
+                    {listView === 'grid' ? (
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {categoryItems.map(item => (
+                          <CatalogCardGrid key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
+                        ))}
+                      </div>
+                    ) : (
+                      categoryItems.map(item => (
+                        <CatalogRow key={item.id} item={item} t={t} onOpen={() => openItem(item)} onDelete={() => handleDelete(item)} />
+                      ))
+                    )}
+                  </section>
+                );
+              })}
           </>
         )}
       </div>
