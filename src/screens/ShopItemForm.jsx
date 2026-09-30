@@ -87,13 +87,16 @@ export function ShopItemForm(){
     reader.onload = ev => {
       const img = new Image();
       img.onload = () => {
-        const maxW = 360;
-        const scale = Math.min(1, maxW / img.width);
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side) / 2;
+        const sy = (img.height - side) / 2;
+        const outputSize = Math.min(720, side);
         const canvas = document.createElement('canvas');
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        setPhoto(canvas.toDataURL('image/jpeg', 0.6));
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+        canvas.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, outputSize, outputSize);
+        setPhoto(canvas.toDataURL('image/jpeg', 0.65));
+        e.target.value = '';
       };
       img.src = ev.target.result;
     };
@@ -164,7 +167,7 @@ export function ShopItemForm(){
       <button
         type="button"
         onClick={() => setPhotoPickerOpen(true)}
-        className="w-full h-[150px] rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
+        className="w-full max-w-[320px] aspect-square mx-auto rounded-2xl border-[1.5px] border-dashed border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-1.5 overflow-hidden cursor-pointer mb-4 relative"
       >
         {photo ? (
           <>
