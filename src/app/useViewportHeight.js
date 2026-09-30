@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
 /**
- * Keep the app matched to the usable iOS visual viewport. Safari can report a
- * visualViewport offset while its browser chrome expands/collapses; moving the
- * whole app by that offset creates a visible gap at the bottom, so only the
- * viewport height is applied to the shell.
+ * Keep the app locked to the usable viewport on mobile.
+ * Use the visual viewport only while the keyboard is open; Safari's visual
+ * viewport can otherwise shrink/shift as its browser chrome expands and
+ * collapses, which makes a full-screen app appear shorter than the screen.
  */
 export function useViewportHeight(){
   useEffect(() => {
@@ -12,10 +12,13 @@ export function useViewportHeight(){
     let focusTimer;
 
     function setViewport(){
-      const height = vv ? vv.height : window.innerHeight;
       const layoutHeight = window.innerHeight;
+      const visualHeight = vv?.height || layoutHeight;
+      const keyboardOpen = !!vv && visualHeight < layoutHeight * 0.78;
+      const height = keyboardOpen ? visualHeight : layoutHeight;
+
       document.documentElement.style.setProperty('--app-height', `${Math.round(height)}px`);
-      document.documentElement.classList.toggle('keyboard-open', height < layoutHeight * 0.78);
+      document.documentElement.classList.toggle('keyboard-open', keyboardOpen);
     }
 
     function keepFocusedFieldVisible(event){
@@ -28,15 +31,16 @@ export function useViewportHeight(){
     }
 
     setViewport();
-    const target = vv || window;
-    target.addEventListener('resize', setViewport);
+    vv?.addEventListener('resize', setViewport);
+    vv?.addEventListener('scroll', setViewport);
     window.addEventListener('resize', setViewport);
     window.addEventListener('orientationchange', setViewport);
     document.addEventListener('focusin', keepFocusedFieldVisible);
 
     return () => {
       clearTimeout(focusTimer);
-      target.removeEventListener('resize', setViewport);
+      vv?.removeEventListener('resize', setViewport);
+      vv?.removeEventListener('scroll', setViewport);
       window.removeEventListener('resize', setViewport);
       window.removeEventListener('orientationchange', setViewport);
       document.removeEventListener('focusin', keepFocusedFieldVisible);
