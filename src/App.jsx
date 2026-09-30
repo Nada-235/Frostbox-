@@ -101,7 +101,7 @@ function Shell(){
     <div
       dir={isRtl ? 'rtl' : 'ltr'}
       className="relative w-full max-w-[460px] min-h-0 bg-frost overflow-hidden shadow-[var(--shadow-app)] flex flex-col"
-      style={{ height: 'var(--app-height, 100dvh)' }}
+      style={{ height: 'var(--app-height, 100dvh)', minHeight: 'var(--app-height, 100dvh)' }}
     >
       {Screen && <Screen />}
       <ToastHost />
