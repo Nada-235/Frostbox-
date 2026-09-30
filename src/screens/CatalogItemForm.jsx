@@ -2,13 +2,14 @@ import { useRef, useState } from 'react';
 import { X, Check, Trash2, Plus, Camera } from 'lucide-react';
 import { useAppState, useAppDispatch } from '../app/AppContext.jsx';
 import { useT } from '../lib/useT.js';
-import { backArrow, formatIQD } from '../lib/formatting.js';
+import { backArrow, formatIQD, catLabel } from '../lib/formatting.js';
 import { uid, catalogRecords, mergeRecords } from '../lib/utils.js';
 import { upsertCatalogItem, deleteCatalogItem } from '../lib/firebase.js';
-import { IconButton, noAutofillProps } from '../components/ui.jsx';
+import { IconButton, noAutofillProps, CatChip } from '../components/ui.jsx';
+import { SHOP_CATEGORIES } from '../lib/constants.js';
 
 function blankItem(){
-  return { id: null, name: '', photo: null, records: [] };
+  return { id: null, name: '', category: 'other', photo: null, records: [] };
 }
 
 export function CatalogItemForm(){
@@ -24,6 +25,7 @@ export function CatalogItemForm(){
 
   const [name, setName] = useState(original.name);
   const [photo, setPhoto] = useState(original.photo || null);
+  const [category, setCategory] = useState(original.category || 'other');
   const [records, setRecords] = useState(catalogRecords(original));
   const [brand, setBrand] = useState('');
   const [size, setSize] = useState('');
@@ -88,6 +90,7 @@ export function CatalogItemForm(){
     try{
       const newId = await upsertCatalogItem(state.code, {
         name: trimmedName,
+        category,
         photo,
         records: finalRecords,
       });
@@ -154,6 +157,16 @@ export function CatalogItemForm(){
 
         <Field label={t('label_name')}>
           <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={t('name_placeholder_shop')} className={inputCls} name="fb-catalog-item-name" {...noAutofillProps} />
+        </Field>
+
+        <Field label={t('label_category')}>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1.5">
+            {SHOP_CATEGORIES.map(c => (
+              <CatChip key={c.id} selected={category === c.id} color={c.color} icon={c.icon} onClick={() => setCategory(c.id)}>
+                {catLabel(c, lang)}
+              </CatChip>
+            ))}
+          </div>
         </Field>
 
         <Field label={t('label_prices')}>
