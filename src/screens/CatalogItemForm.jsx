@@ -230,12 +230,14 @@ export function CatalogItemForm(){
           </div>
         </Field>
 
-        <div className="flex gap-2.5">
+        </div>
+
+
+        <div className="action-bottom-bar"><div className="flex gap-2.5">
           <IconButton onClick={goBack} icon={X} label={t('btn_cancel')} variant="ghost" />
           {isEdit && <IconButton onClick={handleDelete} icon={Trash2} label={t('btn_delete')} variant="danger" />}
           <IconButton onClick={handleSave} disabled={saving} icon={Check} label={t('btn_save_item')} variant="primary" grow />
-        </div>
-      </div>
+        </div></div>
     </>
   );
 }
