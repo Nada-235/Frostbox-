@@ -63,12 +63,21 @@ export function ShopItemForm(){
   }, [name, catalog]);
   const showSuggestions = nameFocused && suggestions.length > 0;
 
+  function applyCatalogEntry(entry){
+    if(!entry) return;
+    setCategory(entry.category || 'other');
+    if(entry.photo) setPhoto(entry.photo);
+  }
+
   function selectSuggestion(entry){
     setName(entry.name);
+    setCategory(entry.category || 'other');
+    setPhoto(entry.photo || null);
     setNameFocused(false);
   }
 
   function selectRecord(record){
+    applyCatalogEntry(matchedCatalogEntry);
     setBrand(record.brand || '');
     setSize(record.size || '');
     setSupermarket(record.supermarket || '');
@@ -127,6 +136,7 @@ export function ShopItemForm(){
       const hasRecord = trimmedSupermarket && trimmedPrice;
       await upsertCatalogItem(state.code, {
         name: trimmedName,
+        category,
         photo: photo || matchedCatalogEntry?.photo || null,
         records: hasRecord
           ? mergeRecords(catalogRecords(matchedCatalogEntry), [{
@@ -198,7 +208,7 @@ export function ShopItemForm(){
         <div className="relative">
           <input
             type="text" value={name} onChange={e => setName(e.target.value)}
-            onFocus={() => setNameFocused(true)} onBlur={() => setNameFocused(false)}
+            onFocus={() => setNameFocused(true)} onBlur={() => { setNameFocused(false); applyCatalogEntry(matchedCatalogEntry); }}
             placeholder={t('name_placeholder_shop')} className={inputCls}
             name="fb-shop-item-name" {...noAutofillProps}
           />
