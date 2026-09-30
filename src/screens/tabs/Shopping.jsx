@@ -63,7 +63,7 @@ function ShopCardGrid({ item, color, onOpen, onToggle }){
         <X size={12} strokeWidth={2.25} />
       </button>
       <div onClick={onOpen} className="w-full aspect-square bg-track flex items-center justify-center overflow-hidden cursor-pointer text-fog">
-        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <Package size={28} strokeWidth={1.5} />}
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-contain" /> : <Package size={28} strokeWidth={1.5} />}
       </div>
       <div onClick={onOpen} className="p-2.5 cursor-pointer">
         <div className={`font-semibold text-[13.5px] whitespace-nowrap overflow-hidden text-ellipsis ${item.checked ? 'text-fog line-through' : ''}`}>{item.name}</div>

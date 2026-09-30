@@ -30,7 +30,7 @@ function ItemCard({ item, lang, onOpen }){
         className="w-[52px] h-[52px] rounded-2xl shrink-0 flex items-center justify-center overflow-hidden relative"
         style={{ background: item.photo ? undefined : `${category.color}22`, color: item.photo ? undefined : category.color }}
       >
-        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <CategoryIcon size={22} strokeWidth={1.75} />}
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-contain" /> : <CategoryIcon size={22} strokeWidth={1.75} />}
         {isFreezer && (
           <span className="absolute -bottom-[3px] end-[-3px] w-[18px] h-[18px] rounded-full bg-card border border-line flex items-center justify-center text-mint-deep">
             <Snowflake size={11} strokeWidth={2.25} />
@@ -58,7 +58,7 @@ function ItemCardGrid({ item, lang, onOpen }){
         className="w-full aspect-square relative flex items-center justify-center"
         style={{ background: item.photo ? undefined : `${category.color}1A`, color: item.photo ? undefined : category.color }}
       >
-        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <CategoryIcon size={30} strokeWidth={1.5} />}
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-contain" /> : <CategoryIcon size={30} strokeWidth={1.5} />}
         {isFreezer && (
           <span className="absolute top-1.5 end-1.5 w-6 h-6 rounded-full bg-card border border-line flex items-center justify-center text-mint-deep">
             <Snowflake size={12} strokeWidth={2.25} />

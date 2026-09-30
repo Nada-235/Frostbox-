@@ -33,7 +33,7 @@ function CatalogRow({ item, t, onOpen, onDelete }){
         className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-track flex items-center justify-center cursor-pointer border-none p-0"
       >
         {item.photo ? (
-          <img src={item.photo} alt="" className="w-full h-full object-cover" />
+          <img src={item.photo} alt="" className="w-full h-full object-contain" />
         ) : (
           <Database size={17} strokeWidth={1.75} className="text-fog" />
         )}
@@ -65,7 +65,7 @@ function CatalogCardGrid({ item, t, onOpen, onDelete }){
         <X size={12} strokeWidth={2.25} />
       </button>
       <div onClick={onOpen} className="w-full aspect-square bg-track flex items-center justify-center overflow-hidden cursor-pointer text-fog">
-        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-cover" /> : <Database size={26} strokeWidth={1.5} />}
+        {item.photo ? <img src={item.photo} alt="" className="w-full h-full object-contain" /> : <Database size={26} strokeWidth={1.5} />}
       </div>
       <div onClick={onOpen} className="p-2.5 cursor-pointer">
         <div className="font-semibold text-[13.5px] whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</div>
