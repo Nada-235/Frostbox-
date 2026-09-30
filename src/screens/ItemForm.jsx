@@ -135,7 +135,7 @@ export function ItemForm(){
       <h2 className={`text-[19px] font-bold m-0 text-kale ${lang === 'ar' ? 'font-arabic' : 'font-display'}`}>{isEdit ? t('edit_item') : t('add_item')}</h2>
     </div>
 
-    <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-2 pb-10">
+    <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden animate-fade-in-up px-3 pt-2 pb-6">
       <button type="button" onClick={() => setPhotoPickerOpen(true)} className="w-full max-w-[320px] aspect-square mx-auto rounded-[28px] border border-line bg-card flex flex-col items-center justify-center text-fog text-[13px] font-semibold gap-2 overflow-hidden cursor-pointer mb-5 relative shadow-[var(--shadow-sm)]">
         {photo ? <><img src={photo} alt="" className="w-full h-full object-contain object-center absolute inset-0"/><span className="absolute bottom-2.5 start-2.5 bg-black/45 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md">{t('replace_photo')}</span></> : <><span className="w-12 h-12 rounded-full bg-track flex items-center justify-center"><Camera size={22}/></span><span>{t('add_photo')}</span></>}
       </button>
@@ -189,7 +189,7 @@ export function ItemForm(){
       </div>}
     </div>
 
-    <div className="shrink-0 py-3.5 px-3 glass border-t border-line sticky bottom-0"><div className="flex gap-2.5">
+    <div className="action-bottom-bar"><div className="flex gap-2.5">
       <IconButton onClick={goBack} icon={X} label={t('btn_cancel')} variant="ghost"/>
       {isEdit&&<IconButton onClick={handleAddToShopping} icon={ShoppingCart} label={t('btn_add_to_shopping')} variant="ghost"/>}
       {isEdit&&<IconButton onClick={handleDelete} icon={Trash2} label={t('btn_delete')} variant="danger"/>}
