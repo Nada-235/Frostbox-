@@ -60,7 +60,7 @@
     max-width: 460px;
     min-width: 0;
     height: var(--app-height, 100dvh);
-    min-height: 0;
+    min-height: var(--app-height, 100dvh);
     overflow: hidden;
   }
 
@@ -381,6 +381,9 @@ input[type="datetime-local"]::-webkit-date-and-time-value {
 /* Final mobile resilience pass: prevent native controls, long labels and
    flex/grid children from creating horizontal page overflow. */
 html, body, #app { max-width: 100%; overflow-x: hidden; }
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; min-height: 100dvh; }
+}
 input, textarea, select, button { max-width: 100%; min-width: 0; box-sizing: border-box; }
 img { max-width: 100%; }
 [dir="rtl"] input, [dir="rtl"] textarea { text-align: start; }
